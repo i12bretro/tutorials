@@ -1,0 +1,109 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Setting up LDAP Authentication for NextCloud</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation').removeClass('copy-animation');
+              try {
+                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Setting up LDAP Authentication for NextCloud</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in terminal to install the PHP LDAP module
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install php-ldap module<br />
+	sudo apt install php-ldap<br />
+	# restart apache httpd service<br />
+	sudo systemctl restart apache2</div>
+	</li>
+	<li>Launch a web browser and navigate to http://DNSorIP/nextcloud</li>
+	<li>Log into NextCloud with an administrative account</li>
+	<li>Click the settings gear menu &gt; Apps in the top right&nbsp;corner</li>
+	<li>Press CTRL+F and search for LDAP</li>
+	<li>Click the LDAP user and group backend app</li>
+	<li>Install/Enable the&nbsp;LDAP user and group backend app</li>
+	<li>Select settings gear menu &gt; Settings from the menu in the upper right hand corner</li>
+	<li>Under Administration, Select LDAP / AD Integration&nbsp;in the left navigation menu</li>
+	<li>Fill out the LDAP server form as follows:<br />
+	Host: ldap://i12bretro.local<br />
+	Port: 389<br />
+	User DN: CN=readonly_svc,CN=Users,DC=i12bretro,DC=local<br />
+	Password: Read0nly!!<br />
+	Base DN:&nbsp;CN=users,DC=i12bretro,DC=local</li>
+	<li>Click the Test Base DN button</li>
+	<li>Click the Continue button</li>
+	<li>Click the Continue button</li>
+	<li>Check the LDAP / AD Email Address box and click the Continue button</li>
+	<li>Select Username &gt; Logout from the menu in the upper right hand corner</li>
+	<li>Log into NextCloud using LDAP user credentials</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
