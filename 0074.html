@@ -1,0 +1,178 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Run Ubuntu 12.04 on Ouya</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation').removeClass('copy-animation');
+              try {
+                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Run Ubuntu 12.04 on Ouya</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Things You Will Need</h2>
+
+<ul>
+	<li>A USB flash drive, at least 4 GB (data will be lost)</li>
+	<li>A USB hub, preferably with external power</li>
+	<li>A USB keyboard and mouse</li>
+</ul>
+
+<h2>Prerequisites and Downloads</h2>
+
+<ol>
+	<li>Download Ubuntu 12.04 files <a href="https://app.box.com/s/ni5rttar4x40tss6kbxm" target="_blank">Download</a></li>
+	<li>Download win32diskimager <a href="https://sourceforge.net/projects/win32diskimager/files/Archive/Win32DiskImager-1.0.0-binary.zip/download" target="_blank">Download</a></li>
+	<li>Download i12bretro_OUYA_Ubuntu_commands.zip <a href="https://drive.google.com/open?id=1m0aD7wPPqiZk55mP1wZnN1VzpaqAJ-Mn" target="_blank">Download</a></li>
+	<li>Extract Ubuntu 12.04 files</li>
+	<li>Extract the downloaded i12bretro_OUYA_Ubuntu_commands.zip</li>
+	<li>Extract win32diskimager</li>
+	<li>Launch win32diskimager</li>
+	<li>Navigate to the extracted Ubuntu files and select the .img file</li>
+	<li>Select and then double and triple check the correct device is selected from the dropdown
+	<ol start="1" style="list-style-type: lower-alpha;">
+		<li><strong>All data will be lost, check the selected device one more time</strong></li>
+	</ol>
+	</li>
+	<li>Click the Write button</li>
+	<li>Ignore prompts to format the drive</li>
+	<li>Safely remove the flash drive</li>
+	<li>Plug the flash drive, keyboard and mouse in the USB hub</li>
+	<li>Plug the USB hub into the Ouya</li>
+</ol>
+
+<h2>Installing Ouya USB Drivers</h2>
+
+<ol>
+	<li>Right click Start &gt; Command Prompt (Admin)</li>
+	<li>Paste the following commands to disable driving signing checks temporarily
+	<div class="codeBlock">bcdedit -set loadoptions DISABLE_INTEGRITY_CHECKS<br />
+	bcdedit -set TESTSIGNING ON<br />
+	shutdown /r</div>
+	</li>
+	<li>Your PC will reboot</li>
+	<li>Connect a USB cable from the micro USB port on the back of the Ouya to your PC</li>
+	<li>Connect the USB hub to the USB port on the Ouya &gt; Plug in the USB keyboard and prepared USB flash drive</li>
+	<li>Make sure the Ouya is connected to a display via HDMI</li>
+	<li>Power on the Ouya</li>
+	<li>After a few seconds you should hear Windows chime that a new device has been detected</li>
+	<li>Right click Start &gt; Device Manager</li>
+	<li>Expand Other Devices and you should see OUYA listed</li>
+	<li>Right click OUYA &gt; Update Driver</li>
+	<li>Select Browse my computer for driver software</li>
+	<li>Click the Browse... button</li>
+	<li>Navigate to the extracted i12bretro_OUYA_Ubuntu_commands\files\driver</li>
+	<li>Click OK</li>
+	<li>Make sure &quot;Include subfolders&quot; is checked, click Next</li>
+	<li>Windows should find the correct driver for the Ouya and install it</li>
+	<li>Navigate to the i12bretro_OUYA_Ubuntu_commands in windows explorer</li>
+	<li>Right click i12bretro_OUYA_Ubuntu_commands.bat &gt; Run as administrator</li>
+	<li>The script uses the Android Debug Bridge (ADB) to boot the Ouya into recovery</li>
+	<li>When the command prompts to &quot;--&nbsp; Setup the fastboot driver&quot;, go back to Device Manager expand Android Device</li>
+	<li>Right click Android Bootloader Device &gt; Update Driver</li>
+	<li>Select Browse my computer for driver software</li>
+	<li>Click the Browse... button</li>
+	<li>Navigate to the extracted i12bretro_OUYA_Ubuntu_commands\files\driver</li>
+	<li>Click OK</li>
+	<li>Make sure &quot;Include subfolders&quot; is checked, click Next</li>
+	<li>Windows should find the correct driver for the Ouya and install it</li>
+	<li>Press Enter at the command prompt once the driver is installed to continue</li>
+	<li>The script will run another ADB command to push a custom zImage kernel to the Ouya</li>
+	<li>The Ouya should boot Ubuntu 12.04 from the USB</li>
+	<li>Default logins are as follows:
+	<p>root/123456<br />
+	developer/ouya</p>
+	</li>
+</ol>
+
+<h2>Configure Ubuntu</h2>
+
+<ol>
+	<li>Change the root and developer passwords by running the commands below, replacing the passwords with something secure
+	<div class="codeBlock">sudo passwd developer<br />
+	sudo passwd root</div>
+	</li>
+	<li>Configure wireless networking by modifying /etc/network/interfaces</li>
+	<li>To return to the Ouya OS simply reboot from the Ubuntu interface</li>
+</ol>
+
+<p>There are instructions included in the Ubuntu download to dual boot the Ouya with Ubuntu and Android. I did not test this option, but beware the dual boot option has the potential to brick your device. The fastboot option demonstrated in the video poses very little risk to your console. For further reading and history on this check out http://tuomas.kulve.fi/blog/2013/09/12/debian-on-ouya-all-systems-go/.</p>
+
+<h2>Cleaning Up</h2>
+
+<ol>
+	<li><span id="li_479051_56"><label for="cb_li_479051_56">To restore driver integrity checks, do the following:</label></span></li>
+	<li><span id="li_786211_57"><label for="cb_li_786211_57">Right click Start &gt; Command Prompt (Admin)</label></span></li>
+	<li><span id="li_121010_58"><label for="cb_li_121010_58">Paste the following commands to re-enable driving signing checks</label></span>
+	<div class="codeBlock"><span id="li_121010_58"><label for="cb_li_121010_58">bcdedit -set loadoptions ENABLE_INTEGRITY_CHECKS<br />
+	bcdedit -set TESTSIGNING OFF<br />
+	shutdown /r</label></span></div>
+	<span id="li_121010_58"><label for="cb_li_121010_58"> </label></span></li>
+	<li><span id="li_154009_59"><label for="cb_li_154009_59">Your PC will reboot</label></span></li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
