@@ -1,0 +1,151 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Web Based File Management with PHP and Tiny File Manager</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation').removeClass('copy-animation');
+              try {
+                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Web Based File Management with PHP and Tiny File Manager</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>
+	Download and Setup Tiny File Manager</h2>
+<ol>
+	<li>
+		Download Tiny File Manager <a href="https://github.com/prasathmani/tinyfilemanager/releases" target="_blank">Download</a></li>
+	<li>
+		Extract the Tiny File Manager files</li>
+	<li>
+		Copy TinyFileManager.php to Apache install directory/htdocs/filemanager</li>
+	<li>
+		Rename TinyFileManager.php to index.php</li>
+	<li>
+		Edit index.php in a text editor</li>
+	<li>
+		Find $use_auth and set the value to false</li>
+	<li>
+		Save</li>
+	<li>
+		Open a web browser and navigate to https://<dnsorip>/filemanager</dnsorip></li>
+</ol>
+<h2>
+	Customizing Root Location and Authentication</h2>
+<ol>
+	<li>
+		Optionally, Edit Apache install directory/htdocs/filemanager/index.php</li>
+	<li>
+		Find $root_path and edit the value to limit the scope of the file manager</li>
+	<li>
+		Save index.php</li>
+	<li>
+		Navigate to the Apache install directory/conf in Explorer</li>
+	<li>
+		Edit httpd.conf in a text editor</li>
+	<li>
+		Find the authnz_ldap_module and make sure it is enabled by removing the # at the start of the line
+		<p>
+			LoadModule authnz_ldap_module modules/mod_authnz_ldap.so</p>
+	</li>
+	<li>
+		Find the ldap_module and make sure it is enabled by removing the # at the start of the line
+		<p>
+			LoadModule ldap_module modules/mod_ldap.so</p>
+	</li>
+	<li>
+		Create a Location block to enable LDAP authentication for the specified directory
+		<p>
+			<location filemanager=""><br />
+			&nbsp;&nbsp;&nbsp; # Basic authentication with LDAP against MS AD<br />
+			&nbsp;&nbsp;&nbsp; AuthType Basic<br />
+			&nbsp;&nbsp;&nbsp; AuthBasicProvider ldap<br />
+			<br />
+			&nbsp;&nbsp;&nbsp; # AuthLDAPURL specifies the LDAP server IP, port, base DN, scope and filter<br />
+			&nbsp;&nbsp;&nbsp; # using this format: ldap://host:port/basedn?attribute?scope?filter<br />
+			&nbsp;&nbsp;&nbsp; AuthLDAPURL &quot;ldap://i12bretro.local:389/DC=i12bretro,DC=local?sAMAccountName?sub?(objectClass=user)&quot; NONE</location></p>
+		<p>
+			&nbsp;&nbsp;&nbsp; # The LDAP bind username and password<br />
+			&nbsp;&nbsp;&nbsp; AuthLDAPBindDN &quot;readonly_svc@i12bretro.local&quot;<br />
+			&nbsp;&nbsp;&nbsp; AuthLDAPBindPassword &quot;Read0nly!!&quot;<br />
+			&nbsp;&nbsp;&nbsp; LDAPReferrals Off<br />
+			&nbsp;&nbsp;&nbsp; AuthUserFile /dev/null<br />
+			<br />
+			&nbsp;&nbsp;&nbsp; AuthName &quot;Restricted Area [i12bretro.local]&quot;<br />
+			&nbsp;&nbsp;&nbsp; # to authenticate a domain group, specify the full DN<br />
+			&nbsp;&nbsp;&nbsp; AuthLDAPGroupAttributeIsDN on<br />
+			&nbsp;&nbsp;&nbsp; require ldap-group CN=WebAuthAccess,CN=Users,DC=i12bretro,DC=local</p>
+	</li>
+	<li>
+		Save httpd.conf</li>
+	<li>
+		Restart the Apache service</li>
+	<li>
+		Refresh https://<dnsorip>/filemanager</dnsorip></li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
