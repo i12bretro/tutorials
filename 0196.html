@@ -1,0 +1,145 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Web Based VSCode with code-server</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation').removeClass('copy-animation');
+              try {
+                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Web Based VSCode with code-server</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Installing code-server</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal:
+	<div class="codeBlock"># download the code-server install.sh<br />
+	wget https://code-server.dev/install.sh<br />
+	# make it executable<br />
+	chmod +x ./install.sh<br />
+	# run the installer<br />
+	sudo ./install.sh --prefix=/usr/local<br />
+	# start the service as root<br />
+	sudo su<br />
+	sudo systemctl enable --now code-server@$USER<br />
+	exit<br />
+	# edit the config.yaml<br />
+	sudo nano /root/.config/code-server/config.yaml</div>
+	</li>
+	<li>Edit the password, or change the authentication type to none and change the bind-addr to&nbsp;bind-addr: 127.0.0.1:8888</li>
+	<li>Continue with the following command in terminal:
+	<div class="codeBlock"># restart code-server service<br />
+	sudo systemctl restart code-server@root.service</div>
+	</li>
+	<li>Launch on web browser on the host running code-server and navigate to http://DNSorIP:8888</li>
+	<li>Browser based VS Code......pretty nice</li>
+</ol>
+
+<p>Out of the box, code-server is only reachable from the host that it is installed on. An easy to configure workaround&nbsp;is to setup a proxy server to allow requests to Apache/NGINX to be routed to code-server.</p>
+
+<h2>Apache Proxy Server (optional, but recommended)</h2>
+
+<ol>
+	<li>Run the following commands in terminal:
+	<div class="codeBlock"># install apache httpd<br />
+	sudo apt install apache2<br />
+	# enable headers, rewrite, proxy and proxy_http modules<br />
+	sudo a2enmod proxy proxy_http rewrite headers proxy_wstunnel<br />
+	# edit the default site<br />
+	sudo nano /etc/apache2/sites-available/000-default.conf</div>
+	</li>
+	<li>Paste the following configuration into the existing VirtualHost
+	<p>&nbsp;<location code=""><br />
+	&nbsp;&nbsp; &nbsp;RewriteEngine On<br />
+	&nbsp;&nbsp; &nbsp;RewriteCond %{REQUEST_FILENAME} !-f<br />
+	&nbsp;&nbsp; &nbsp;RewriteCond %{REQUEST_URI} !(.*)/$<br />
+	&nbsp;&nbsp; &nbsp;RewriteRule ^(.*)$ http://%{HTTP_HOST}/code/ [L,R=301]</location><br />
+	<br />
+	<location code=""><br />
+	&nbsp;&nbsp; &nbsp;Header set X-Frame-Options ALLOWALL<br />
+	&nbsp;&nbsp; &nbsp;RewriteEngine On<br />
+	&nbsp;&nbsp; &nbsp;RewriteCond %{HTTP:Upgrade} =websocket [NC]<br />
+	&nbsp;&nbsp; &nbsp;RewriteRule /(.*) &nbsp; ws://127.0.0.1:8888/$1 [P,L]<br />
+	&nbsp;&nbsp; &nbsp;ProxyPreserveHost on<br />
+	&nbsp;&nbsp; &nbsp;ProxyPass http://127.0.0.1:8888/<br />
+	&nbsp;&nbsp; &nbsp;ProxyPassReverse http://127.0.0.1:8888/</location></p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to code-server.conf</li>
+	<li>Continue with the following commands in terminal:
+	<div class="codeBlock"># restart the apache service<br />
+	sudo systemctl restart apache2</div>
+	</li>
+	<li>Back in the web browser, navigate to http://DNSorIP/vscode</li>
+	<li>Enjoy your web based&nbsp;VS Code</li>
+</ol>
+
+<p>Source: <a href="https://github.com/cdr/code-server" target="_blank">https://github.com/cdr/code-server</a><br />
+Proxy resource:&nbsp;<a href="https://github.com/cdr/code-server/issues/282" target="_blank">https://github.com/cdr/code-server/issues/282</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
