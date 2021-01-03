@@ -1,0 +1,145 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Running a Mac OSX VM in Virtualbox</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation').removeClass('copy-animation');
+              try {
+                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Running a Mac OSX VM in Virtualbox</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Locate a Mac OSX Catalina iso</li>
+	<li>Launch Virtualbox</li>
+	<li>Create a New VM by selecting Machine &gt; New
+	<p>Name: MAC OSX<br />
+	Machine Folder: C:\VMs<br />
+	Type: MAC OS X<br />
+	Version: Mac OS X (64-bit)<br />
+	Memory Size: 4096&nbsp;MB<br />
+	Hard disk: Create a virtual hard disk now</p>
+	</li>
+	<li>Click Create</li>
+	<li>On the Create Virtual Hard Disk dialog
+	<p>Name the virtual disk image MAC OSX.vdi<br />
+	File size: 60.00 GB<br />
+	Hard disk file type: VDI<br />
+	Storage on physical hard disk: Dynamically Allocated</p>
+	</li>
+	<li>Click Create</li>
+	<li>Select the VM and Click Settings</li>
+	<li>Select System &gt; Click the Processor tab &gt; Set Processor(s) to at least 2</li>
+	<li>Select Display &gt; Slide Video Memory to 128 MB</li>
+	<li>Select USB &gt; Select USB 3.0</li>
+	<li>Select Storage &gt; Create a new SATA Controller</li>
+	<li>Click the Choose disk button on the optical drive</li>
+	<li>Click the Add button &gt; Browse to and select the MAC OSX .iso file</li>
+	<li>Click Choose</li>
+	<li>Click OK</li>
+	<li>Right Click the Start Button &gt; Command Prompt (Admin) &gt; Paste in the following commands
+	<div class="codeBlock">cd &quot;%programfiles%\Oracle\VirtualBox\&quot;<br />
+	VBoxManage.exe modifyvm &quot;MAC OSX&quot; --cpuidset 00000001 000106e5 00100800 0098e3fd bfebfbff<br />
+	VBoxManage setextradata &quot;MAC OSX&quot; &quot;VBoxInternal/Devices/efi/0/Config/DmiSystemProduct&quot; &quot;iMac11,3&quot;<br />
+	VBoxManage setextradata &quot;MAC OSX&quot; &quot;VBoxInternal/Devices/efi/0/Config/DmiSystemVersion&quot; &quot;1.0&quot;<br />
+	VBoxManage setextradata &quot;MAC OSX&quot; &quot;VBoxInternal/Devices/efi/0/Config/DmiBoardProduct&quot; &quot;Iloveapple&quot;<br />
+	VBoxManage setextradata &quot;MAC OSX&quot; &quot;VBoxInternal/Devices/smc/0/Config/DeviceKey&quot; &quot;ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc&quot;<br />
+	VBoxManage setextradata &quot;MAC OSX&quot; &quot;VBoxInternal/Devices/smc/0/Config/GetKeyFromRealSMC&quot; 1</div>
+	</li>
+	<li>If you are running an AMD processor also run the following command:
+	<div class="codeBlock">VBoxManage modifyvm &quot;MAC OSX&quot; --cpu-profile &quot;Intel Core i7-6700K&quot;</div>
+	</li>
+	<li>Make sure the MAC OSX VM is selected and click Start &gt; Normal</li>
+	<li>After a long initialization sequence the OSX Setup should start</li>
+	<li>Select a language &gt; Click the arrow</li>
+	<li>Select Disk Utility</li>
+	<li>Select the VBOX HARDDISK &gt; Click Erase</li>
+	<li>Name the drive OSX &gt; Click Erase</li>
+	<li>Click Done &gt; Close Disk Utility</li>
+	<li>Click Install macOS</li>
+	<li>Click Continue, Click Agree</li>
+	<li>Select the OSX disk &gt; Click Install</li>
+	<li>Wait while OSX installs files, the VM will reboot several times</li>
+	<li>Select your Country &gt; Click Continue</li>
+	<li>Confirm your languages and keyboard layout &gt; Click Continue</li>
+	<li>Click Continue on the Data &amp; Privacy screen</li>
+	<li>Select Don&#39;t transfer any information now &gt; Click Continue</li>
+	<li>Select Set Up Later &gt; Click Continue &gt; Click Skip</li>
+	<li>Click Agree &gt; Agree again</li>
+	<li>Enter a name, user name, password &gt; Click Continue</li>
+	<li>Click Customize Settings</li>
+	<li>Click Continue &gt; Select Use or Don&#39;t Use for Location Services</li>
+	<li>Pick a timezone &gt; Click Continue</li>
+	<li>Uncheck the Send Mac Analytics box &gt; Click Continue</li>
+	<li>Click Set Up Later on the Screen Time screen</li>
+	<li>Uncheck the Enable Ask Siri box &gt; Click Continue</li>
+	<li>Pick a theme &gt; Click Continue</li>
+	<li>Welcome to OSX</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
