@@ -1,0 +1,133 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>FTP Files to Sony Playstation 2 Console</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation').removeClass('copy-animation');
+              try {
+                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>FTP Files to Sony Playstation 2 Console</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <p>A quick note, you cannot copy games directly to the PS2 console via FTP. It is helpful for moving around artwork, configuration files and homebrew applications</p>
+
+<h2>Things You Will Need</h2>
+
+<ul>
+	<li>A Sony PlayStation 2 Fat console</li>
+	<li>The PS2 Network/Hard Drive Adapter</li>
+	<li>A working hard drive in the PS2 (IDE or via a SATA adapter)</li>
+	<li>A way to execute uLaunchElf (I&#39;m using <a href="https://sites.google.com/view/ysai187/home/projects/fmcbfhdb#h.p_e31_CKrrgS5f" target="_blank">FreeMcBoot</a>)</li>
+	<li>A network</li>
+</ul>
+
+<h2>Setting Up and Starting the PS2 FTP Server</h2>
+
+<ol>
+	<li>Connect the PS2 console to your network</li>
+	<li>Make sure the memory card with Free McBoot is inserted</li>
+	<li>Power on the PS2 and wait for Free McBoot to load</li>
+	<li>Start the uLaunchElf application</li>
+	<li>Press Select &gt; Network Settings &gt; press O</li>
+	<li>Using the D-pad, set the IP address, netmask and gateway
+	<ul>
+		<li>Tip: If you don&#39;t want your PS2 to reach the internet input a bogus gateway IP address</li>
+	</ul>
+	</li>
+	<li>Navigate down to Save &gt; press O to save your changes</li>
+	<li>Navigate down to OK &gt; press O</li>
+	<li>Highlight MISC/ &gt; press O</li>
+	<li>Highlight PS2Net &gt; press O</li>
+	<li>The FTP server should start running and give status output at the top of the screen</li>
+</ol>
+
+<h2>Copying Files to the Playstation 2 Console</h2>
+
+<ol>
+	<li>On a PC, open Windows Explorer</li>
+	<li>In the location bar type ftp://<ps2 address="" ip=""></ps2></li>
+	<li>Once connected to the PS2 FTP server you will see some folders listed<br />
+	hdd: this is the internal hard drive inside the PS2<br />
+	mass: this is the USB flash drive if one is plugged into the PS2<br />
+	mc: this is the memory card currently inserted in the PS2<br />
+	pfs: this is the playstation file system which is alos the internal hard drive inside the PS2</li>
+</ol>
+
+<h2><br />
+Additional Notes</h2>
+
+<ul>
+	<li>The PS2 hard drive and network speeds are not great. Expect to see somewhere between 2-8 MB/s. The network interface is fast ethernet which under perfect conditions maxes out at 100 Mbps (12.5 MB/s)</li>
+	<li>The PS2 USB ports are USB 1.1, so they are even slower than the network/hard drive combo (around 1.5 MB/s)</li>
+	<li>Playing games from an internal hard drive is the best experience you can get on the PS2. Load times are reduced and it saves wear and tear on the aging optical drive</li>
+	<li>Even using a SATA to IDE adapter in the PS2 the internal connection of the hard drive to the PS2 motherboard is still running at ATA speeds (around <span class="ILfuVd"><span class="e24Kjd">66 MB/s)</span></span></li>
+</ul>
+
+<p>Additional reading: <a href="https://www.ps2-home.com/forum/viewtopic.php?t=315" target="_blank">https://www.ps2-home.com/forum/viewtopic.php?t=315</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
