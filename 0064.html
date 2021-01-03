@@ -1,0 +1,139 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Fix the Ouya Discover Store 2020</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation').removeClass('copy-animation');
+              try {
+                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Fix the Ouya Discover Store 2020</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Things You Will Need</h2>
+
+<ul>
+	<li>A micro USB data cable</li>
+</ul>
+
+<h2>Prerequisites and Downloads</h2>
+
+<ol start="1">
+	<li>Download i12bretro_OUYA_discover.zip <a href="https://drive.google.com/open?id=18N0Ce7nfh5rnjHEZPO4iNCaHsJrnbJWr" target="_blank">Download</a></li>
+	<li>Extract the downloaded i12bretro_OUYA_discover.zip</li>
+</ol>
+
+<h2>Installing Ouya USB Drivers</h2>
+
+<ol>
+	<li>Right click Start &gt; Command Prompt (Admin)</li>
+	<li>Paste the following commands to disable driving signing checks temporarily
+	<div class="codeBlock">bcdedit -set loadoptions DISABLE_INTEGRITY_CHECKS<br />
+	bcdedit -set TESTSIGNING ON<br />
+	shutdown /r</div>
+	</li>
+	<li>Your PC will reboot</li>
+	<li>Connect a USB cable from the micro USB port on the back of the Ouya to your PC</li>
+	<li>Make sure the Ouya is connected to a display via HDMI</li>
+	<li>Power on the Ouya</li>
+	<li>After a few seconds you should hear Windows chime that a new device has been detected</li>
+	<li>Right click Start &gt; Device Manager</li>
+	<li>Expand Other Devices and you should see OUYA listed</li>
+	<li>Right click OUYA &gt; Update Driver</li>
+	<li>Select Browse my computer for driver software</li>
+	<li>Click the Browse... button</li>
+	<li>Navigate to the extracted i12bretro_OUYA_discover\files\driver</li>
+	<li>Click OK</li>
+	<li>Make sure &quot;Include subfolders&quot; is checked, click Next</li>
+	<li>Windows should find the correct driver for the Ouya and install it</li>
+	<li>Navigate to the i12bretro_OUYA_discover in Windows Explorer</li>
+	<li>Right click i12bretro_OUYA_discover.bat &gt; Run as administrator</li>
+	<li>The script uses the Android Debug Bridge (ADB) to push an ouya_config.properties file to the Ouya
+	<p>OUYA_SERVER_URL=http://ouya.cweiske.de<br />
+	OUYA_STATUS_SERVER_URL=http://ouya.cweiske.de/api/v1/status</p>
+	</li>
+	<li>The Ouya will reboot after the file is copied over</li>
+	<li>After rebooting, the Ouya will now be accessing ouya.cweiske.de for it&#39;s store and API calls</li>
+</ol>
+
+<h2>Cleaning Up</h2>
+
+<ol>
+	<li>After successfully flashing the image to your Ouya, do the following</li>
+	<li>Right click Start &gt; Command Prompt (Admin)</li>
+	<li>Paste the following commands to re-enable driving signing checks
+	<div class="codeBlock">bcdedit -set loadoptions ENABLE_INTEGRITY_CHECKS<br />
+	bcdedit -set TESTSIGNING OFF<br />
+	shutdown /r</div>
+	</li>
+	<li>Your PC will reboot</li>
+</ol>
+
+<p>I cannot thank Christian Weiske enough for reverse engineering the Ouya API and hosting a static recreation of it so Ouya&#39;s around the world can continue to work. Show Christian some love at https://ouya.cweiske.de<br />
+&nbsp;</p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
