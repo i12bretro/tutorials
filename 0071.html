@@ -1,0 +1,147 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Running a Windows 2000 VM in Virtualbox</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation').removeClass('copy-animation');
+              try {
+                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Running a Windows 2000 VM in Virtualbox</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Download Microsoft Windows 2000&nbsp;<a href="https://winworldpc.com/product/windows-nt-2000/final" target="_blank">Download</a></li>
+	<li>Extract the Windows 2000&nbsp;files</li>
+	<li>Launch Virtualbox</li>
+	<li>Create a New VM by selecting Machine &gt; New
+	<p>Name: Windows 2000<br />
+	Machine Folder: C:\VMs<br />
+	Type: Microsoft Windows<br />
+	Version: Windows 2000<br />
+	Memory Size: 1024 MB<br />
+	Hard disk: Create a virtual hard disk now</p>
+	</li>
+	<li>Click Create</li>
+	<li>On the Create Virtual Hard Disk dialog
+	<p>Name the virtual disk image Windows 2000.vdi<br />
+	File size: 4.00 GB<br />
+	Hard disk file type: VDI<br />
+	Storage on physical hard disk: Dynamically Allocated</p>
+	</li>
+	<li>Click Create</li>
+	<li>Select the VM and Click Settings</li>
+	<li>Select Storage</li>
+	<li>Click on the CD-ROM drive</li>
+	<li>Select the disc dropdown to the right &gt; Choose a virtual optical disc file...</li>
+	<li>Browse to the extracted Windows 2000&nbsp;files and select Win2000 .iso</li>
+	<li>Click OK</li>
+	<li>Make sure the Windows 2000 VM is selected and click Start &gt; Normal</li>
+	<li>The Windows 2000 setup should load on boot</li>
+	<li>Press Enter to Continue with Setup&nbsp;</li>
+	<li>Press C to Continue with Setup</li>
+	<li>Press F8 to agree to the Licensing Agreement</li>
+	<li>Press Enter to Install to the&nbsp;unpartitioned&nbsp;space</li>
+	<li>Select the top option to format using the NTFS file system</li>
+	<li>Press Enter to continue</li>
+	<li>Setup will copy files and then reboot the VM</li>
+	<li><span style="display: none;">&nbsp;</span>When the VM boots back up, Click Next</li>
+	<li><span style="display: none;">&nbsp;</span>Wait for Windows to install devices and drivers</li>
+	<li><span style="display: none;">&nbsp;</span>Click Next</li>
+	<li>Enter a name and organization &gt; Click Next</li>
+	<li>Enter a valid Windows 2000 product key (<span style="display: none;">&nbsp;</span>XGH9J-KBPBD-FXDKQ-K36XB-X9J6Y), <span style="display: none;">&nbsp;</span>click Next</li>
+	<li>Give the computer a name</li>
+	<li>Enter an administrator password &gt; Re-type to confirm &gt; Click Next</li>
+	<li>Set the date/time and select a timezone &gt; Click Apply &gt; Click OK</li>
+	<li><span style="display: none;">&nbsp;</span>Select Typical settings on the Network settings dialog &gt; Click Next</li>
+	<li><span style="display: none;">&nbsp;</span>Select No, this computer is not on a network &gt; Click Next<span style="display: none;">&nbsp;</span></li>
+	<li>Wait for Windows to install components</li>
+	<li>Click Finish, the VM will reboot<span style="display: none;">&nbsp;</span></li>
+	<li>On the Network Identification dialog select This computer is for home use... &gt; Click Next&nbsp;&gt; Click Next &gt; Click Finish, the VM will reboot<span style="display: none;">&nbsp;</span></li>
+	<li>Welcome back to Windows 2000...Y2k</li>
+	<li>Revel in the nostalgia</li>
+</ol>
+
+<h2>Optional Steps</h2>
+
+<ol>
+	<li>Select Devices &gt; Insert Guest Additions CD image...</li>
+	<li>If VirtualBox Guest Additions doesn&#39;t autorun, open&nbsp;My Computer &gt; CD Drive &gt; Double click VBoxWindowsAdditions-x86.exe</li>
+	<li>Install Guest Additions accepting the defaults</li>
+	<li>Accept any driver popups from the Guest Additions installer by clicking the Yes button</li>
+	<li>After the installation completes select Reboot now &gt; Click Finish</li>
+	<li>Upon rebooting, you can now full screen the VM and the interal resolution will automatically change to match the window size</li>
+	<li>Download i12bretro Windows SP.iso <a href="https://drive.google.com/open?id=1kCH4j9DmcDZHS3Bw8XlFG7PxJ5y-PR2v" target="_blank">Download</a></li>
+	<li>Select Devices &gt; Optical Drives &gt; Select disk image...</li>
+	<li>Navigate to and select i12bretro_Windows_SP.iso</li>
+	<li>If the VM doesn&#39;t autorun, open&nbsp;My Computer &gt; CD Drive</li>
+	<li>Open the Windows 2000 folder &gt; Double click Windows 2000 SP4.exe</li>
+	<li>Follow the dialogs to install Service Pack 4</li>
+	<li>Click Finish to reboot and complete the SP4 install</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
