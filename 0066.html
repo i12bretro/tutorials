@@ -1,0 +1,130 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Running a Windows 1 VM in Virtualbox</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation').removeClass('copy-animation');
+              try {
+                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Running a Windows 1 VM in Virtualbox</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Download MS-DOS 6.22 <a href="https://winworldpc.com/product/ms-dos/622" target="_blank">Download</a></li>
+	<li>Download Microsoft Windows 1.04 <a href="https://winworldpc.com/product/windows-10/104" target="_blank">Download</a></li>
+	<li>Extract the MS-DOS and Windows 1.04 files</li>
+	<li>Launch Virtualbox</li>
+	<li>Create a New VM by selecting Machine &gt; New
+	<p>Name: Microsoft Windows 1.04<br />
+	Machine Folder: C:\VMs<br />
+	Type: Microsoft Windows<br />
+	Version: Windows 3.1<br />
+	Memory Size: 4 MB<br />
+	Hard disk: Create a virtual hard disk now</p>
+	</li>
+	<li>Click Create</li>
+	<li>On the Create Virtual Hard Disk dialog
+	<p>Name the virtual disk image Microsoft Windows 1.04.vdi<br />
+	File size: 16 MB<br />
+	Hard disk file type: VDI<br />
+	Storage on physical hard disk: Dynamically Allocated</p>
+	</li>
+	<li>Click Create</li>
+</ol>
+
+<ol>
+	<li>Select the VM and Click Settings</li>
+	<li>Select Storage</li>
+	<li>Click on the floppy disk drive</li>
+	<li>Select the disc dropdown to the right &gt; Choose a virtual floppy disk file...</li>
+	<li>Browse to the extracted MS-DOS 6.22 files and select Disk1.img</li>
+	<li>Click OK</li>
+	<li>Make sure the Windows 1.04 VM is selected and click Start &gt; Normal</li>
+	<li>Press Enter to start the installation and press Enter multiple times to accept the default values</li>
+	<li>When prompted by the installer, go to the VM settings and swap out the MS-DOS disk images and press Enter to continue</li>
+	<li>Once MS-DOS has been successfully installed, select Devices &gt; Floppy Drives &gt; Remove disk from virtual drive</li>
+	<li>Press Enter in the VM to reboot</li>
+	<li>Once MS-DOS has booted, select Devices &gt; Floppy Drives &gt; Choose disk image...<br />
+	Navigate to the extracted Windows 1.04 files and select Disk1.img</li>
+	<li>Type the following command<br />
+	a:<br />
+	setup</li>
+	<li>The Windows 1.04 installation process will start</li>
+	<li>Press C to Continue</li>
+	<li>Select 1 on the keyboard setup</li>
+	<li>Select 7 on the pointing device setup</li>
+	<li>Select 3 on the display setup</li>
+	<li>When prompted by the installer, go to the VM settings and swap out the Window 1.04 disk images and press Enter to continue</li>
+	<li>Press N when asked if you&#39;d like to setup a printer/plotter</li>
+	<li>After the installation completes, type the following command:<br />
+	win</li>
+	<li>Welcome to Windows 1.04</li>
+	<li>Revel in the nostalgia</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
