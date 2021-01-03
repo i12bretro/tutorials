@@ -1,0 +1,111 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Get Around Ouya Login After Factory Reset 2020</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation').removeClass('copy-animation');
+              try {
+                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Get Around Ouya Login After Factory Reset 2020</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Things You Will Need</h2>
+
+<ul>
+	<li>A micro USB data cable</li>
+</ul>
+
+<h2>Prerequisites and Downloads</h2>
+
+<ol start="1">
+	<li>Download Ouya_Hosts_Update.zip <a href="https://drive.google.com/file/d/1IJIOQtxmzvx0JE1BD_un_9IfeaRKV8Gb/view?usp=sharing" target="_blank">Download</a></li>
+	<li>Extract the downloaded Ouya_Hosts_Update.zip</li>
+</ol>
+
+<h2>Running the ADB Script</h2>
+
+<ol>
+	<li>Connect the Ouya to your PC with the micro USB cable</li>
+	<li>If you have issues with adb connecting to your Ouya watch one of my other Ouya videos to see how to install the Ouya adb drivers on Windows 10</li>
+	<li>Navigate to the extacted Ouya_Hosts_Update in Windows Explorer</li>
+	<li>Right click Ouya_Hosts_Update.bat &gt; Run as administrator</li>
+	<li>When prompted, copy and paste each of the commands below into the adb shell
+	<p>su<br />
+	mount -o rw,remount -t ext4 /dev/block/platform/sdhci-tegra.3/by-name/APP<br />
+	cp /sdcard/hosts /system/etc/<br />
+	exit<br />
+	exit</p>
+	</li>
+	<li>On the Ouya, you should now be able to proceed with the OOBE setup by selecting Existing Account and inputting any username and password</li>
+</ol>
+
+<p>I cannot thank Christian Weiske enough for reverse engineering the Ouya API and purchase process and hosting a static recreation of it so Ouya&#39;s around the world can continue to work. Show Christian some love at https://ouya.cweiske.de</p>
+
+<p>Further reading: <a href="http://cweiske.de/tagebuch/ouya-oobe-network.htm" target="_blank">http://cweiske.de/tagebuch/ouya-oobe-network.htm</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
