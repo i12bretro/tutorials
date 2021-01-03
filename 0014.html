@@ -1,0 +1,143 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install and Setup hMailServer E-Mail Server</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation').removeClass('copy-animation');
+              try {
+                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install and Setup hMailServer E-Mail Server</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <p>This video tutorial will cover the basic installation and setup for hMailServer in it&#39;s simplest form. In future videos we will create and apply SSL certificates, enable Active Directory authentication for email accounts and setup the mail server for use with PHP.</p>
+
+<h2>Install and Basic Inbox Setup</h2>
+
+<ol>
+	<li>If installing to a newer Windows OS, run the following commands as an administrator to enable .NET 2
+	<div class="codeBlock">dism /online /enable-feature /featurename:NetFx3ServerFeatures /Source:D:\sources\sxs<br />
+	dism /online /enable-feature /featurename:NetFx3 /Source:D:\sources\sxs</div>
+	</li>
+	<li>Download hMailServer <a href="https://www.hmailserver.com/download" target="_blank">Download</a></li>
+	<li>Setup DNS entries for smtp. and imap.
+	<ol start="1" style="list-style-type: lower-alpha;">
+		<li>For Windows DNS, go to Start &gt; Windows Administrative Tools &gt; DNS</li>
+		<li>Expand the DNS server and domain name</li>
+		<li>Right Click &gt; New Host (A or AAAA)</li>
+		<li>Type the dns name and target IP address &gt; Click OK</li>
+	</ol>
+	</li>
+	<li>Run the hMailServer installer, accepting the default values</li>
+	<li>Set the administrative password, re-type to confirm</li>
+	<li>Click Install</li>
+	<li>After the installation completes, Open the Start Menu &gt; hMailServer &gt; hMailServer Administrator</li>
+	<li>Select localhost &gt; Click Connect</li>
+	<li>Login with the password set during the installation</li>
+	<li>Click Add domain...</li>
+	<li>Enter the domain name to be used for the e-mail addresses &gt; Click Save</li>
+	<li>Click on the Accounts folder</li>
+	<li>Click the Add... button</li>
+	<li>Enter an e-mail address and a password for the inbox</li>
+	<li>Click the Save button</li>
+	<li>Expand Settings &gt; Advanced &gt; IP Ranges
+	<ol>
+		<li>NOTE: To disable the ability to send e-mail outside the local network, delete the Internet IP Range by Right Clicking on it and selecting Remove</li>
+	</ol>
+	</li>
+	<li>Click the Add... button</li>
+	<li>Enter the name LAN and fill in the appropriate lower and upper IP for your subnet</li>
+	<li>Review the available options, to make this a LAN only e-mail server only allow local to local e-mail addresses</li>
+	<li>Click Save</li>
+</ol>
+
+<h2>Setting Up An E-Mail Client</h2>
+
+<ol>
+	<li>Download Mozilla Thunderbird Portable <a href="https://portableapps.com/apps/internet/thunderbird_portable" target="_blank">Download</a></li>
+	<li>Run the downloaded paf.exe file and extract it to any location</li>
+	<li>Check the Run box and click Finish</li>
+	<li>Fill out Your name, Email address and Password for the account created earlier</li>
+	<li>Click Manual config</li>
+	<li>For Incoming, enter imap.<youremaildomain></youremaildomain></li>
+	<li>For Outgoing, enter smtp.<youremaildomain></youremaildomain></li>
+	<li>Click the Re-test button, Thunderbird should set some additional values</li>
+	<li>Click Done</li>
+	<li>Select I understand the risks &gt; Done</li>
+</ol>
+
+<h2>Testing Your New E-Mail Server</h2>
+
+<ol>
+	<li>In hMailServer Administrator, Expand Utilities &gt; Server sendout</li>
+	<li>Select Specific domain and select the domain created earlier from the dropdown</li>
+	<li>Fill out the form to send a test e-mail &gt; Click Send</li>
+	<li>Back in Thunderbird, click the Get Messages button</li>
+	<li>You should receive the test e-mail</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
