@@ -1,0 +1,147 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Roll Your Own Google Docs with OnlyOffice On ownCloud</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation').removeClass('copy-animation');
+              try {
+                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Roll Your Own Google Docs with OnlyOffice On ownCloud</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Installing OnlyOffice Office</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal:
+	<div class="codeBlock"># check for an install software updates<br />
+	sudo apt update<br />
+	sudo apt upgrade<br />
+	# install postgreSQL<br />
+	sudo apt&nbsp;install postgresql<br />
+	# create the OnlyOffice database, user and grant permissions<br />
+	sudo -i -u postgres psql -c &quot;CREATE DATABASE onlyoffice;&quot;<br />
+	sudo -i -u postgres psql -c &quot;CREATE USER onlyoffice WITH password &#39;0nly0ff1c3&#39;;&quot;<br />
+	sudo -i -u postgres psql -c &quot;GRANT ALL privileges ON DATABASE onlyoffice TO onlyoffice;&quot;<br />
+	# install redis and rabbitmq<br />
+	sudo apt install redis-server rabbitmq-server<br />
+	# if running on the same server as owncloud, stop apache<br />
+	sudo systemctl stop apache2<br />
+	# install nginx extras<br />
+	sudo apt-get install nginx-extras<br />
+	# set the onlyoffice port, using port 1440 here<br />
+	echo onlyoffice-documentserver onlyoffice/ds-port select 1440 | sudo debconf-set-selections<br />
+	# add the onlyoffice document server apt repository<br />
+	sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys CB2DE8E5<br />
+	sudo echo &quot;deb https://download.onlyoffice.com/repo/debian squeeze main&quot; | sudo tee /etc/apt/sources.list.d/onlyoffice.list<br />
+	sudo apt&nbsp;update<br />
+	# install onlyoffice document server<br />
+	sudo apt-get install onlyoffice-documentserver</div>
+	</li>
+	<li>Paste the onlyoffice database password from above when prompted</li>
+	<li>Continue the setup by running the following command in terminal
+	<div class="codeBlock"># modify the default nginx port<br />
+	sudo nano /etc/nginx/sites-available/default</div>
+	</li>
+	<li>Change the port from :80 to :801</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to default and close it</li>
+	<li>Continue the configuration by running the following commands in terminal:
+	<div class="codeBlock"># edit ownCloud&nbsp;configuration file<br />
+	sudo nano /var/www/owncloud/config/config.php</div>
+	</li>
+	<li>Find the trusted_domains array and add the DNS entry for the OnlyOffice host</li>
+	<li>Add the following line inside the array
+	<p>&#39;allow_local_remote_servers&#39; =&gt; true</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X</li>
+	<li>Continue with the following in terminal
+	<div class="codeBlock"># restart nginx<br />
+	sudo systemctl restart nginx<br />
+	# start apache2<br />
+	sudo systemctl start apache2</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP:1440 to verify OnlyOffice Document Server is up and running</li>
+</ol>
+
+<h2>Adding OnlyOffice&nbsp;to ownCloud</h2>
+
+<ol>
+	<li>Log into ownCloud with an administrative user</li>
+	<li>Click the hamburger menu in the top left corner &gt; Market</li>
+	<li>Click Integration under the Categories heading</li>
+	<li>Find and click on OnlyOffice</li>
+	<li>Click the Install button</li>
+	<li>Once the installation completes, click the username dropdown &gt; Settings</li>
+	<li>Select Admin &gt; Additional&nbsp;from the left navigation menu</li>
+	<li>Enter the DNS name for the OnlyOffice server URL</li>
+	<li>Click Apply</li>
+</ol>
+
+<p>Source:&nbsp;<a href="https://helpcenter.onlyoffice.com/server/linux/document/linux-installation.aspx" target="_blank">https://helpcenter.onlyoffice.com/server/linux/document/linux-installation.aspx</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
