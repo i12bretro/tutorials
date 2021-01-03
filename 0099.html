@@ -1,0 +1,138 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Unlock Ouya Discover Store Full Games in 2020</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation').removeClass('copy-animation');
+              try {
+                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Unlock Ouya Discover Store Full Games in 2020</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <p>Please note, this process will root your Ouya console and install several applications. If your Ouya is already rooted you can just install the included xposed-ouya-plain-purchases-1.1.0.apk and enable it in Xposed Installer. The included script removes Busybox, Superuser, and Xposed Installer before attemping to install them to make sure the correct versions are running.</p>
+
+<p>Watch the entire video to see how the process works and the end result before running the script on your console. This will not work on 100% of the paid games and applications as some of the developers did not use the Ouya API purchase model and used their own servers for validating purchased apps.</p>
+
+<h2>Things You Will Need</h2>
+
+<ul>
+	<li>A micro USB data cable</li>
+</ul>
+
+<h2>Prerequisites and Downloads</h2>
+
+<ol start="1">
+	<li>Download Ouya_Purchase_Unlock.zip <a href="https://drive.google.com/file/d/1M0tOkuxzkqlLCjAzNTYKCT-g6UM7JYo9/view?usp=sharing" target="_blank">Download</a></li>
+	<li>Extract the downloaded Ouya_Purchase_Unlock.zip</li>
+	<li>Make sure ADB is enabled on your Ouya by going to Manage &gt; System &gt; Development and checking the ADB value</li>
+</ol>
+
+<h2>Running the ADB Script</h2>
+
+<ol>
+	<li>Connect the Ouya to your PC with the micro USB cable</li>
+	<li>If you have issues with adb connecting to your Ouya watch one of my other Ouya videos to see how to install the Ouya adb drivers on Windows 10</li>
+	<li>Navigate to the extacted Ouya_Purchase_Unlock in Windows Explorer</li>
+	<li>Right click Ouya_Purchase_Unlock.bat &gt; Run as administrator</li>
+	<li>When prompted, copy and paste each of the commands below into the adb shell
+	<p>su<br />
+	mount -o rw,remount -t ext4 /dev/block/platform/sdhci-tegra.3/by-name/APP<br />
+	cat /sdcard/su &gt; /system/xbin/su<br />
+	ln -s /system/xbin/su /system/bin/su<br />
+	chmod 6755 /system/xbin/su<br />
+	exit<br />
+	exit</p>
+	</li>
+	<li>The script will continue by uninstalling and then installing several APKs and then prompt that it has completed successfully</li>
+</ol>
+
+<h2>Enabling Plain Purchases</h2>
+
+<ol>
+	<li>On the Ouya, navigate to Make &gt; Software</li>
+	<li>Launch Superuser &gt; Select Install</li>
+	<li>Select Remember choice forever &gt; Allow</li>
+	<li>Click OK</li>
+	<li>Exit Superuser and navigate back to Make &gt; Software</li>
+	<li>Launch Xposed Installer</li>
+	<li>Select Framework &gt; Check Don&#39;t show this again and Click OK to the popup &gt; Click Install/Update &gt; Click OK to reboot</li>
+	<li>After rebooting, navigate back to Make &gt; Software</li>
+	<li>Launch Xposed Installer</li>
+	<li>Select Modules</li>
+	<li>Using the either a USB mouse or the mouse pad on the Ouya controller check the box next to OUYA plain purchases [1.1.0]</li>
+	<li>Click the back arrow</li>
+	<li>Go to Framework &gt; Reboot &gt; OK</li>
+	<li>The Ouya should now be able to unlock the full version of most games in the Ouya store</li>
+</ol>
+
+<p>I cannot thank Christian Weiske enough for reverse engineering the Ouya API and purchase process and hosting a static recreation of it so Ouya&#39;s around the world can continue to work. Show Christian some love at https://ouya.cweiske.de</p>
+
+<p>Ouya Plain Purchases: <a href="https://github.com/cweiske/xposed-ouya-plain-purchases/releases" target="_blank">https://github.com/cweiske/xposed-ouya-plain-purchases/releases</a><br />
+Further reading: <a href="http://cweiske.de/tagebuch/ouya-purchases.htm" target="_blank">http://cweiske.de/tagebuch/ouya-purchases.htm</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
