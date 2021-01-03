@@ -1,0 +1,129 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Running a Windows 98 VM in Virtualbox</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation').removeClass('copy-animation');
+              try {
+                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Running a Windows 98 VM in Virtualbox</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Download Microsoft Windows 98 <a href="https://winworldpc.com/download/417d71c2-ae18-c39a-11c3-a4e284a2c3a5" target="_blank">Download</a></li>
+	<li>Extract the Windows 98 files</li>
+	<li>Launch Virtualbox</li>
+	<li>Create a New VM by selecting Machine &gt; New
+	<p>Name: Windows 98<br />
+	Machine Folder: C:\VMs<br />
+	Type: Microsoft Windows<br />
+	Version: Windows 98<br />
+	Memory Size: 512 MB<br />
+	Hard disk: Create a virtual hard disk now</p>
+	</li>
+	<li>Click Create</li>
+	<li>On the Create Virtual Hard Disk dialog
+	<p>Name the virtual disk image Windows 98.vdi<br />
+	File size: 1.00 GB<br />
+	Hard disk file type: VDI<br />
+	Storage on physical hard disk: Dynamically Allocated</p>
+	</li>
+	<li>Click Create</li>
+	<li>Select the VM and Click Settings</li>
+	<li>Select Storage</li>
+	<li>Click on the CD-ROM drive</li>
+	<li>Select the disc dropdown to the right &gt; Choose a virtual optical disc file...</li>
+	<li>Browse to the extracted Windows 98 files and select Win98 .iso</li>
+	<li>Click OK</li>
+	<li>Make sure the Windows 98 VM is selected and click Start &gt; Normal</li>
+	<li>Press 2 to Boot from&nbsp;CD-ROM</li>
+	<li>Press 1 to Start Windows 98 Setup from CD-ROM</li>
+	<li>Press Enter to Continue with Setup&nbsp;</li>
+	<li>Press Enter to Configure unallocated disk space</li>
+	<li>Select Yes to enable large disk support, press Enter</li>
+	<li>Press Enter to continue</li>
+	<li>Press 2 to Boot from&nbsp;CD-ROM</li>
+	<li>Press 1 to Start Windows 98 Setup from CD-ROM</li>
+	<li>Press Enter to Continue with Setup</li>
+	<li>Click the Continue button to begin installing Windows</li>
+	<li>Follow the prompts to give the machine a name and workgroup</li>
+	<li>Wait for the files to copy and Windows 98 to complete initializing</li>
+	<li>When the VM reboots, select 1 to Boot from the Hard Disk</li>
+	<li>Enter a name and company on the User Information Dialog, click Next</li>
+	<li>Select I accept the Agreement, click Next</li>
+	<li>Enter a valid Windows 98 SE product key (H8J3X-9HQQG-DQXX7-6GFTJ-DF6MB), click Next</li>
+	<li>Click Finish</li>
+	<li>Set the date/time and select a timezone &gt; Click Apply &gt; Click OK</li>
+	<li>Wait for Windows to Update Sytstem Settings</li>
+	<li>At the login screen click OK</li>
+	<li>Enjoy the boot up sound from the Gods</li>
+	<li>Welcome back to Windows 98</li>
+	<li>Revel in the nostalgia</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
