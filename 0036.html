@@ -1,0 +1,125 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Enabling mod_status for Monitoring Apache HTTPD</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation').removeClass('copy-animation');
+              try {
+                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Enabling mod_status for Monitoring Apache HTTPD</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Enabling mod_status in Apache HTTPD</h2>
+
+<ol>
+	<li>Navigate to the PHP install directory</li>
+	<li>Edit /php.ini</li>
+	<li>Press CTRL+F, type curl, press Enter</li>
+	<li>Uncomment the extension to enable it by removing the ; at the start of the line
+	<p>extension=curl</p>
+	</li>
+	<li>Navigate to the Apache install directory</li>
+	<li>Edit /conf/httpd.conf</li>
+	<li>Press CTRL+F, type mod_status, press Enter</li>
+	<li>Uncomment the module to enable it by removing the # at the start of the line
+	<p>LoadModule status_module modules/mod_status.so</p>
+	</li>
+	<li>At the bottom of the file paste the following
+	<p>ExtendedStatus On<br />
+	<location server-status=""><br />
+	&nbsp;&nbsp;&nbsp; SetHandler server-status<br />
+	&nbsp;&nbsp;&nbsp; Order allow,deny<br />
+	&nbsp;&nbsp;&nbsp; Allow from all</location></p>
+	</li>
+	<li><em>Note: By default this will only allow access from the host Apache is running on</em></li>
+	<li>Restart the Apache service to apply the changes</li>
+	<li>Open a web browser and navigate to http://<dnsorip>/server-status
+	<ol start="1" style="list-style-type: lower-alpha;">
+		<li>?refresh=5 will refresh the display every 5 seconds</li>
+		<li>?auto will display the output in a text only format</li>
+	</ol>
+	</dnsorip></li>
+	<li>Cringe at the output displayed</li>
+</ol>
+
+<h2>Style and Modernize /server-status</h2>
+
+<ol>
+	<li>Download PHP Simple DOM <a href="https://sourceforge.net/projects/simplehtmldom/files/" target="_blank">Download </a> <a href="https://simplehtmldom.sourceforge.io/manual.htm" target="_blank">Documentation</a></li>
+	<li>Create a status folder inside apache/htdocs</li>
+	<li>Copy/Paste simple_html_dom.php inside apache/htdocs/status</li>
+	<li>Download server-status.php <a href="https://drive.google.com/open?id=1f1HBZgdjTcYuYq6ut4PXyiaYC7vGd_ty" target="_blank">Download</a></li>
+	<li>Copy/Paste server-status.php inside apache/htdocs/status</li>
+	<li>Open a web browser and navigate to http://<dnsorip>/status/server-status.php
+	<ol>
+		<li style="list-style-type: lower-alpha;">?getStatus will return a JSON output of the server-status data</li>
+	</ol>
+	</dnsorip></li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
