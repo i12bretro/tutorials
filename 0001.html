@@ -22,7 +22,7 @@
 					var lines = theElement.html().split("\n");
 					theElement.empty();
 					for(l=0;l<lines.length;l++){
-						if($.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+						if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
 							theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '"') +'" ></lines.length;l++){><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
 						} else {
 							theElement.append(lines[l]);
@@ -55,10 +55,6 @@
 						}
 					});
 				});
-
-				if(window.self !== window.top){
-					window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
-				}
 			});
 		</script>
 		<link href="css/steps.css" rel="stylesheet" type="text/css" />
