@@ -1,0 +1,226 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Flashing the OUYA with i12bretro Image v3.0</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation').removeClass('copy-animation');
+              try {
+                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Flashing the OUYA with i12bretro Image v3.0</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What&#39;s Included</h2>
+
+<ul>
+	<li>Everything from the previous i12bretro Ouya images</li>
+	<li>Ouya Discover Store 2020 fix</li>
+	<li>Factory Reset Fix</li>
+	<li>Discover Store full games unlock</li>
+	<li>Root access</li>
+</ul>
+
+<h2>What&#39;s New</h2>
+
+<ul>
+	<li>Updated RetroArch to v1.9.0</li>
+	<li>Installed Aptoide app store</li>
+	<li>Installed Dig Emulation Frontend</li>
+	<li>Semi-working Google Play store (Frequent crashes / apps can be installed, but some don&#39;t work due to missing Google services)</li>
+</ul>
+
+<h2>Things You Will Need</h2>
+
+<ul>
+	<li>A USB flash drive, at least 4 GB of free space</li>
+	<li>A USB hub, preferably with external power</li>
+	<li>A USB keyboard</li>
+</ul>
+
+<h2>Prerequisites and Downloads</h2>
+
+<ol>
+	<li>Download i12bretro_OUYA_image_v3.0.zip <a href="https://drive.google.com/file/d/1xY6Yzcjm3VZYHYHVLoa_Fsz3XUUvo26l/view?usp=sharing" target="_blank">Download</a></li>
+	<li>Format the USB flash drive to FAT32
+	<ol start="1" style="list-style-type: lower-alpha;">
+		<li>Right Click Start &gt; File Explorer</li>
+		<li>Right Click the USB flash drive &gt; Format...</li>
+		<li>Select FAT32 from the File System dropdown</li>
+		<li>Make sure Quick Format is checked</li>
+		<li>Click Start</li>
+	</ol>
+	</li>
+</ol>
+
+<ol start="4">
+	<li>Extract the downloaded i12bretro_OUYA_image_v3.0.zip file</li>
+	<li>Copy the contents of the /Copy_to_USB folder to the root of the USB flash drive</li>
+	<li>Safely remove the flash drive and plug it into the USB hub connected to the Ouya</li>
+	<li>Plug in the USB keyboard to the USB hub connected to the Ouya</li>
+</ol>
+
+<h2>Installing Ouya USB Drivers</h2>
+
+<ol>
+	<li>Right click Start &gt; Command Prompt (Admin)</li>
+	<li>Paste the following commands to disable driving signing checks temporarily
+	<div class="codeBlock">bcdedit -set loadoptions DISABLE_INTEGRITY_CHECKS<br />
+	bcdedit -set TESTSIGNING ON<br />
+	shutdown /r</div>
+	</li>
+	<li>Your PC will reboot</li>
+	<li>Connect a USB cable from the micro USB port on the back of the Ouya to your PC</li>
+	<li>Make sure the Ouya is connected to a display via HDMI</li>
+	<li>Power on the Ouya</li>
+	<li>After a few seconds you should hear Windows chime that a new device has been detected</li>
+	<li>Right click Start &gt; Device Manager</li>
+	<li>Expand Other Devices and you should see OUYA listed</li>
+	<li>Right click OUYA &gt; Update Driver</li>
+	<li>Select Browse my computer for driver software</li>
+	<li>Click the Browse... button</li>
+	<li>Navigate to the extracted i12bretro_OUYA_image_v3.0\files\driver</li>
+	<li>Click OK</li>
+	<li>Make sure &quot;Include subfolders&quot; is checked, click Next</li>
+	<li>Windows should find the correct driver for the Ouya and install it</li>
+	<li>Navigate to the i12bretro_OUYA_image_v3.0 in windows explorer</li>
+	<li>Right click i12bretro_OUYA_image_v3.0.bat &gt; Run as administrator</li>
+	<li>The script uses the Android Debug Bridge (ADB) to boot the Ouya into CyanogenMod recovery</li>
+	<li>When the command prompts to &quot;--&nbsp; Setup the fastboot driver&quot;, go back to Device Manager expand Android Device</li>
+	<li>Right click Android Bootloader Device &gt; Update Driver</li>
+	<li>Select Browse my computer for driver software</li>
+	<li>Click the Browse... button</li>
+	<li>Navigate to the extracted i12bretro_OUYA_image_v3.0\files\driver</li>
+	<li>Click OK</li>
+	<li>Make sure &quot;Include subfolders&quot; is checked, click Next</li>
+	<li>Windows should find the correct driver for the Ouya and install it</li>
+	<li>Press Enter at the command prompt once the driver is installed to continue booting the Ouya to CyanogenMod recovery</li>
+</ol>
+
+<h2>Restore i12bretro Image via CyanogenMod Recovery</h2>
+
+<ol>
+	<li>With the OUYA in CyanogenMod Recovery:</li>
+	<li>Select wipe data/factory reset</li>
+	<li>Select Yes to confirm wiping all user data</li>
+	<li>From the main menu select advanced &gt; wipe dalvik cache partition</li>
+	<li>Select Yes to confirm wiping the dalvik cache</li>
+	<li>Select Backup/Restore &gt; Restore from USB disk</li>
+	<li>Navigate to and select the extracted i12bretro image from the USB disk clockworkmod\backup\i12bretro_v3.0</li>
+	<li>Select Yes to confirm restoring the backup</li>
+	<li>Wait several minutes for the various partitions of the image to be copied to the Ouya</li>
+	<li>From the main menu select&nbsp;install zip &gt; choose zip from /storage/usbdisk</li>
+	<li>Arrow down and select RC-OUYA-1.2.1427-r1_ota.zip &gt; Press Enter</li>
+	<li>Select Yes to confirm the install</li>
+	<li>From the main menu select mounts and storage &gt; mount /system</li>
+	<li>While at the mounts and storage menu, make sure /data is mounted, the menu should say unmount /data. If it does not, mount it as well</li>
+	<li>Back on the PC Press Enter to continue with rooting the Ouya and fixing the Discover store</li>
+	<li>Copy each of the adb shell commands one at a time into the command prompt to gain root access</li>
+	<li>Once the process completes the Ouya will reboot</li>
+</ol>
+
+<h2>Completing Root Access</h2>
+
+<ol>
+	<li>Once the Ouya boots, navigate to Make &gt; Software</li>
+	<li><label for="cb_li_605884_11">Launch Superuser &gt; Select Install</label></li>
+	<li>S<label for="cb_li_307470_12">elect Remember choice forever &gt; Allow</label></li>
+	<li><label for="cb_li_503050_13">Click OK</label></li>
+	<li><label for="cb_li_312900_14">Exit Superuser and navigate back to Make &gt; Software</label></li>
+	<li>Launch Xposed Installer</li>
+	<li>Select Framework &gt; Check Don&#39;t show this again and Click OK to the popup &gt; Click Install/Update &gt; Click OK to reboot</li>
+	<li>After rebooting Discover Store games that used the Ouya purchase API will be unlocked</li>
+</ol>
+
+<h2>Setting Up Google Play</h2>
+
+<ol>
+	<li>Navigate to Make &gt; Software</li>
+	<li>Launch Mod Collection for Ouya</li>
+	<li>Arrow down to Install Play Store</li>
+	<li>Wait for the installation to complete</li>
+	<li>Back out to Make &gt; Software and select Quick Boot</li>
+	<li>Select Reboot to complete the Google Play install</li>
+	<li>Once the Ouya is back up go to Make &gt; Software &gt; Google Play</li>
+	<li>Go through authenticated with Google and the Play Store will load (The Play Store is pretty unstable, but it does allow apps to be installed pretty simply when it plays nice)</li>
+</ol>
+
+<h2>Cleaning Up</h2>
+
+<ol>
+	<li>After successfully flashing the image to your Ouya, do the following</li>
+	<li>Right click Start &gt; Command Prompt (Admin)</li>
+	<li>Paste the following commands to re-enable driving signing checks
+	<div class="codeBlock">bcdedit -set loadoptions ENABLE_INTEGRITY_CHECKS<br />
+	bcdedit -set TESTSIGNING OFF<br />
+	shutdown /r</div>
+	</li>
+	<li>Your PC will reboot</li>
+</ol>
+
+<p>Special thanks to <a href="https://www.s-config.com/cyanogen-mod-and-the-ouya/" target="_blank">https://www.s-config.com/cyanogen-mod-and-the-ouya/</a> and&nbsp;Christian Weiske&nbsp;<a href="https://ouya.cweiske.de" target="_blank">https://ouya.cweiske.de</a> for helping to keep the Ouya alive</p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
