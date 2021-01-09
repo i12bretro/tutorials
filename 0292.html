@@ -1,0 +1,113 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>mRemoteNG Advanced External Tools - Setting Up WOL Utility</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation').removeClass('copy-animation');
+              try {
+                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>mRemoteNG Advanced External Tools - Setting Up WOL Utility</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <p>mRemoteNG is a fork of mRemote: an open source, tabbed, multi-protocol, remote connections manager for Windows. mRemoteNG creates a tabbed interface for RDP, VNC, SSH and many other connection protocols.&nbsp;</p>
+
+<h2>Creating the WOL External Tool</h2>
+
+<ol>
+	<li>Download WakeMeOnLAN Utility&nbsp;<a href="https://www.nirsoft.net/utils/wake_on_lan.html#DownloadLinks" target="_blank">Download</a></li>
+	<li>Extract MakeMeOnLAN.zip</li>
+	<li>Copy WakeMeOnLan.exe to the mRemoteNG installation directory, usually C:\Program Files (x86)\mRemoteNG</li>
+	<li>Launch mRemoteNG</li>
+	<li>Hover over the Connections tab&nbsp;&gt; Select an existing connection to modify</li>
+	<li>With the connection highlighted, click the Config tab</li>
+	<li>At the bottom under the Miscellaneous heading, enter the hosts&nbsp;MAC address</li>
+	<li>Click Tools&nbsp;&gt; External Tools</li>
+	<li>Click the New Button at the top left</li>
+	<li>Set the following values to add the ability to quickly send a WOL packet. Replace the broadcast address (192.168.0.255) with the correct broadcast address for the subnet of your network
+	<p>Display Name: WOL<br />
+	Filename:&nbsp;.\WakeMeOnLan.exe<br />
+	Arguments:&nbsp;/wakeup %macaddress% 7 10.10.27.255</p>
+	</li>
+</ol>
+
+<h2>Testing WOL</h2>
+
+<ol>
+	<li>Download&nbsp;WakeOnLanMonitor tool <a href="https://www.depicus.com/wake-on-lan/wake-on-lan-monitor" target="_blank">Download</a></li>
+	<li>Extract wakeonlanmonitor.zip on the target WOL machine</li>
+	<li>Launch WakeOnLanMonitor</li>
+	<li>Set the UDP port value to 7</li>
+	<li>Click the Start button&nbsp;</li>
+	<li>Allow the connection if you are prompted with a firewall notification</li>
+	<li>From mRemoteNG, right click on the Connection &gt; External Tools &gt; WOL</li>
+	<li>On the target machine, WakeOnLanMonitor should display the packet details if the WOL packet was successfully sent and received by the target</li>
+</ol>
+
+<p>Wake on LAN is very useful functionality if your hardware supports it. Here is a good tutorial on the steps required to enable WOL on a device. This typically needs to be enabled in the BIOS as well as on the network interface inside the operating system.&nbsp;<a href="https://www.lifewire.com/wake-on-lan-4149800" target="_blank">https://www.lifewire.com/wake-on-lan-4149800</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
