@@ -1,0 +1,136 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install OpenWRT in VirtualBox VM</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install OpenWRT in VirtualBox VM</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Download OpenWRT x86 Image<a href="https://downloads.openwrt.org/releases/19.07.6/targets/x86/64/" target="_blank"> Download</a></li>
+	<li>Extract the OpenWRT image</li>
+	<li>Convert OpenWRT Image to VDI
+	<div class="codeBlock">cd %programfiles%/Oracle/Virtualbox<br />
+	vboxmanage.exe convertdd &quot;%userprofile%\downloads\openwrt-19.07.6-x86-64-combined-ext4.img&quot; &quot;%userprofile%\downloads\openwrt.vdi&quot;</div>
+	</li>
+	<li>Resize the VDI File
+	<div class="codeBlock">vboxmanage.exe modifyhd --resize 512 &quot;%userprofile%\downloads\openwrt.vdi&quot;</div>
+	</li>
+	<li>Launch Virtualbox</li>
+	<li>Create a New VM by selecting Machine &gt; New
+	<p>Name: OpenWRT<br />
+	Machine Folder: C:\VMs<br />
+	Type: Linux<br />
+	Version: 2.6 / 3.x / 4.x (64-bit)<br />
+	Memory Size: 128 MB<br />
+	Hard disk: Do not add a virtual hard disk</p>
+	</li>
+	<li>Click Create</li>
+	<li>Move the openwrt.vdi file from downloads into C:\VMs\OpenWRT</li>
+	<li>Select the VM and Click Settings</li>
+	<li>Select Storage</li>
+	<li>Click Add Storage Attachment &gt; Add Hard Disk &gt; Choose existing disk</li>
+	<li>Click Add and browse to C:\VMs\OpenWRT\openwrt.vdi</li>
+	<li>Click OK</li>
+	<li>Select Network</li>
+	<li>Set Adapter 1 Attached to: Bridged</li>
+	<li>Click the Adapter 2 tab</li>
+	<li>Check the Enable Network Adapter box</li>
+	<li>Set Adapter 2 Attached to: Bridged</li>
+	<li>Click OK</li>
+	<li>Make sure the OpenWRT VM is selected and click Start &gt; Normal</li>
+	<li>Wait for the text to stop scrolling and press Enter</li>
+	<li>Run the following command to change/set the root password
+	<div class="codeBlock">passwd</div>
+	</li>
+	<li>Type a new root password twice to set it</li>
+	<li>Continue the configuration by running the following commands
+	<div class="codeBlock"># set the lan ip address<br />
+	uci set network.lan.ipaddr=&#39;192.168.0.251&#39;<br />
+	# restart network services<br />
+	service network restart<br />
+	# update openwrt packages<br />
+	opkg update<br />
+	# install the luci web ui<br />
+	opkg install luci</div>
+	</li>
+	<li>Open a web browser and navigate to http://IPofVM, http://192.168.0.251 in the example</li>
+	<li>At the login screen, enter the username root and the password set above &gt; Click the Login button</li>
+	<li>Enjoy OpenWRT running in VirtualBox</li>
+</ol>
+
+<p>Further reading <a href="https://openwrt.org/docs/guide-user/virtualization/virtualbox-vm" target="_blank">https://openwrt.org/docs/guide-user/virtualization/virtualbox-vm</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
