@@ -33,9 +33,13 @@
             $(document).on('click','input.copy-text',function(){
               theButton = $(this);
 														$('input.copy-text').attr('src','images/clipboard.png');
-							              $('span.copy-animation').removeClass('copy-animation');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
               try {
-                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
                 navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
 																theButton.attr('src','images/clipboard_active.png');
 								              } catch(err) {
@@ -71,7 +75,9 @@
           </div>
           <div></div>
           <div id="content">
-          <h2>Create Your SSL Certificate</h2>
+          <p><em>Note: You may need to enable JFFS2 support under Administration &gt;&nbsp;Management &gt;&nbsp;JFFS2 Support to have a usable /jffs location</em></p>
+
+<h2>Create Your SSL Certificate</h2>
 
 <ol>
 	<li>Launch XCA</li>
@@ -129,6 +135,8 @@
 	<li>Select the Enable radio option next to SSHd</li>
 	<li>Click Apply Settings</li>
 	<li>Click on the Administration tab</li>
+	<li>Locate the JFFS2 Support heading</li>
+	<li>Check the Enable button next to Internal Flash Storage</li>
 	<li>Locate the Web Access heading</li>
 	<li>Uncheck HTTP</li>
 	<li>Check HTTPS</li>
