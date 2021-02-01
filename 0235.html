@@ -1,0 +1,152 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install pfSense Firewall and Router in VirtualBox</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install pfSense Firewall and Router in VirtualBox</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Download pfSense&nbsp;<a href="https://www.pfsense.org/download/" target="_blank">Download</a></li>
+	<li>Extract the downloaded pfSense .gz</li>
+	<li>Launch Virtualbox</li>
+	<li>Create a New VM by selecting Machine &gt; New
+	<p>Name: pfSense<br />
+	Machine Folder: C:\VMs<br />
+	Type: BSD<br />
+	Version: FreeBSD&nbsp;(64-bit)<br />
+	Memory Size: 1024 MB<br />
+	Hard disk: Create a virtual hard disk now</p>
+	</li>
+	<li>Click Create</li>
+	<li>On the Create Virtual Hard Disk dialog
+	<p>Name the virtual disk image pfSense.vdi<br />
+	File size: 8 GB<br />
+	Hard disk file type: VDI<br />
+	Storage on physical hard disk: Dynamically Allocated</p>
+	</li>
+	<li>Click Create</li>
+	<li>Select the VM and Click Settings</li>
+	<li>Select Display</li>
+	<li>Slide the Video Memory to 128 MB</li>
+	<li>Select Storage</li>
+	<li>Click on the CD-ROM drive</li>
+	<li>Select the disc dropdown to the right &gt; Choose a virtual optical disc file...</li>
+	<li>Browse to and select the downloaded pfSense .iso file</li>
+	<li>Click OK</li>
+	<li>Select Network</li>
+	<li>Set the attached to dropdown to Bridged Adapter</li>
+	<li>Click the Adapter 2 tab</li>
+	<li>Check the Enable Network Adapter and set the attached to dropdown to Bridged Adapter</li>
+	<li>Click OK</li>
+	<li>Make sure the pfSense VM is selected and click Start &gt; Normal</li>
+	<li>Press Enter to Accept the Copyright and distribution notice</li>
+	<li>Select Install pfSense &gt; Press Enter</li>
+	<li>Select the keyboard mapping to use &gt; Press Enter</li>
+	<li>Select Auto (UFS) Guided Disk Setup &gt; Press Enter</li>
+	<li>Wait for pfSense to copy files and install</li>
+	<li>At the Manual Configuration prompt select No &gt; Press Enter</li>
+	<li>Select Reboot &gt; Press Enter</li>
+	<li>From the VirtualBox menu select Devices &gt; Optical Drives &gt; Remove disk from virtual drive</li>
+	<li>Reset the VM by selecting Machine &gt; Reset from the VirtualBox menu</li>
+	<li>Welcome to the pfSense terminal</li>
+</ol>
+
+<h2>Configuring Network Interfaces and Web UI</h2>
+
+<ol>
+	<li>At the pfSense menu, select Set interface(s) IP address by typing 2 and pressing Enter</li>
+	<li>Enter the number that corresponds to the LAN&nbsp;interface &gt; Press Enter</li>
+	<li>Enter a LAN IP address on the same subnet as your LAN</li>
+	<li>At the bit count prompt type&nbsp;24 &gt; Press Enter</li>
+	<li>Leave the IPv4 upstream gateway blank press Enter</li>
+	<li>Leave the IPv6 address blank and press Enter</li>
+	<li>At the DHCP server prompt type n &gt; Press Enter</li>
+	<li>At the revert to HTTP prompt type y &gt; Press Enter</li>
+	<li>The http address of the pfSense Web UI will be displayed</li>
+	<li>Press Enter to return to the main menu</li>
+	<li>Minimize the pfSense VM and open a web browser</li>
+	<li>Navigate to the web UI http address</li>
+	<li>Log into the web UI with the username admin and password pfsense</li>
+	<li>Select System &gt; User Manager from the top navigation</li>
+	<li>Click the edit icon across from the admin user</li>
+	<li>Setup and confirm a new password for the admin user</li>
+	<li>Scroll to the bottom of the page and click the Save button</li>
+	<li>Click the Logout icon in the top right of the page</li>
+	<li>Log back into the web UI using the new password</li>
+	<li>Enjoy exploring pfSense</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
