@@ -33,9 +33,13 @@
             $(document).on('click','input.copy-text',function(){
               theButton = $(this);
 														$('input.copy-text').attr('src','images/clipboard.png');
-							              $('span.copy-animation').removeClass('copy-animation');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
               try {
-                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
                 navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
 																theButton.attr('src','images/clipboard_active.png');
 								              } catch(err) {
@@ -85,7 +89,7 @@ https://www.gearbest.com/refurbished-product/pp_009840550154.html?wid=1433363</p
 <h2>Downloads and Flashing to MicroSD</h2>
 
 <ol>
-	<li>Download Armbian <a href="https://mega.nz/#F!j9QSDQSQ!6WpasOlbZYIInfw6yo4phQ" target="_blank">Download</a></li>
+	<li>Download Armbian <a href="https://yadi.sk/d/_rQgn_FosYuW0g" target="_blank">Download</a></li>
 	<li>Download Balena Etcher <a href="https://www.balena.io/etcher/" target="_blank">Download</a></li>
 	<li>Run Balena Etcher</li>
 	<li>Burn Armbian image to microSD card</li>
