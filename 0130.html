@@ -33,9 +33,13 @@
             $(document).on('click','input.copy-text',function(){
               theButton = $(this);
 														$('input.copy-text').attr('src','images/clipboard.png');
-							              $('span.copy-animation').removeClass('copy-animation');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
               try {
-                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
                 navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
 																theButton.attr('src','images/clipboard_active.png');
 								              } catch(err) {
@@ -72,7 +76,7 @@
           <div></div>
           <div id="content">
           <ol>
-	<li>Download Aidan&#39;s Android TV ROM v7.1 <a href="https://drive.google.com/file/d/1n_9foPrAOrwja9U8vvMV6qvdmSIeRdId/view" target="_blank">Download</a></li>
+	<li>Download Aidan&#39;s Android TV ROM v7.1 <a href="https://drive.google.com/drive/mobile/folders/17uJLtj6egJBmvVLv1CoQEsTq_vwIkL6a/1xAyL12LVljkWDhrev9RcOBXDU6eI3Snd?usp=sharing&amp;sort=13&amp;direction=a" target="_blank">Download</a></li>
 	<li>Download Amlogic Burning Tool v2.2.0 <a href="https://drive.google.com/file/d/1OU_O7qq_mtpRO8ELWhycQD4R036Nw0iW/view" target="_blank">Download</a></li>
 	<li>Optional, Download Magisk v20.4 for root access <a href="https://drive.google.com/file/d/1_YblR6FEbkE7hQbSrG9HRcSYUiIVCpd3/view?usp=sharing" target="_blank">Download</a>
 	<ol start="1" style="list-style-type: lower-alpha;">
