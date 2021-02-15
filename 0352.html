@@ -1,0 +1,196 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Transform FireTV Stick Into An Awesome Emulation Device, Part 1</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Transform FireTV Stick Into An Awesome Emulation Device, Part 1</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Prerequisites</h2>
+
+<ul>
+	<li>A FireTV device</li>
+	<li>A 16-64 GB USB flash drive, I&#39;m using a <a href="https://www.amazon.com/SanDisk-Ultra-Transfer-Speeds-s-SDCZ48-032G-UAM46/dp/B00KYK2AKO/" target="_blank">SanDisk Ultra 32GB</a></li>
+	<li>A microUSB OTG adapter, I&#39;m using one like this <a href="https://www.amazon.com/AuviPal-Charging-PlayStaion-Raspberry-Chromecast/dp/B07TZFS7V7/ref=sr_1_14?dchild=1&amp;keywords=micro+usb+otg+adapter&amp;qid=1610305771&amp;s=electronics&amp;sr=1-14" target="_blank">Link</a></li>
+	<li>A bluetooth controller, I&#39;m using an <a href="https://www.amazon.com/Wireless-Bluetooth-Controller-Classic-Joystick/dp/B018K3Q4KS" target="_blank">8BitDo NES30 Pro</a></li>
+	<li>Optionally, a USB keyboard will make things go alot faster, I&#39;m using a <a href="https://www.amazon.com/Logitech-Wireless-Keyboard-Control-Touchpad/dp/B014EUQOGK/ref=sr_1_14?dchild=1&amp;keywords=logitech+usb+wireless+keyboard&amp;qid=1610306091&amp;s=electronics&amp;sr=1-14" target="_blank">Logitech K400</a></li>
+</ul>
+
+<h2>Prepare USB Flash Drive</h2>
+
+<ol>
+	<li>Insert the flash drive into a PC</li>
+	<li>Format the flash drive to FAT32
+	<ol start="1" style="list-style-type: lower-alpha;">
+		<li>Right Click Start &gt; File Explorer</li>
+		<li>Right Click the USB flash drive &gt; Format...</li>
+		<li>Select FAT32 from the File System dropdown</li>
+		<li>Make sure Quick Format is checked</li>
+		<li>Click Start</li>
+	</ol>
+	</li>
+	<li>Create a folder on the flash drive called ROMs</li>
+	<li>Copy retro games into subfolders inside the ROMs directory, ie \ROMs\NES, \ROMs\Genesis, \ROMs\SNES, etc</li>
+	<li>Safely remove the USB flash drive</li>
+	<li>Connect the OTG adapter to the FireTV Stick</li>
+	<li>Plug the USB flash drive into the OTG adapter</li>
+	<li>Plug the power supply into the OTG adapter to power on the FireTV Stick</li>
+</ol>
+
+<h2>Pair A Bluetooth Controller</h2>
+
+<ol>
+	<li>Once the FireTV Stick boots, navigate to Settings &gt; Controllers &amp; Bluetooth Devices &gt; Game Controllers</li>
+	<li>Click Add New Game Controller</li>
+	<li>Put your Bluetooth controller in pairing mode</li>
+	<li>Once the controller shows on the FireTV, select it to complete pairing</li>
+</ol>
+
+<h2>Install Aptoide</h2>
+
+<ol>
+	<li>Go back to the Home screen and over to search</li>
+	<li>Search for Downloader and install the application</li>
+	<li>Launch Downloader</li>
+	<li>Navigate to&nbsp;https://aptoide.com/</li>
+	<li>Click Download button</li>
+	<li>Click the Download APK button</li>
+	<li>A prompt will display to go to settings and allow installing unknown apps</li>
+	<li>Click Settings &gt; Install Unknown Apps &gt; Downloader &gt; Toggle the setting to On</li>
+	<li>Click back a few times to return to the Downloader app</li>
+	<li>Click Install and then Install again</li>
+</ol>
+
+<h2>Install RetroArch</h2>
+
+<ol>
+	<li>Still in Downloader, press back and navigate to https://www.retroarch.com/</li>
+	<li>Click Download from the top navigation</li>
+	<li>Scroll down to Android</li>
+	<li>Click the Download (32 bit) link</li>
+	<li>Click Install</li>
+</ol>
+
+<h2>Install Dig Emulation Frontend</h2>
+
+<ol>
+	<li>Go back to the Home screen and launch Aptoide App Store</li>
+	<li>Search for Dig Frontend</li>
+	<li>Click the Install button</li>
+	<li>Click Install on the application dialog</li>
+</ol>
+
+<h2>Configure RetroArch</h2>
+
+<ol>
+	<li>Launch RetroArch</li>
+	<li>After the application extracts components, select Online Updater &gt; Core Downloader</li>
+	<li>Download emulation cores that correspond to the systems you want to emulate</li>
+	<li>Optionally, change the RetroArch&nbsp;menu theme by navigating to Settings &gt; Drivers &gt; Menu and making a selection</li>
+	<li>Lastly, set a menu gamepad key combination by navigating to Settings &gt; Input &gt; Hotkeys and setting the Menu Toggle Gamepad Combo to L3 + R3. This will allow you to bring up the RetroArch menu by pressing both of the analog sticks at the same time</li>
+	<li>Back out to the main menu and quit RetroArch</li>
+</ol>
+
+<h2>Configure Dig Emulation Frontend</h2>
+
+<ol>
+	<li>From the Home screen launch Dig Emulation Frontend</li>
+	<li>The initial load takes some time to extract assets</li>
+	<li>Select Later if prompted to scan for games</li>
+	<li>Once the menu loads select Options &gt; Game covers</li>
+	<li>Scroll down and select Storage location &gt; Other folder</li>
+	<li>Browse to the USB flash drive</li>
+	<li>Optionally, click the + in the top right of the folder browser and create a folder to store box art and screenshots</li>
+	<li>Click Confirm to set the directory</li>
+	<li>Back in the Options menu, select ROM scanning &gt; Start manual scan &gt; Select folder to scan</li>
+	<li>Navigate back a few folders and find the USB flash drive</li>
+	<li>Select the ROMs directory created earlier &gt; Click Confirm</li>
+	<li>A wrench icon will show in the top right corner of the screen anytime Dig is scanning or processing files</li>
+	<li>Back out to Dig&#39;s main menu to watch the game count increase as the scan progresses</li>
+	<li>Dig will automatically pull in game descriptions, box art and screenshots</li>
+	<li>Select Systems from the main menu</li>
+	<li>For each system displayed, configure the emulator by doing the following:
+	<ol start="1" style="list-style-type: lower-alpha;">
+		<li>Select the system so the games list is shown</li>
+		<li>Press the R1 button on the controller &gt; Manage system</li>
+		<li>Click the top option and set the emulator to use, if using RetroArch make sure the core selected has been installed from within RetroArch or Dig will tell you the core wasn&#39;t found</li>
+		<li>Press the R1 button on the controller again&nbsp;&gt; Manage system &gt; Default RetroArch and set the value to 32 bit RetroArch</li>
+	</ol>
+	</li>
+	<li>Test launching a game from each system to verify the emulator settings are working</li>
+	<li>Press L3 + R3 on the controller to bring up the RetroArch menu and quit RetroArch to return to Dig</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
