@@ -82,7 +82,7 @@
 	$query = new MongoDB\Driver\Query([],[]);
 	$result = $conn->executeQuery('phpDemo.state', $query);
 
-	if(count($result) > 0){
+	if($result){
 		echo '<h3>Reading data from MongoDB</h3>'.
 		'<table width="500" align="center">'.
 			'<thead>'.
@@ -98,7 +98,7 @@
 		
 		$query = new MongoDB\Driver\Query(['State'=> 'Massachusetts'],[]);
 		$result = $conn->executeQuery('phpDemo.state', $query);
-		if(count($result) > 0){
+		if($result){
 			$rs = $result->toArray()[0];
 			echo '<h3>Reading specific state from MongoDB</h3>'.
 			'The capital of '.$rs->State.' is '.$rs->Capital.'<br /><br />_id: '.$rs->{'_id'};
