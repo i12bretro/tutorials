@@ -1,0 +1,137 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Transform FireTV Stick Into An Awesome Emulation Device, Part 2</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Transform FireTV Stick Into An Awesome Emulation Device, Part 2</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Setting Up FTP Access to USB Drive</h2>
+
+<ol>
+	<li>On the FireTV device&nbsp;search for ES File Explorer</li>
+	<li>Install ES File Explorer</li>
+	<li>Launch ES File Explorer</li>
+	<li>Scroll down the left navigation to the USB flash drive</li>
+	<li>Navigate in the right pane to any file &gt; Long press the file &gt; Select Copy</li>
+	<li>Navigate back to the root of the USB flash drive &gt; Select Paste</li>
+	<li>When prompted, allow ES File Explorer access to the USB flash drive</li>
+	<li>Long press the copied file &gt; Select Delete &gt; Confirm deleting the file</li>
+	<li>Scroll up on left navigation and select Network&nbsp;&gt; View on PC</li>
+	<li>Click the Settings button at the bottom</li>
+	<li>Click the Mount Path option and set the path to the root of the USB flash drive</li>
+	<li>Click the big Turn On button to start the FTP server</li>
+	<li>The IP address and port will display, by default anonymous access is enabled</li>
+	<li>Download FileZilla FTP client <a href="https://filezilla-project.org/download.php?show_all=1" target="_blank">Download</a></li>
+	<li>Extract the downloaded .zip file</li>
+	<li>Launch FileZilla.exe</li>
+	<li>Enter the IP address and port (3721 by default) in the quick connect fields and press Enter to connect</li>
+	<li>If everything is setup correctly, a listing of folders on the USB flash drive should be displayed in the right pane</li>
+</ol>
+
+<h2>Customizing Artwork</h2>
+
+<p>With FTP access setup, artwork can be easily customized</p>
+
+<p><em>NOTE: Image files must match the ROM file name exactly, IE artwork for &quot;i12bretro Strikes Back (USA).zip&quot; must be name &quot;i12bretro Strikes Back (USA).png&quot;</em></p>
+
+<ol>
+	<li>Download the artwork to be used (<a href="https://emumovies.com/" target="_blank">EmuMovies</a> and <a href="https://forums.launchbox-app.com/files/category/18-game-box-art/" target="_blank">LaunchBox </a>forums are&nbsp;great resources)</li>
+	<li>Launch FileZilla</li>
+	<li>Enter the IP address and port (3721 by default) in the quick connect fields and press Enter to connect</li>
+	<li>Navigate the USB flash drive in the right pane to the Covers or Screenshots directory &gt; Find the folder for the system to modify</li>
+	<li>Drag/Drop files to copy into the right pane</li>
+	<li>Launch Dig and the updated artwork should appear, if it does not, back out of the system and reload it again&nbsp;</li>
+</ol>
+
+<h2>Installing Themes</h2>
+
+<p>Some of my favorite themes are Blast 16, Comic Book, Mega-PI USA, Unified Arkade, NES, Retroman UltimateVideo, Riivive, SNES Classic Official UI</p>
+
+<p><em>NOTE: Not all themes support every system</em></p>
+
+<ol>
+	<li>Download the theme(s) to be installed <a href="https://digdroid.com/forums/categories/themes" target="_blank">Download</a></li>
+	<li>Launch FileZilla.exe</li>
+	<li>Enter the IP address and port (3721 by default) in the quick connect fields and press Enter to connect</li>
+	<li>Drag/Drop downloaded theme zip files into the right pane</li>
+	<li>Launch Dig&nbsp;and go to &gt; Options &gt; Themes &gt; Install theme</li>
+	<li>Navigate to the root of the USB flash drive and select the theme .zip file to install&nbsp;</li>
+	<li>Click Confirm</li>
+	<li>Dig will extract the contents of the zip file and install the theme</li>
+	<li>To set the theme go to Options &gt; Themes &gt; Select theme and select it from the dropdown</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
