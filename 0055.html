@@ -1,0 +1,124 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Deploy Java Installation and Updates via Windows GPO</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Deploy Java Installation and Updates via Windows GPO</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Getting the Java .msi</h2>
+
+<ol>
+	<li>Download the offline Java installer <a href="https://java.com/en/download/manual.jsp" target="_blank">Download</a></li>
+	<li>Start the downloaded Java installer, but don&#39;t go past the initial screen</li>
+	<li>Open Windows Explorer and navigate to&nbsp;%userprofile%\AppData\LocalLow\Oracle\Java\</li>
+	<li>Open the folder for the version of Java and copy the Java .msi to a different folder (ie Downloads, Desktop, etc)</li>
+	<li>Cancel the Java installation</li>
+</ol>
+
+<h2>Creating Software Share</h2>
+
+<ol>
+	<li>Log into a domain controller</li>
+	<li>Create a folder somewhere to share for software distribution (ie c:\gpo_files)</li>
+	<li>Right click on the created folder &gt; Properties &gt; Sharing tab &gt; Advanced Sharing...</li>
+	<li>Click the Share this folder box</li>
+	<li>Give the share a name (ie gpo_files)</li>
+	<li>Click the Permissions button</li>
+	<li>Remove the Everyone group</li>
+	<li>Add Authenticated Users</li>
+	<li>Click OK on all open dialog boxes</li>
+	<li>Copy the Java .msi from earlier into the new shared folder</li>
+</ol>
+
+<h2>Creating the GPO to Push Java</h2>
+
+<ol>
+	<li>Still logged into the domain controller, right click on the Start button &gt; Run &gt; type gpmc.msc &gt; Press Enter</li>
+	<li>Expand Forest: %domainname% &gt; Domains &gt; %domainname%</li>
+	<li>Right click on the domain name &gt; Create a GPO in this domain, and link it here...</li>
+	<li>Name the new GPO Software Distribution</li>
+	<li>Right click the Software Distribution GPO &gt; Edit...</li>
+	<li>In the Group Policy Management Editor expand Computer Configuration &gt; Policies &gt; Software Settings &gt; Software installation</li>
+	<li>Right click Software installation &gt; New&nbsp;&gt; Package...</li>
+	<li>When the file dialog appears, point it to the Java .msi using the share created earlier (ie \\domain_controller\gpo_files\javax64.msi)</li>
+	<li>Leave the deployment method as Assigned &gt; Click OK</li>
+	<li>Close out of all open&nbsp;Group Policy Management Editor windows</li>
+	<li>On client domain devices right click the Start button &gt; Run &gt; type gpupdate /force &gt; Press Enter</li>
+	<li>After the group policy update completes, reboot the device</li>
+	<li>During the boot process the Java from the software distribution GPO will be installed</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
