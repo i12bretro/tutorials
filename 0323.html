@@ -1,0 +1,146 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Converting PlayStation 1 Games Between Formats (cue/bin, pbp, chd)</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Converting PlayStation 1 Games Between Formats (cue/bin, pbp, chd)</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Ripping Game Discs to .cue/.bin</h2>
+
+<ol>
+	<li>Download ImgBurn <a href="https://www.imgburn.com/index.php?act=download" target="_blank">Download</a></li>
+	<li>Install ImgBurn and launch it</li>
+	<li>Insert the Playstation game into the disc drive</li>
+	<li>Click the Create image file from disc option</li>
+	<li>Click the folder icon under the Destination heading</li>
+	<li>Set the destination path and change the Save as type dropdown to BIN</li>
+	<li>Click the Read button to begin backing up the disc</li>
+</ol>
+
+<h2>Converting .cue/.bin to .pbp</h2>
+
+<ol>
+	<li>Download&nbsp;PSX2PSP <a href="https://drive.google.com/file/d/1zECS3iE7tej1uc1nK4UBXrG-T_JQQw39/view?usp=sharing" target="_blank">Download</a></li>
+	<li>Extract the downloaded .rar file</li>
+	<li>Double click the Batch mode shortcut</li>
+	<li>Set the Input directory to the directory containing the .cue/.bin image(s)</li>
+	<li>Set the Output directory to a directory to save the created .pbp files</li>
+	<li>Click the Convert button</li>
+</ol>
+
+<h2>Convert .cue/.bin to .chd</h2>
+
+<ol>
+	<li>Download chdman <a href="https://drive.google.com/file/d/1_-ZhXmJnIteJNcKcX7LRU8T9zXeLWeL8/view?usp=sharing" target="_blank">Download</a></li>
+	<li>Extract the downloaded .zip file</li>
+	<li>Copy chdman.exe and&nbsp;cue2chd.bat to the location of the .cue/.bin file(s)</li>
+	<li>Double click&nbsp;cue2chd.bat<br />
+	to manually run the conversion open a command prompt to the location of chdman and execute the following command:
+	<div class="codeBlock">chdman createcd -i &quot;input file.cue&quot; -o &quot;output file.chd&quot;</div>
+	</li>
+</ol>
+
+<h2>Convert .chd to .cue/.bin</h2>
+
+<ol>
+	<li>Download chdman <a href="https://drive.google.com/file/d/1_-ZhXmJnIteJNcKcX7LRU8T9zXeLWeL8/view?usp=sharing" target="_blank">Download</a></li>
+	<li>Extract the downloaded .zip file</li>
+	<li>Copy chdman.exe and&nbsp;chd2cue.bat to the location of the .cue/.bin file(s)</li>
+	<li>Double click&nbsp;chd2cue.bat<br />
+	to manually run the conversion open a command prompt to the location of chdman and execute the following command:
+	<div class="codeBlock">chdman extractcd -i &quot;input file.chd&quot; -o &quot;output file.cue&quot;</div>
+	</li>
+</ol>
+
+<h2>Converting .pbp to&nbsp;.cue/.bin</h2>
+
+<ol>
+	<li>Download&nbsp;PSX2PSP <a href="https://drive.google.com/file/d/1zECS3iE7tej1uc1nK4UBXrG-T_JQQw39/view?usp=sharing" target="_blank">Download</a></li>
+	<li>Extract the downloaded .rar file</li>
+	<li>Double click the Batch mode shortcut</li>
+	<li>Set the Input directory to the directory containing the .pbp files</li>
+	<li>Set the Output directory to a directory to save the created&nbsp;.cue/.bin image(s)</li>
+	<li>Click the Extract ISO button</li>
+	<li>This process will convert the .pbp to .ccd/.img</li>
+	<li>Download CDmage <a href="https://www.romhacking.net/utilities/1435/" target="_blank">Download</a></li>
+	<li>Launch CDmage &gt; File &gt; Open</li>
+	<li>Navigate to the location of the .ccd/.img image and select the .ccd file</li>
+	<li>File &gt; Save As...</li>
+	<li>Click Save</li>
+	<li>Click OK</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
