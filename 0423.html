@@ -1,0 +1,129 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Installing Heimdall Application Dashboard on Existing Apache Webserver</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Installing Heimdall Application Dashboard on Existing Apache Webserver</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Log into the Linux web server and run the following commands in terminal
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install git<br />
+	sudo apt install git<br />
+	# create heimdall install directory<br />
+	sudo mkdir /var/www/heimdall<br />
+	# clone the git repository to the working directory<br />
+	sudo git clone https://github.com/linuxserver/Heimdall.git /var/www/heimdall<br />
+	# cd to the working directory<br />
+	cd /var/www/heimdall<br />
+	# generate artisan key, if prompted answer yes<br />
+	sudo php artisan key:generate<br />
+	# make www-data the owner<br />
+	sudo chown -R www-data:www-data /var/www/heimdall<br />
+	# set permissions<br />
+	sudo chmod -R 755 /var/www/heimdall/<br />
+	# create heimdall apache conf<br />
+	sudo nano /etc/apache2/sites-available/heimdall.conf</div>
+	</li>
+	<li>Paste the following configuration into heimdall.conf
+	<p>Alias /heimdall &quot;/var/www/heimdall/public&quot;</p>
+
+	<p>&lt;Directory /var/www/heimdall/public&gt;<br />
+	Options Indexes FollowSymLinks MultiViews<br />
+	AllowOverride all<br />
+	Order allow,deny<br />
+	allow from all<br />
+	&lt;/Directory&gt;</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to heimdall.conf</li>
+	<li>Continue with the following commands in terminal
+	<div class="codeBlock"># enable apache rewrite module<br />
+	sudo a2enmod rewrite<br />
+	# enable the heimdall site<br />
+	sudo a2ensite heimdall<br />
+	# restart apache2 service<br />
+	sudo systemctl restart apache2</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP/heimdall</li>
+	<li>Welcome to Heimdall Application Dashboard running on your existing Apache web server</li>
+</ol>
+
+<p>Source:&nbsp;<a href="https://github.com/linuxserver/Heimdall" target="_blank">https://github.com/linuxserver/Heimdall</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
