@@ -1,0 +1,207 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Setting Up Apache Subversion on Windows</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Setting Up Apache Subversion on Windows</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Installing Subversion</h2>
+
+<ol>
+	<li>Download Microsoft Visual C++<a href="https://aka.ms/vs/16/release/vc_redist.x64.exe" target="_blank">Download</a></li>
+	<li>Download TortoiseSVN <a href="https://tortoisesvn.net/downloads.html" target="_blank">Download</a></li>
+	<li>Install&nbsp;Microsoft Visual C++</li>
+	<li>Install&nbsp;TortoiseSVN, making sure to enable the command line client tools option</li>
+</ol>
+
+<h2>Installing and Configuring Apache HTTPD</h2>
+
+<ol>
+	<li>Download Apache HTTPD <a href="https://www.apachelounge.com/download/" target="_blank">Download</a></li>
+	<li>Download Subversion Apache Modules <a href="https://github.com/nono303/win-svn/tree/1.14.0" target="_blank">Download</a></li>
+	<li>Extract the downloaded .zip files</li>
+	<li>Copy the extracted Subversion files to the desired location, for example C:\Program Files\Subversion</li>
+	<li>Click the Start button &gt; Search Control &gt; Click Control Panel</li>
+	<li>Click on System &gt; Advanced system settings</li>
+	<li>Click the Environment Variables...</li>
+	<li>Edit the System Path variable</li>
+	<li>Add the Subversion /bin path</li>
+	<li>Click OK</li>
+	<li>Open a command prompt and run svn --version to confirm the Subversion executables are configured in the system path correctly</li>
+	<li>Copy the following files from the extracted Subversion&nbsp;directory to the Apache installation directory specified below:
+	<p><u>Apache /modules</u><br />
+	&nbsp; &nbsp; &nbsp; mod_dav_svn.so<br />
+	&nbsp; &nbsp; &nbsp; mod_authz_svn.so<br />
+	&nbsp; &nbsp; &nbsp; deps/brotlicommon.dll<br />
+	&nbsp; &nbsp; &nbsp; deps/brotlidec.dll<br />
+	&nbsp; &nbsp; &nbsp; deps/brotlienc.dll<br />
+	&nbsp; &nbsp; &nbsp; deps/libapr-1.dll<br />
+	&nbsp; &nbsp; &nbsp; deps/libapriconv-1.dll<br />
+	&nbsp; &nbsp; &nbsp; deps/libaprutil-1.dll<br />
+	&nbsp; &nbsp; &nbsp; deps/libcrypto-1_1-x64.dll<br />
+	&nbsp; &nbsp; &nbsp; deps/libexpat.dll<br />
+	&nbsp; &nbsp; &nbsp; deps/libhttpd.dll<br />
+	&nbsp; &nbsp; &nbsp; deps/libserf-2.dll<br />
+	&nbsp; &nbsp; &nbsp; deps/libssl-1_1-x64.dll<br />
+	&nbsp; &nbsp; &nbsp; deps/zlib1.dll<br />
+	<u>Apache /bin</u><br />
+	&nbsp; &nbsp; &nbsp; libsvnjavahl-1.dll<br />
+	&nbsp; &nbsp; &nbsp; libsvn_client-1.dll<br />
+	&nbsp; &nbsp; &nbsp; libsvn_delta-1.dll<br />
+	&nbsp; &nbsp; &nbsp; libsvn_diff-1.dll<br />
+	&nbsp; &nbsp; &nbsp; libsvn_fs-1.dll<br />
+	&nbsp; &nbsp; &nbsp; libsvn_fs_fs-1.dll<br />
+	&nbsp; &nbsp; &nbsp; libsvn_fs_util-1.dll<br />
+	&nbsp; &nbsp; &nbsp; libsvn_fs_x-1.dll<br />
+	&nbsp; &nbsp; &nbsp; libsvn_ra-1.dll<br />
+	&nbsp; &nbsp; &nbsp; libsvn_repos-1.dll<br />
+	&nbsp; &nbsp; &nbsp; libsvn_subr-1.dll<br />
+	&nbsp; &nbsp; &nbsp; libsvn_wc-1.dll</p>
+	</li>
+	<li>Inside the extracted Apache file structure, navigate to /conf/httpd.conf and edit it with a text editor</li>
+	<li>Find the following lines LoadModule dav_module modules/mod_dav.so and uncomment them by removing the # at the beginning<br />
+<p>
+LoadModule access_compat_module modules/mod_access_compat.so<br />
+LoadModule dav_module modules/mod_dav.so
+</p>
+</li>
+	<li>Add the following block to the file:
+	<p>LoadModule dav_svn_module modules/mod_dav_svn.so<br />
+	LoadModule authz_svn_module modules/mod_authz_svn.so</p>
+	<p>&lt;VirtualHost svn.i12bretro.local:80&gt;<br />
+	&nbsp;&nbsp; &nbsp;ServerName svn.i12bretro.local<br />
+	&nbsp;&nbsp; &nbsp;ServerAlias i12bretro.local<br />
+	&nbsp;&nbsp; &nbsp;DocumentRoot E:\SVN_Repos<br />
+	&nbsp;&nbsp; &nbsp;<br />
+	&nbsp;&nbsp; &nbsp;&lt;Location /&gt;<br />
+	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;DAV svn<br />
+	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;SVNListParentPath On<br />
+	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;SVNParentPath E:\SVN_Repos<br />
+	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;<br />
+	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Order allow,deny<br />
+	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Allow from all<br />
+	&nbsp;&nbsp; &nbsp;&lt;/Location&gt;<br />
+	&lt;/VirtualHost&gt;</p>
+	</li>
+	<li>Save the changes</li>
+	<li>To just start Apache and have it run, double click the httpd.exe in the Apache /bin directory</li>
+	<li>To run Apache as a Windows server, hold the shift key and right click in the Apache /bin directory &gt; Open command window here</li>
+	<li>Enter the following command to create the Apache service:
+	<div class="codeBlock">httpd.exe -k install -n &quot;Apache HTTPD&quot;</div>
+	</li>
+	<li>Open a web browser and navigate to http://svn.i12bretro.local</li>
+	<li>A bare bones directory listing of the &quot;Collection of Repositories&quot; should be displayed</li>
+</ol>
+
+<h2>Setting Up LDAP Authentication</h2>
+
+<ol>
+	<li>Navigate to the Apache install directory/conf in Explorer</li>
+	<li>Edit httpd.conf in a text editor</li>
+	<li>Find both the authnz_ldap_module and&nbsp;ldap_module and make sure it is enabled by removing the # at the start of the line
+	<p>LoadModule authnz_ldap_module modules/mod_authnz_ldap.so<br />
+	LoadModule ldap_module modules/mod_ldap.so</p>
+	</li>
+	<li>Add the following to the Location block created earlier for svn.i12bretro.local to enable LDAP authentication
+	<p>&nbsp; &nbsp; Order deny,allow<br />
+	&nbsp; &nbsp; # Basic authentication with LDAP against MS AD<br />
+	&nbsp; &nbsp; AuthType Basic<br />
+	&nbsp; &nbsp; AuthBasicProvider ldap<br />
+	<br />
+	&nbsp; &nbsp; # AuthLDAPURL specifies the LDAP server IP, port, base DN, scope and filter<br />
+	&nbsp; &nbsp; # using this format: ldap://host:port/basedn?attribute?scope?filter<br />
+	&nbsp; &nbsp; AuthLDAPURL &quot;ldap://i12bretro.local:389/DC=i12bretro,DC=local?sAMAccountName?sub?(objectClass=user)&quot; NONE<br />
+	<br />
+	&nbsp; &nbsp; # The LDAP bind username and password<br />
+	&nbsp; &nbsp; AuthLDAPBindDN &quot;readonly_svc@i12bretro.local&quot;<br />
+	&nbsp; &nbsp; AuthLDAPBindPassword &quot;Read0nly!!&quot;<br />
+	&nbsp; &nbsp; LDAPReferrals Off<br />
+	&nbsp; &nbsp; AuthUserFile /dev/null<br />
+	<br />
+	&nbsp; &nbsp; AuthName &quot;Restricted Area [i12bretro.local]&quot;<br />
+	&nbsp; &nbsp; # to authenticate a domain group, specify the full DN<br />
+	&nbsp; &nbsp; AuthLDAPGroupAttributeIsDN on<br />
+	&nbsp; &nbsp; require ldap-group CN=WebAuthAccess,CN=Users,DC=i12bretro,DC=local</p>
+	</li>
+	<li>Save httpd.conf</li>
+	<li>Restart the Apache service</li>
+	<li>Open a web browser and navigate back to http://svn.i12bretro.local</li>
+	<li>An authentication prompt should be displayed</li>
+	<li>Enter a valid username and password for a user belonging to the group specified above</li>
+	<li>A bare bones directory listing of the Subversion repositories should be displayed</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
