@@ -33,9 +33,13 @@
             $(document).on('click','input.copy-text',function(){
               theButton = $(this);
 														$('input.copy-text').attr('src','images/clipboard.png');
-							              $('span.copy-animation').removeClass('copy-animation');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
               try {
-                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
                 navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
 																theButton.attr('src','images/clipboard_active.png');
 								              } catch(err) {
@@ -57,8 +61,8 @@
             });
 
             if(window.self !== window.top){
-              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
-            }
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
           });
         </script>
         <link href="css/steps.css" rel="stylesheet" type="text/css" />
@@ -88,10 +92,11 @@
 	</li>
 	<li>At the bottom of the file paste the following
 	<p>ExtendedStatus On<br />
-	<location server-status=""><br />
-	&nbsp;&nbsp;&nbsp; SetHandler server-status<br />
-	&nbsp;&nbsp;&nbsp; Order allow,deny<br />
-	&nbsp;&nbsp;&nbsp; Allow from all</location></p>
+	&lt;location /server-status&gt;<br />
+	    SetHandler server-status<br />
+	    Order allow,deny<br />
+	    Allow from all<br />
+	&lt;/location&gt;</p>
 	</li>
 	<li><em>Note: By default this will only allow access from the host Apache is running on</em></li>
 	<li>Restart the Apache service to apply the changes</li>
