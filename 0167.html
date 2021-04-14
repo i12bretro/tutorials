@@ -33,9 +33,13 @@
             $(document).on('click','input.copy-text',function(){
               theButton = $(this);
 														$('input.copy-text').attr('src','images/clipboard.png');
-							              $('span.copy-animation').removeClass('copy-animation');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
               try {
-                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
                 navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
 																theButton.attr('src','images/clipboard_active.png');
 								              } catch(err) {
@@ -57,8 +61,8 @@
             });
 
             if(window.self !== window.top){
-              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
-            }
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
           });
         </script>
         <link href="css/steps.css" rel="stylesheet" type="text/css" />
@@ -115,18 +119,17 @@
 	</li>
 	<li>Paste the following configuration into owncloud.conf
 	<p>Alias /owncloud &quot;/var/www/owncloud/&quot;<br />
-	<br />
-	<directory owncloud="" var="" www=""><br />
-	&nbsp;&nbsp;&nbsp;&nbsp;Options +FollowSymlinks<br />
-	&nbsp;&nbsp;&nbsp;&nbsp;AllowOverride All<br />
-	<br />
-	&nbsp;&nbsp;&nbsp;&nbsp;<ifmodule mod_dav.c=""><br />
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dav off<br />
-	&nbsp;&nbsp;&nbsp;&nbsp;</ifmodule><br />
-	<br />
-	&nbsp;&nbsp;&nbsp;&nbsp;SetEnv HOME /var/www/owncloud<br />
-	&nbsp;&nbsp;&nbsp;&nbsp;SetEnv HTTP_HOME /var/www/owncloud</directory><br />
-	&nbsp;</p>
+	&lt;Directory /var/www/owncloud/&gt;<br />
+	    Options +FollowSymlinks<br />
+	    AllowOverride All<br />
+	    <br />
+	    &lt;IfModule mod_dav.c&gt;<br />
+	        Dav off<br />
+	    &lt;/IfModule&gt;<br />
+	    <br />
+	    SetEnv HOME /var/www/owncloud<br />
+	    SetEnv HTTP_HOME /var/www/owncloud<br />
+	&lt;/Directory&gt;</p>
 	</li>
 	<li>Press CTRL+O, Enter, CTRL+X to write the changes to owncloud.conf</li>
 	<li>Continue with the following commands to enable the site and restart Apache:
