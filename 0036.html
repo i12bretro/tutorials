@@ -93,19 +93,19 @@
 	<li>At the bottom of the file paste the following
 	<p>ExtendedStatus On<br />
 	&lt;location /server-status&gt;<br />
-	    SetHandler server-status<br />
-	    Order allow,deny<br />
-	    Allow from all<br />
-	&lt;/location&gt;</p>
+	SetHandler server-status<br />
+	Order allow,deny<br />
+	Allow from all<br />
+	&lt;/location&gt;<location server-status=""></location></p>
 	</li>
 	<li><em>Note: By default this will only allow access from the host Apache is running on</em></li>
 	<li>Restart the Apache service to apply the changes</li>
-	<li>Open a web browser and navigate to http://<dnsorip>/server-status
+	<li>Open a web browser and navigate to http://DNSorIP/server-status
 	<ol start="1" style="list-style-type: lower-alpha;">
 		<li>?refresh=5 will refresh the display every 5 seconds</li>
 		<li>?auto will display the output in a text only format</li>
 	</ol>
-	</dnsorip></li>
+	</li>
 	<li>Cringe at the output displayed</li>
 </ol>
 
@@ -117,11 +117,11 @@
 	<li>Copy/Paste simple_html_dom.php inside apache/htdocs/status</li>
 	<li>Download server-status.php <a href="https://drive.google.com/open?id=1f1HBZgdjTcYuYq6ut4PXyiaYC7vGd_ty" target="_blank">Download</a></li>
 	<li>Copy/Paste server-status.php inside apache/htdocs/status</li>
-	<li>Open a web browser and navigate to http://<dnsorip>/status/server-status.php
+	<li>Open a web browser and navigate to http://DNSorIP/status/server-status.php
 	<ol>
 		<li style="list-style-type: lower-alpha;">?getStatus will return a JSON output of the server-status data</li>
 	</ol>
-	</dnsorip></li>
+	</li>
 </ol>
           </div>
         </div>
