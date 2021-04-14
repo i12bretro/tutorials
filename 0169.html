@@ -33,9 +33,13 @@
             $(document).on('click','input.copy-text',function(){
               theButton = $(this);
 														$('input.copy-text').attr('src','images/clipboard.png');
-							              $('span.copy-animation').removeClass('copy-animation');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
               try {
-                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
                 navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
 																theButton.attr('src','images/clipboard_active.png');
 								              } catch(err) {
@@ -57,8 +61,8 @@
             });
 
             if(window.self !== window.top){
-              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
-            }
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
           });
         </script>
         <link href="css/steps.css" rel="stylesheet" type="text/css" />
@@ -85,7 +89,7 @@
 	# install loolwsd and code-brand<br />
 	sudo apt install loolwsd code-brand<br />
 	# enable required Apache modules<br />
-	sudo a2enmod proxy&nbsp;proxy_wstunnel&nbsp;proxy_http ssl</div>
+	sudo a2enmod proxy proxy_wstunnel proxy_http ssl</div>
 	</li>
 </ol>
 
@@ -147,63 +151,63 @@
 	<li>Extract WinSCP and run the executable</li>
 	<li>Connect to the Collabora Online server via WinSCP</li>
 	<li>Copy the created .crt, .key and .pem files to ~/</li>
-	<li>On the&nbsp;Collabora Online server, run the following command in a terminal
+	<li>On the Collabora Online server, run the following command in a terminal
 	<div class="codeBlock">sudo cp ~/nettools.i12bretro.local.crt /etc/ssl/certs/<br />
 	sudo cp ~/nettools.i12bretro.local.key /etc/ssl/certs/<br />
 	sudo cp ~/CA.pem /etc/ssl/certs/<br />
 	# edit the configuration file<br />
-	sudo nano&nbsp;/etc/loolwsd/loolwsd.xml</div>
+	sudo nano /etc/loolwsd/loolwsd.xml</div>
 	</li>
 	<li>Edit the loolwsd.xml file, find the SSL block and update the cert_file_path, key_file_path and ca_file_path values
-	<p><cert_file_path desc="Path to the cert file" relative="false"></cert_file_path><cert_file_path desc="Path to the cert file" relative="false"></cert_file_path><cert_file_path desc="Path to the cert file" relative="false"></cert_file_path><cert_file_path desc="Path to the cert file" relative="false">/etc/ssl/certs/nettools.i12bretro.local.crt</cert_file_path><br />
-	<key_file_path desc="Path to the key file" relative="false">/etc/ssl/certs/nettools.i12bretro.local.key</key_file_path><br />
-	<ca_file_path desc="Path to the ca file" relative="false">/etc/ssl/certs/CA.pem</ca_file_path><ca_file_path desc="Path to the ca file" relative="false"></ca_file_path><ca_file_path desc="Path to the ca file" relative="false"></ca_file_path><ca_file_path desc="Path to the ca file" relative="false"></ca_file_path></p>
+	<p>&lt;cert_file_path desc=&quot;Path to the cert file&quot; relative=&quot;false&quot;&gt;/etc/ssl/certs/nettools.i12bretro.local.crt&lt;/cert_file_path&gt;<br />
+	&lt;key_file_path desc=&quot;Path to the key file&quot; relative=&quot;false&quot;&gt;/etc/ssl/certs/nettools.i12bretro.local.key&lt;/key_file_path&gt;<br />
+	&lt;ca_file_path desc=&quot;Path to the ca file&quot; relative=&quot;false&quot;&gt;/etc/ssl/certs/CA.pem&lt;/ca_file_path&gt;</p>
 	</li>
-	<li>Press CTRL+W and search for <wopi< li=""> </wopi<></li>
+	<li>Press CTRL+W and search for &lt;wopi</li>
 	<li>Add a new host for the DNS name of the ownCloud server<br />
-	<host allow="true&quot;">nettools.i12bretro.local</host></li>
+	<host allow="true">nettools.i12bretro.local</host></li>
 	<li>Press CTRL+O, Enter, CTRL+X</li>
 	<li>Continue the configuration by running the following commands in terminal:
 	<div class="codeBlock"># create CODE proxy configuration file<br />
 	sudo nano /etc/apache2/conf-available/code.conf</div>
 	</li>
 	<li>Paste the following into code.conf
-	<p>&nbsp;Options -Indexes</p>
+	<p> Options -Indexes</p>
 
-	<p>&nbsp; #Encoded slashes need to be allowed<br />
-	&nbsp; AllowEncodedSlashes NoDecode</p>
+	<p>  #Encoded slashes need to be allowed<br />
+	  AllowEncodedSlashes NoDecode</p>
 
-	<p>&nbsp; # Container uses a unique non-signed certificate<br />
-	&nbsp; SSLProxyEngine On<br />
-	&nbsp; SSLProxyVerify None<br />
-	&nbsp; SSLProxyCheckPeerCN Off<br />
-	&nbsp; SSLProxyCheckPeerName Off</p>
+	<p>  # Container uses a unique non-signed certificate<br />
+	  SSLProxyEngine On<br />
+	  SSLProxyVerify None<br />
+	  SSLProxyCheckPeerCN Off<br />
+	  SSLProxyCheckPeerName Off</p>
 
-	<p>&nbsp; # keep the host<br />
-	&nbsp; ProxyPreserveHost On</p>
+	<p>  # keep the host<br />
+	  ProxyPreserveHost On</p>
 
-	<p>&nbsp; # static html, js, images, etc. served from loolwsd<br />
-	&nbsp; # loleaflet is the client part of Collabora Online<br />
-	&nbsp; ProxyPass &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; /loleaflet https://127.0.0.1:9980/loleaflet retry=0<br />
-	&nbsp; ProxyPassReverse &nbsp; &nbsp;/loleaflet https://127.0.0.1:9980/loleaflet</p>
+	<p>  # static html, js, images, etc. served from loolwsd<br />
+	  # loleaflet is the client part of Collabora Online<br />
+	  ProxyPass           /loleaflet https://127.0.0.1:9980/loleaflet retry=0<br />
+	  ProxyPassReverse    /loleaflet https://127.0.0.1:9980/loleaflet</p>
 
-	<p>&nbsp; # WOPI discovery URL<br />
-	&nbsp; ProxyPass &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; /hosting/discovery https://127.0.0.1:9980/hosting/discovery retry=0<br />
-	&nbsp; ProxyPassReverse &nbsp; &nbsp;/hosting/discovery https://127.0.0.1:9980/hosting/discovery</p>
+	<p>  # WOPI discovery URL<br />
+	  ProxyPass           /hosting/discovery https://127.0.0.1:9980/hosting/discovery retry=0<br />
+	  ProxyPassReverse    /hosting/discovery https://127.0.0.1:9980/hosting/discovery</p>
 
-	<p>&nbsp; # Capabilities<br />
-	&nbsp; ProxyPass &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; /hosting/capabilities https://127.0.0.1:9980/hosting/capabilities retry=0<br />
-	&nbsp; ProxyPassReverse &nbsp; &nbsp;/hosting/capabilities https://127.0.0.1:9980/hosting/capabilities</p>
+	<p>  # Capabilities<br />
+	  ProxyPass           /hosting/capabilities https://127.0.0.1:9980/hosting/capabilities retry=0<br />
+	  ProxyPassReverse    /hosting/capabilities https://127.0.0.1:9980/hosting/capabilities</p>
 
-	<p>&nbsp; # Main websocket<br />
-	&nbsp; ProxyPassMatch &quot;/lool/(.*)/ws$&quot; wss://127.0.0.1:9980/lool/$1/ws nocanon</p>
+	<p>  # Main websocket<br />
+	  ProxyPassMatch &quot;/lool/(.*)/ws$&quot; wss://127.0.0.1:9980/lool/$1/ws nocanon</p>
 
-	<p>&nbsp; # Admin Console websocket<br />
-	&nbsp; ProxyPass &nbsp; /lool/adminws wss://127.0.0.1:9980/lool/adminws</p>
+	<p>  # Admin Console websocket<br />
+	  ProxyPass   /lool/adminws wss://127.0.0.1:9980/lool/adminws</p>
 
-	<p>&nbsp; # Download as, Fullscreen presentation and Image upload operations<br />
-	&nbsp; ProxyPass &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; /lool https://127.0.0.1:9980/lool<br />
-	&nbsp; ProxyPassReverse &nbsp; &nbsp;/lool https://127.0.0.1:9980/lool</p>
+	<p>  # Download as, Fullscreen presentation and Image upload operations<br />
+	  ProxyPass           /lool https://127.0.0.1:9980/lool<br />
+	  ProxyPassReverse    /lool https://127.0.0.1:9980/lool</p>
 	</li>
 	<li>Press CTRL+O, Enter, CTRL+X</li>
 	<li>Continue the configuration by running the following commands in terminal:
@@ -215,7 +219,7 @@
 	</li>
 	<li>Press CTRL+O, Enter, CTRL+X</li>
 	<li>Continue the configuration by running the following commands in terminal:
-	<div class="codeBlock"># edit ownCloud&nbsp;configuration file<br />
+	<div class="codeBlock"># edit ownCloud configuration file<br />
 	sudo nano /var/www/owncloud/config/config.php</div>
 	</li>
 	<li>Find the trusted_domains array and add the DNS used for the SSL certificate</li>
@@ -236,7 +240,7 @@
 	<li>Find and click on Collabora Online</li>
 	<li>Click the Install button</li>
 	<li>Once the installation completes, click the username dropdown &gt; Settings</li>
-	<li>Select Admin &gt; Additional&nbsp;from the left navigation menu</li>
+	<li>Select Admin &gt; Additional from the left navigation menu</li>
 	<li>Enter the DNS name for the Collabora Online server URL</li>
 	<li>Click Apply</li>
 	<li>If the above option does not appear, you can complete the same terminal by running:
@@ -245,7 +249,7 @@
 	</li>
 </ol>
 
-<p>Source:&nbsp;<a href="https://www.collaboraoffice.com/code/linux-packages/" target="_blank">https://www.collaboraoffice.com/code/linux-packages/</a></p>
+<p>Source: <a href="https://www.collaboraoffice.com/code/linux-packages/" target="_blank">https://www.collaboraoffice.com/code/linux-packages/</a></p>
           </div>
         </div>
       </body>
