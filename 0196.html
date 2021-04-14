@@ -117,20 +117,21 @@
 	</li>
 	<li>Paste the following configuration into the existing VirtualHost
 	<p>&lt;location /code&gt;<br />
-	    RewriteEngine On<br />
-	    RewriteCond %{REQUEST_FILENAME} !-f<br />
-	    RewriteCond %{REQUEST_URI} !(.*)/$<br />
-	    RewriteRule ^(.*)$ http://%{HTTP_HOST}/code/ [L,R=301]<br />
-	&lt;location&gt;<br />
+	RewriteEngine On<br />
+	RewriteCond %{REQUEST_FILENAME} !-f<br />
+	RewriteCond %{REQUEST_URI} !(.*)/$<br />
+	RewriteRule ^(.*)$ http://%{HTTP_HOST}/code/ [L,R=301]<br />
+	&lt;/location&gt;<br />
+	<br />
 	&lt;location /code/&gt;<br />
-	    Header set X-Frame-Options ALLOWALL<br />
-	    RewriteEngine On<br />
-	    RewriteCond %{HTTP:Upgrade} =websocket [NC]<br />
-	    RewriteRule /(.*)   ws://127.0.0.1:8888/$1 [P,L]<br />
-	    ProxyPreserveHost on<br />
-	    ProxyPass http://127.0.0.1:8888/<br />
-	    ProxyPassReverse http://127.0.0.1:8888/<br />
-	&lt;location&gt;</p>
+	Header set X-Frame-Options ALLOWALL<br />
+	RewriteEngine On<br />
+	RewriteCond %{HTTP:Upgrade} =websocket [NC]<br />
+	RewriteRule /(.*) ws://127.0.0.1:8888/$1 [P,L]<br />
+	ProxyPreserveHost on<br />
+	ProxyPass http://127.0.0.1:8888/<br />
+	ProxyPassReverse http://127.0.0.1:8888/<br />
+	&lt;/location&gt;</p>
 	</li>
 	<li>Press CTRL+O, Enter, CTRL+X to write the changes to code-server.conf</li>
 	<li>Continue with the following commands in terminal:
