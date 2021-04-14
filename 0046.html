@@ -33,9 +33,13 @@
             $(document).on('click','input.copy-text',function(){
               theButton = $(this);
 														$('input.copy-text').attr('src','images/clipboard.png');
-							              $('span.copy-animation').removeClass('copy-animation');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
               try {
-                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
                 navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
 																theButton.attr('src','images/clipboard_active.png');
 								              } catch(err) {
@@ -57,8 +61,8 @@
             });
 
             if(window.self !== window.top){
-              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
-            }
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
           });
         </script>
         <link href="css/steps.css" rel="stylesheet" type="text/css" />
@@ -71,78 +75,58 @@
           </div>
           <div></div>
           <div id="content">
-          <h2>
-	Download and Setup Tiny File Manager</h2>
+          <h2>Download and Setup Tiny File Manager</h2>
+
 <ol>
-	<li>
-		Download Tiny File Manager <a href="https://github.com/prasathmani/tinyfilemanager/releases" target="_blank">Download</a></li>
-	<li>
-		Extract the Tiny File Manager files</li>
-	<li>
-		Copy TinyFileManager.php to Apache install directory/htdocs/filemanager</li>
-	<li>
-		Rename TinyFileManager.php to index.php</li>
-	<li>
-		Edit index.php in a text editor</li>
-	<li>
-		Find $use_auth and set the value to false</li>
-	<li>
-		Save</li>
-	<li>
-		Open a web browser and navigate to https://<dnsorip>/filemanager</dnsorip></li>
+	<li>Download Tiny File Manager <a href="https://github.com/prasathmani/tinyfilemanager/releases" target="_blank">Download</a></li>
+	<li>Extract the Tiny File Manager files</li>
+	<li>Copy TinyFileManager.php to Apache install directory/htdocs/filemanager</li>
+	<li>Rename TinyFileManager.php to index.php</li>
+	<li>Edit index.php in a text editor</li>
+	<li>Find $use_auth and set the value to false</li>
+	<li>Save</li>
+	<li>Open a web browser and navigate to https://DNSorIP/filemanager</li>
 </ol>
-<h2>
-	Customizing Root Location and Authentication</h2>
+
+<h2>Customizing Root Location and Authentication</h2>
+
 <ol>
-	<li>
-		Optionally, Edit Apache install directory/htdocs/filemanager/index.php</li>
-	<li>
-		Find $root_path and edit the value to limit the scope of the file manager</li>
-	<li>
-		Save index.php</li>
-	<li>
-		Navigate to the Apache install directory/conf in Explorer</li>
-	<li>
-		Edit httpd.conf in a text editor</li>
-	<li>
-		Find the authnz_ldap_module and make sure it is enabled by removing the # at the start of the line
-		<p>
-			LoadModule authnz_ldap_module modules/mod_authnz_ldap.so</p>
+	<li>Optionally, Edit Apache install directory/htdocs/filemanager/index.php</li>
+	<li>Find $root_path and edit the value to limit the scope of the file manager</li>
+	<li>Save index.php</li>
+	<li>Navigate to the Apache install directory/conf in Explorer</li>
+	<li>Edit httpd.conf in a text editor</li>
+	<li>Find the authnz_ldap_module and make sure it is enabled by removing the # at the start of the line
+	<p>LoadModule authnz_ldap_module modules/mod_authnz_ldap.so</p>
 	</li>
-	<li>
-		Find the ldap_module and make sure it is enabled by removing the # at the start of the line
-		<p>
-			LoadModule ldap_module modules/mod_ldap.so</p>
+	<li>Find the ldap_module and make sure it is enabled by removing the # at the start of the line
+	<p>LoadModule ldap_module modules/mod_ldap.so</p>
 	</li>
-	<li>
-		Create a Location block to enable LDAP authentication for the specified directory
-		<p>
-			<location filemanager=""><br />
-			&nbsp;&nbsp;&nbsp; # Basic authentication with LDAP against MS AD<br />
-			&nbsp;&nbsp;&nbsp; AuthType Basic<br />
-			&nbsp;&nbsp;&nbsp; AuthBasicProvider ldap<br />
-			<br />
-			&nbsp;&nbsp;&nbsp; # AuthLDAPURL specifies the LDAP server IP, port, base DN, scope and filter<br />
-			&nbsp;&nbsp;&nbsp; # using this format: ldap://host:port/basedn?attribute?scope?filter<br />
-			&nbsp;&nbsp;&nbsp; AuthLDAPURL &quot;ldap://i12bretro.local:389/DC=i12bretro,DC=local?sAMAccountName?sub?(objectClass=user)&quot; NONE</location></p>
-		<p>
-			&nbsp;&nbsp;&nbsp; # The LDAP bind username and password<br />
-			&nbsp;&nbsp;&nbsp; AuthLDAPBindDN &quot;readonly_svc@i12bretro.local&quot;<br />
-			&nbsp;&nbsp;&nbsp; AuthLDAPBindPassword &quot;Read0nly!!&quot;<br />
-			&nbsp;&nbsp;&nbsp; LDAPReferrals Off<br />
-			&nbsp;&nbsp;&nbsp; AuthUserFile /dev/null<br />
-			<br />
-			&nbsp;&nbsp;&nbsp; AuthName &quot;Restricted Area [i12bretro.local]&quot;<br />
-			&nbsp;&nbsp;&nbsp; # to authenticate a domain group, specify the full DN<br />
-			&nbsp;&nbsp;&nbsp; AuthLDAPGroupAttributeIsDN on<br />
-			&nbsp;&nbsp;&nbsp; require ldap-group CN=WebAuthAccess,CN=Users,DC=i12bretro,DC=local</p>
+	<li>Create a Location block to enable LDAP authentication for the specified directory
+	<p>&lt;location /filemanager&gt;<br />
+	    # Basic authentication with LDAP against MS AD<br />
+	    AuthType Basic<br />
+	    AuthBasicProvider ldap<br />
+	<br />
+	    # AuthLDAPURL specifies the LDAP server IP, port, base DN, scope and filter<br />
+	    # using this format: ldap://host:port/basedn?attribute?scope?filter<br />
+	    AuthLDAPURL &quot;ldap://i12bretro.local:389/DC=i12bretro,DC=local?sAMAccountName?sub?(objectClass=user)&quot; NONE</p>
+
+	<p>    # The LDAP bind username and password<br />
+	    AuthLDAPBindDN &quot;readonly_svc@i12bretro.local&quot;<br />
+	    AuthLDAPBindPassword &quot;Read0nly!!&quot;<br />
+	    LDAPReferrals Off<br />
+	    AuthUserFile /dev/null<br />
+	<br />
+	    AuthName &quot;Restricted Area [i12bretro.local]&quot;<br />
+	    # to authenticate a domain group, specify the full DN<br />
+	    AuthLDAPGroupAttributeIsDN on<br />
+	    require ldap-group CN=WebAuthAccess,CN=Users,DC=i12bretro,DC=local<br />
+	&lt;/location&gt;</p>
 	</li>
-	<li>
-		Save httpd.conf</li>
-	<li>
-		Restart the Apache service</li>
-	<li>
-		Refresh https://<dnsorip>/filemanager</dnsorip></li>
+	<li>Save httpd.conf</li>
+	<li>Restart the Apache service</li>
+	<li>Refresh https://DNSorIP/filemanager</li>
 </ol>
           </div>
         </div>
