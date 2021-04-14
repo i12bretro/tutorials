@@ -33,9 +33,13 @@
             $(document).on('click','input.copy-text',function(){
               theButton = $(this);
 														$('input.copy-text').attr('src','images/clipboard.png');
-							              $('span.copy-animation').removeClass('copy-animation');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
               try {
-                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
                 navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
 																theButton.attr('src','images/clipboard_active.png');
 								              } catch(err) {
@@ -57,8 +61,8 @@
             });
 
             if(window.self !== window.top){
-              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
-            }
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
           });
         </script>
         <link href="css/steps.css" rel="stylesheet" type="text/css" />
@@ -89,7 +93,7 @@
 	# edit the config.yaml<br />
 	sudo nano /root/.config/code-server/config.yaml</div>
 	</li>
-	<li>Edit the password, or change the authentication type to none and change the bind-addr to&nbsp;bind-addr: 127.0.0.1:8888</li>
+	<li>Edit the password, or change the authentication type to none and change the bind-addr to bind-addr: 127.0.0.1:8888</li>
 	<li>Continue with the following command in terminal:
 	<div class="codeBlock"># restart code-server service<br />
 	sudo systemctl restart code-server@root.service</div>
@@ -98,7 +102,7 @@
 	<li>Browser based VS Code......pretty nice</li>
 </ol>
 
-<p>Out of the box, code-server is only reachable from the host that it is installed on. An easy to configure workaround&nbsp;is to setup a proxy server to allow requests to Apache/NGINX to be routed to code-server.</p>
+<p>Out of the box, code-server is only reachable from the host that it is installed on. An easy to configure workaround is to setup a proxy server to allow requests to Apache/NGINX to be routed to code-server.</p>
 
 <h2>Apache Proxy Server (optional, but recommended)</h2>
 
@@ -112,20 +116,21 @@
 	sudo nano /etc/apache2/sites-available/000-default.conf</div>
 	</li>
 	<li>Paste the following configuration into the existing VirtualHost
-	<p>&nbsp;<location code=""><br />
-	&nbsp;&nbsp; &nbsp;RewriteEngine On<br />
-	&nbsp;&nbsp; &nbsp;RewriteCond %{REQUEST_FILENAME} !-f<br />
-	&nbsp;&nbsp; &nbsp;RewriteCond %{REQUEST_URI} !(.*)/$<br />
-	&nbsp;&nbsp; &nbsp;RewriteRule ^(.*)$ http://%{HTTP_HOST}/code/ [L,R=301]</location><br />
-	<br />
-	<location code=""><br />
-	&nbsp;&nbsp; &nbsp;Header set X-Frame-Options ALLOWALL<br />
-	&nbsp;&nbsp; &nbsp;RewriteEngine On<br />
-	&nbsp;&nbsp; &nbsp;RewriteCond %{HTTP:Upgrade} =websocket [NC]<br />
-	&nbsp;&nbsp; &nbsp;RewriteRule /(.*) &nbsp; ws://127.0.0.1:8888/$1 [P,L]<br />
-	&nbsp;&nbsp; &nbsp;ProxyPreserveHost on<br />
-	&nbsp;&nbsp; &nbsp;ProxyPass http://127.0.0.1:8888/<br />
-	&nbsp;&nbsp; &nbsp;ProxyPassReverse http://127.0.0.1:8888/</location></p>
+	<p>&lt;location /code&gt;<br />
+	    RewriteEngine On<br />
+	    RewriteCond %{REQUEST_FILENAME} !-f<br />
+	    RewriteCond %{REQUEST_URI} !(.*)/$<br />
+	    RewriteRule ^(.*)$ http://%{HTTP_HOST}/code/ [L,R=301]<br />
+	&lt;location&gt;<br />
+	&lt;location /code/&gt;<br />
+	    Header set X-Frame-Options ALLOWALL<br />
+	    RewriteEngine On<br />
+	    RewriteCond %{HTTP:Upgrade} =websocket [NC]<br />
+	    RewriteRule /(.*)   ws://127.0.0.1:8888/$1 [P,L]<br />
+	    ProxyPreserveHost on<br />
+	    ProxyPass http://127.0.0.1:8888/<br />
+	    ProxyPassReverse http://127.0.0.1:8888/<br />
+	&lt;location&gt;</p>
 	</li>
 	<li>Press CTRL+O, Enter, CTRL+X to write the changes to code-server.conf</li>
 	<li>Continue with the following commands in terminal:
@@ -133,11 +138,11 @@
 	sudo systemctl restart apache2</div>
 	</li>
 	<li>Back in the web browser, navigate to http://DNSorIP/vscode</li>
-	<li>Enjoy your web based&nbsp;VS Code</li>
+	<li>Enjoy your web based VS Code</li>
 </ol>
 
 <p>Source: <a href="https://github.com/cdr/code-server" target="_blank">https://github.com/cdr/code-server</a><br />
-Proxy resource:&nbsp;<a href="https://github.com/cdr/code-server/issues/282" target="_blank">https://github.com/cdr/code-server/issues/282</a></p>
+Proxy resource: <a href="https://github.com/cdr/code-server/issues/282" target="_blank">https://github.com/cdr/code-server/issues/282</a></p>
           </div>
         </div>
       </body>
