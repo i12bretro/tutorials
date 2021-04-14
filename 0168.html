@@ -33,9 +33,13 @@
             $(document).on('click','input.copy-text',function(){
               theButton = $(this);
 														$('input.copy-text').attr('src','images/clipboard.png');
-							              $('span.copy-animation').removeClass('copy-animation');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
               try {
-                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
                 navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
 																theButton.attr('src','images/clipboard_active.png');
 								              } catch(err) {
@@ -57,8 +61,8 @@
             });
 
             if(window.self !== window.top){
-              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
-            }
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
           });
         </script>
         <link href="css/steps.css" rel="stylesheet" type="text/css" />
@@ -114,17 +118,17 @@
 	sudo nano /etc/apache2/sites-available/nextcloud.conf</div>
 	</li>
 	<li>Paste the following configuration into nextcloud.conf
-	<p>Alias /nextcloud &quot;/var/www/nextcloud/&quot;</p>
-
-	<p><directory html="" nextcloud="" var="" www=""><br />
-	&nbsp;&nbsp; Options +FollowSymlinks<br />
-	&nbsp;&nbsp; AllowOverride All<br />
-	&nbsp;&nbsp; Require all granted<br />
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <ifmodule mod_dav.c=""><br />
-	&nbsp;&nbsp; Dav off<br />
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </ifmodule><br />
-	&nbsp;&nbsp; SetEnv HOME /var/www/nextcloud<br />
-	&nbsp;&nbsp; SetEnv HTTP_HOME /var/www/nextcloud</directory></p>
+	<p><label for="cb_li_592529_12">Alias /nextcloud &quot;/var/www/nextcloud/&quot;<br />
+	&lt;directory /var/www/html/nextcloud/&gt;<br />
+	   Options +FollowSymlinks<br />
+	   AllowOverride All<br />
+	   Require all granted<br />
+	         <br />
+	   Dav off<br />
+	         <br />
+	   SetEnv HOME /var/www/nextcloud<br />
+	   SetEnv HTTP_HOME /var/www/nextcloud<br />
+	&lt;/directory&gt;</label></p>
 	</li>
 	<li>Press CTRL+O, Enter, CTRL+X to write the changes to nextcloud.conf</li>
 	<li>Continue with the following commands to enable the site and restart Apache:
