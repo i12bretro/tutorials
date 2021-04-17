@@ -1,0 +1,185 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Copy Games to Playstation 2 Fat Hard Drive</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Copy Games to Playstation 2 Fat Hard Drive</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Things You Will Need</h2>
+
+<ul>
+	<li>A Sony PlayStation 2 Fat console</li>
+	<li>The PS2 Network/Hard Drive Adapter</li>
+	<li>A working hard drive in the PS2 (IDE or via a SATA adapter)</li>
+	<li>A way to execute PS2 homebrew apps (I&#39;m using <a href="https://sites.google.com/view/ysai187/home/projects/fmcbfhdb?authuser=0#h.p_-aEvm93GgS4k" target="_blank">FreeMcBoot</a>)</li>
+	<li><a href="https://java.com/en/download/manual.jsp" target="_blank">Java Runtime Environment</a> running on the source computer</li>
+	<li>Open PS2 Loader (OPL) <a href="https://www.ps2-home.com/forum/viewtopic.php?f=83&amp;t=3&amp;p=42625#p42625" target="_blank">Download</a></li>
+	<li>HDL Dump Helper GUI <a href="https://www.ps2-home.com/forum/viewtopic.php?f=27&amp;t=2738" target="_blank">Download</a></li>
+	<li>OPL Manager <a href="https://oplmanager.com/site/" target="_blank">Download</a></li>
+</ul>
+
+<h2>Setting Up and Starting the PS2 HDL Server</h2>
+
+<ol>
+	<li>Connect the PS2 console to your network</li>
+	<li>Make sure the memory card with Free McBoot is inserted</li>
+	<li>Power on the PS2 and wait for Free McBoot to load&nbsp;</li>
+	<li>Launch Open PS2 Loader from the Free McBoot browser</li>
+	<li>Press Start &gt; select Network Settings</li>
+	<li>Set the network settings to meet your network requirements
+	<p>IP Address Type: Static<br />
+	IP Address: 192.168.0.227<br />
+	Mask: 255.255.255.0<br />
+	Gateway: 192.168.0.252<br />
+	DNS Server: 192.168.0.2<br />
+	Tip: if you don&#39;t want your PS2 console to reach the internet use a bogus gateway IP</p>
+	</li>
+	<li>Navigate to OK &gt; Press X</li>
+	<li>Go to Settings &gt; <span class="caps">Press X</span></li>
+	<li><span class="caps">Set HDD</span> device start mode = <span class="caps">AUTO</span></li>
+	<li>Set Enable write operations = ON</li>
+	<li>Navigate to OK &gt; Press X</li>
+	<li>Navigate to Save Changes &gt; Press X</li>
+	<li>Navigate to Start HDL Server &gt; Press X</li>
+	<li>The HDL Server should now be running and ready to accept incoming connections</li>
+</ol>
+
+<h2>Downloading and Configuring Software</h2>
+
+<ol>
+	<li>Download the HDL Dump Helper GUI application <a href="https://www.ps2-home.com/forum/viewtopic.php?p=16263#p16263" onclick="window.open(this.href, '', 'resizable=no,status=no,location=no,toolbar=no,menubar=no,fullscreen=no,scrollbars=no,dependent=no'); return false;">Download</a></li>
+	<li>Extract the downloaded .rar file</li>
+	<li>Launch HDL Dump Helper GUI by right clicking de.hdld.gui.HdlDHGui.exe &gt; Run as administrator<br />
+	If you get an error here saying Java cannot be found and you do have it insatlled, try the following:
+	<ol>
+		<li>Right click the Start button &gt; Command Prompt (Admin)</li>
+		<li>Type java -version, if you get a response you have Java properly installed and configued and can continue. If you don&#39;t install/reinstall Java</li>
+		<li>Type the following commands to launch HDL Dump Helper GUI as and administrator, updating the path if you extracted it somewhere else
+		<div class="codeBlock">cd &quot;%userprofile%\Downloads\hdl_dump_helper_gui_2.3\hdld_2_3&quot;<br />
+		java -jar &quot;de.hdld.gui.HdlDHGui.jar&quot;</div>
+		</li>
+	</ol>
+	</li>
+	<li>Enter the IP address assigned to the PS2 console earlier &gt; Click Connect</li>
+</ol>
+
+<h2>Copying Games to the Hard Drive</h2>
+
+<ol>
+	<li>With HDL Dump Helper GUI connected to the PS2 console, click the elipsis next to ISO-File:</li>
+	<li>Browse to the PS2 .iso file to be copied to the console</li>
+	<li>If the .iso file is valid the application will set the Type, Name and StartUp automatically</li>
+	<li>Click the Add to Jobs button if you&#39;d like to queue several games before copying, otherwise, click the Install button</li>
+	<li>Wait for the game(s) to copy to the console. Expect to see 2-8 MB/s speeds</li>
+</ol>
+
+<h2>Downloading and Applying Artwork for OPL (Optional)</h2>
+
+<ol>
+	<li>Download OPL Manager <a href="https://oplmanager.com/site/" target="_blank">Download</a></li>
+	<li>Extract OPL Manager</li>
+	<li>Right click on OPL_Manager.exe &gt; Run as administator</li>
+	<li>You should be prompted with the Change Mode/OPL Folder dialog, if not select Settings &gt; Change Mode/OPL Folder</li>
+	<li>Select the Network mode</li>
+	<li>Enter the IP address of the PS2 console</li>
+	<li>Select hdl_dump_086.exe from the version dropdown</li>
+	<li>Click the test button</li>
+	<li>If the test fails, try stopping and starting the HDL Server on the PS2 console. Once the test is successful click Save</li>
+	<li>Select Network Options &gt; Get game list from PS2</li>
+	<li>Select Batch Actions &gt; ART Download</li>
+	<li>Select the artwork you&#39;d like to download in the Download options section</li>
+	<li>Click Start</li>
+	<li>Close the Art downloaded window but leave OPL Manager running</li>
+	<li>On the PS2 console, stop the HDL server and close OPL by navigating to Exit &gt; Press X</li>
+	<li>Start uLaunchElf by selecting it from the Free McBoot menu</li>
+	<li>Press Select &gt; Network Settings &gt; press O</li>
+	<li>Using the D-pad, set the IP address, netmask and gateway
+	<ul>
+		<li>Tip: If you don&#39;t want your PS2 to reach the internet input a bogus gateway IP address</li>
+	</ul>
+	</li>
+	<li>Navigate down to Save &gt; press O to save your changes</li>
+	<li>Navigate down to OK &gt; press O</li>
+	<li>Highlight MISC/ &gt; press O</li>
+	<li>Highlight PS2Net &gt; press O</li>
+	<li>The FTP server should start running and give status output at the top of the screen</li>
+	<li>Back in OPL Manager, select Network Options &gt; Sync files to PS2 via FTP</li>
+	<li>Click the Connect FTP button</li>
+	<li>One connected, click the Sync PC to PS2 button</li>
+	<li>After the sync completes, fire up OPL to see the new games with artwork</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
