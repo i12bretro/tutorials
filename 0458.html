@@ -1,0 +1,148 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Active Directory Installation Guide on Server 2019 Using VirtualBox</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Active Directory Installation Guide on Server 2019 Using VirtualBox</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Configuring Server 2019</h2>
+
+<ol>
+	<li>Install Microsoft Server 2019 (<a href="https://youtu.be/_1zBK93RxY4" target="_blank">Tutorial</a>)</li>
+	<li>Log in with an account with admin priviliges</li>
+	<li>Set the server name
+	<ol start="1" style="list-style-type: lower-alpha;">
+		<li>Click the Start button &gt; Type control panel &gt; press Enter</li>
+		<li>Click View By &gt; Small Icons</li>
+		<li>Click System</li>
+		<li>Click Advanced System Settings in the top left</li>
+		<li>Select the Computer Name tab</li>
+		<li>Click the change button</li>
+		<li>Enter the new computer name &gt; Click OK</li>
+		<li>When prompted to reboot, choose Restart Later</li>
+	</ol>
+	</li>
+	<li>Set a static IP address
+	<ol start="1" style="list-style-type: lower-alpha;">
+		<li>Back in Control Panel, select Network and Sharing Center</li>
+		<li>Click Change adapter settings</li>
+		<li>Right click on the network connection &gt; Properties</li>
+		<li>Select Internet Protocol Version 4 (TCP/IPv4) &gt; Properties</li>
+		<li>Click the Use the following IP address option</li>
+		<li>Enter a static IP address, subnet mask and gateway</li>
+		<li>Enter DNS addresses</li>
+		<li>Click OK to all open dialog windows and close Control Panel</li>
+	</ol>
+	</li>
+	<li>Reboot the server for the name change to take effect</li>
+</ol>
+
+<h2>Installing Active Directory</h2>
+
+<ol>
+	<li>After the reboot, launch Server Manager if it does not automatically load</li>
+	<li>Click Add roles and features</li>
+	<li>Click Next on the Before you begin screen</li>
+	<li>Select Role-based or feature-based installation &gt; Next</li>
+	<li>Leave Select a server from the server pool selected and select the current Server2019 server &gt; Next</li>
+	<li>Check the Active Directory Domain Services box</li>
+	<li>A popup will appear with additional required roles and features, click the Add Features button</li>
+	<li>Click Next</li>
+	<li>Click Next on the Select features screen</li>
+	<li>Click Next on the Active Directory Domain Services screen</li>
+	<li>Click Install on the confirmation screen</li>
+	<li>Leave the installation progress screen open until the install completes</li>
+</ol>
+
+<h2>Configuring Active Directory</h2>
+
+<ol>
+	<li>Back in Server Manager, click the flag with the caution icon in the upper right corner</li>
+	<li>Click Promote this server to a domain controller</li>
+	<li>Select Add a new forest and enter the desired domain name, ie i12bretro.local &gt; Click Next</li>
+	<li>Verify Domain Name System (DNS) server and Global Catalog (GC) are checked</li>
+	<li>Enter and confirm a Directory Services Restore Mode (DSRM) password &gt; Click Next</li>
+	<li>On the DNS Options page, click the Change button and enter credentials for a local administrator account &gt; Click Next</li>
+	<li>Verify or modify the NetBIOS domain name &gt; Click Next</li>
+	<li>Leave the AD DS paths as default &gt; Click Next</li>
+	<li>Click Next on the Review Options screen</li>
+	<li>After the prerequisite check completes, click the Install button</li>
+	<li>Once the installation completes the server will reboot</li>
+	<li>After rebooting, log back into the server</li>
+	<li>Welcome to your very own Active Directory server</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
