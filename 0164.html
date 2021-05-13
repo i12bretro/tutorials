@@ -1,0 +1,141 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Installing Airsonic on Windows, Free Self-Hosted Music Streamer</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Installing Airsonic on Windows, Free Self-Hosted Music Streamer</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Downloads and Pre-requisites</h2>
+
+<ol>
+	<li>Download OpenJDK <a href="https://jdk.java.net/" target="_blank">Download</a></li>
+	<li>Download Apache Tomcat <a href="https://tomcat.apache.org/download-90.cgi" target="_blank">Download</a></li>
+	<li>Download Airsonic.war <a href="https://github.com/airsonic/airsonic/releases" target="_blank">Download</a></li>
+	<li>Extract the OpenJDK archive to C:\program files\OpenJDK</li>
+	<li>Click the Start button and search Control Panel</li>
+	<li>Navigate to System &gt; Advanced System Settings</li>
+	<li>Click the Environment Variables button</li>
+	<li>Under System Variables, click New</li>
+	<li>In the Variable Name field enter JAVA_HOME</li>
+	<li>In the Variable Value field enter the full path to C:\program files\OpenJDK</li>
+	<li>Click OK to close all the open dialog windows</li>
+</ol>
+
+<h2>Installing Tomcat</h2>
+
+<ol>
+	<li>Double click the Apache Tomcat installer executable</li>
+	<li>Click Next and then I Agree</li>
+	<li>On the Choose Components screen, uncheck everything except Core, Service Startup and Native &gt; Click Next</li>
+	<li>Set the port to 8000 and Service Name &gt; Click Next</li>
+	<li>At the Java Virtual Machine screen, input C:\program files\OpenJDK &gt; Click Next</li>
+	<li>Verify the install location &gt; Click Install</li>
+	<li>After the installation completes, open a web browser and navigate to http://DNSorIP:8000</li>
+	<li>An Apache Tomcat splash screen should display with the version of Tomcat that is currently running</li>
+</ol>
+
+<h2>Installing Airsonic</h2>
+
+<ol>
+	<li>Copy the airsonic.war file downloaded earlier to the Apache Tomcat/webapps directory</li>
+	<li>Within a few moments Apache Tomcat should see the .war file and extract it to a /airsonic sub-directory
+	<ol start="1" style="list-style-type: lower-alpha;">
+		<li>If this doesn&#39;t occur automatically, try right clicking the Start button &gt; Run &gt; services.msc and restarting the Apache Tomcat service</li>
+	</ol>
+	</li>
+	<li>Once the .war file has extracted itself to a directory, open a web browser and navigate to http://DNSorIP:8000/airsonic</li>
+	<li>Login with username: admin, password: admin</li>
+	<li>Click the Change administrator password link</li>
+	<li>Check the Change password box</li>
+	<li>Input the new password twice and click the Save button</li>
+	<li>Select Media folders from the top navigation</li>
+	<li>Add one or more media folders and click the Save button</li>
+	<li>Click the Scan media folders now link for Airsonic to begin importing your music library</li>
+	<li>Click the Home button in the top navigation</li>
+	<li>Scanning files should show in the top right of the screen to indicate the import progress</li>
+	<li>Click the Refresh link on the left navigation to watch as artists are scanned and added</li>
+</ol>
+
+<h2>Optional Steps</h2>
+
+<ol>
+	<li>To remove the need to navigate to /airsonic, navigate to the Apache Tomcat/webapps directory in Explorer</li>
+	<li>Delete the ROOT directory if it exists</li>
+	<li>Rename the airsonic directory ROOT</li>
+	<li>Open a web browser and navigate to http://DNS-or-IP:8000/ to reach the Airsonic</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
