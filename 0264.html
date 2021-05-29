@@ -1,0 +1,120 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Custom Android Nougat ROM on Rockchip RK3288 Android TV Box (M8S RK3288)</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Custom Android Nougat ROM on Rockchip RK3288 Android TV Box (M8S RK3288)</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <p>I love the idea of the Raspberry Pi, but there are some cheaper alternative single board computers that offer a similar experience for a fraction of the cost. While the community support isn&#39;t quite what it is for the Pi, there are a ton of projects you can accomplish on the cheap with these little hidden gems. Keep an eye on AliExpress and Amazon and you can find SBC&#39;s sporting quad core ARM process with 2-4 GB of RAM for under $30, including a power supply and IR remote control.</p>
+
+<p>The box used in this video is a M8S (RK3288) I picked up on eBay for $15.99 shipped. It sports a Quad Core Rockchip RK3288 @ 1.8GHz and 2 GB of DDR3 RAM.<br />
+https://www.ebay.com/itm/264726126644</p>
+
+<h2>!! Warnings !!</h2>
+
+<p>This will remove the Android OS that came with the device. Make sure you have a backup of the Android image before proceeding in case you want to revert to the stock Android image in the future. On my box the wifi and remote control did not function and the wired networking was really slow.&nbsp;</p>
+
+<h2>Things You Will Need</h2>
+
+<ul>
+	<li>&nbsp;&nbsp;&nbsp; A USB A to USB A cable</li>
+</ul>
+
+<h2>Preparing the TV Box to Boot from MicroSD</h2>
+
+<ol>
+	<li>Download the&nbsp;RK3288_Nougat.zip <a href="https://drive.google.com/file/d/1LZaN8a9R8QDsy418AbUTXkjE-KN-kovq/view?usp=sharing" target="_blank">Download</a></li>
+	<li>Download RK3288_Files.zip <a href="https://drive.google.com/file/d/10YXYevWoSFLf-L-0d0ZnWuC-ZhFk1Xas/view?usp=sharing" target="_blank">Download</a></li>
+	<li>Extract RK3288_Nougat.zip</li>
+	<li>Extract RK3288_Files.zip</li>
+	<li>Navigate to extracted files/Driver/ &gt; Right click DriverInstall.exe &gt; Run as administrator</li>
+	<li>Click Install Driver</li>
+	<li>Click Install on any security popups that display</li>
+	<li>Navigate to extracted files/AndroidTool/ &gt; Right click AndroidTool.exe &gt; Run as administrator</li>
+	<li>Select the Upgrade Firmware tab</li>
+	<li>While holding in the reset button on the TV Box, connect a USB cable from the OTG port to a USB port on your computer</li>
+	<li>Click the EraseFlash button</li>
+	<li>Unplug the USB cable from the PC</li>
+	<li>While holding in the reset button on the TV Box, connect a USB cable from the OTG port to a USB port on your computer</li>
+	<li>Click the Firmware Button</li>
+	<li>Navigate to the extracted RK3288_Nougat files &nbsp;&gt; Select the HPH NT-V6 RK3288 Custom Nougat ROM v1.0 2018-12-19.img file &gt; Click the Upgrade button</li>
+	<li>After the process completes, unplug the USB cable from the PC and power on the TV box</li>
+	<li>Plug in the TV box and the custom Android Nougat image should boot</li>
+</ol>
+
+<p>Source:&nbsp;<a href="https://forum.freaktab.com/forum/tv-player-support/rk3288-devices/nagrace-3288-devices/755354-hph-nt-v6-rk3288-custom-nougat-rom" target="_blank">https://forum.freaktab.com/forum/tv-player-support/rk3288-devices/nagrace-3288-devices/755354-hph-nt-v6-rk3288-custom-nougat-rom</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
