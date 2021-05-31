@@ -1,0 +1,127 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>What's Currently Running in My Home Lab - Summer 2021</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>What's Currently Running in My Home Lab - Summer 2021</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <p><em>As of Spring 2021 I am currently in the process of migrating to ProxMox VE to host my Linux VMs and Docker hosts as well as upgrading my physical home lab network to be me organized and scalable</em></p>
+
+<h2>DD-WRT (<a href="https://youtu.be/1LzdU9KsVfY" target="_blank">Tutorial</a>)</h2>
+
+<ul>
+	<li>Web UI SSL Mod (<a href="https://youtu.be/9j8vtz9u8Q0" target="_blank">Tutorial</a>)</li>
+	<li>OpenVPN Server (<a href="https://youtu.be/szRUKjKvtEI" target="_blank">Tutorial</a>)</li>
+</ul>
+
+<h2>Windows Server 2019 (<a href="https://youtu.be/_1zBK93RxY4" target="_blank">Tutorial</a>)</h2>
+
+<ul>
+	<li>Active Directory, DNS, Group Policy (<a href="https://youtu.be/daGsd__UpFU" target="_blank">Tutorial</a>)</li>
+	<li>hMailServer Email Server (<a href="https://youtu.be/QfAmSYKUdFs" target="_blank">Tutorial</a>)</li>
+	<li>Apache/MySQL/PHP web server (<a href="https://youtu.be/Ww0f5NVY30Q" target="_blank">Tutorial</a>)</li>
+	<li>phpMyAdmin (<a href="https://youtu.be/1UqzybsPRWQ" target="_blank">Tutorial</a>)</li>
+	<li>TinyFileManager (<a href="https://youtu.be/KEX2xenQENc" target="_blank">Tutorial</a>)</li>
+	<li>MonstaFTP (<a href="https://youtu.be/gS4JdAz9uXo" target="_blank">Tutorial</a>)</li>
+	<li>FileZilla FTP Server (<a href="https://youtu.be/S_h3z_UWJ4w" target="_blank">Tutorial</a>)</li>
+	<li>AirSonic (<a href="https://youtu.be/dJ5Z9Q9ExmM" target="_blank">Tutorial</a>)</li>
+	<li>AriaNg (<a href="https://youtu.be/2ObfTGsm1I0" target="_blank">Tutorial</a>)</li>
+	<li>qBittorrent (<a href="https://youtu.be/ib4RWNeiWjM" target="_blank">Tutorial</a>)</li>
+	<li>RainLoop Web Email Client (<a href="https://youtu.be/NhdvKwfa6BA" target="_blank">Tutorial</a>)</li>
+	<li>phpVirtualBox (<a href="https://youtu.be/82nXHNfPuAg" target="_blank">Tutorial</a>)</li>
+	<li>MongoDB (<a href="https://youtu.be/JHZ3LMOp-s4" target="_blank">Tutorial</a>)</li>
+	<li>OpenFire XMPP Server (<a href="https://youtu.be/4cD0bstRn_g" target="_blank">Tutorial</a>)</li>
+	<li>OpenVPN Server (<a href="https://youtu.be/eu2y_8tao2A" target="_blank">Tutorial</a>)</li>
+	<li>Subversion (<a href="https://youtu.be/hJmzyjlW6gU" target="_blank">Tutorial</a>)</li>
+</ul>
+
+<h2 style="margin-left: 40px;">Debian 10 VirtualBox VM (<a href="https://youtu.be/D78QKh2wQS4" target="_blank">Tutorial</a>)</h2>
+
+<ul style="margin-left: 40px;">
+	<li>Apache/MySQL/PHP web server (<a href="https://youtu.be/lp9RtsyabvQ" target="_blank">Tutorial</a>)</li>
+	<li>PiHole (<a href="https://youtu.be/V6ujcri7Ay0" target="_blank">Tutorial</a>)</li>
+	<li>Draw.io (<a href="https://youtu.be/9zEe-ocOU50" target="_blank">Tutorial</a>)</li>
+	<li>Guacamole (<a href="https://youtu.be/OWOHpSCmez8" target="_blank">Tutorial</a>)</li>
+	<li>Heimdall (<a href="https://youtu.be/bBtiB_Hkimg" target="_blank">Tutorial</a>)</li>
+	<li>Nextcloud (<a href="https://youtu.be/fZjgg3dssR0" target="_blank">Tutorial</a>)</li>
+	<li>phpMyAdmin (<a href="https://youtu.be/1SKoYd1bvFs" target="_blank">Tutorial</a>)</li>
+	<li>VSCode Server (<a href="https://youtu.be/TDbUoEgGE54" target="_blank">Tutorial</a>)</li>
+	<li>Webmin (<a href="https://youtu.be/YVh16Au_Y9Q" target="_blank">Tutorial</a>)</li>
+</ul>
+
+<h2>ProxMox VE (<a href="https://youtu.be/5Xji4Y60zDo" target="_blank">Tutorial</a>)</h2>
+          </div>
+        </div>
+      </body>
+    </html>
+  
