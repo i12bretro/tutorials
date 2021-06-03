@@ -1,0 +1,140 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Powershell Script for Always On VirtualBox VMs</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Powershell Script for Always On VirtualBox VMs</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Preparation</h2>
+
+<ol>
+	<li>Download the VMs_Always_On Powershell script <a href="https://raw.githubusercontent.com/i12bretro/tutorials/main/_Downloads/VM_Always_On.ps1" target="_blank">Download</a></li>
+	<li>Open the downloaded VMs_Always_on.ps1 file in a text editor</li>
+	<li>Edit the following:
+	<ol start="1" style="list-style-type: lower-alpha;">
+		<li>Set the <em>$vboxPath</em> variable to the install path of VirtualBox if it&#39;s not installed to the default location</li>
+		<li><em>Set the $alwaysRunningVMs&nbsp;</em>variable, adding the list of VM names or UUIDs to keep running (These values are case sensitive)</li>
+	</ol>
+	</li>
+	<li>Save the changes</li>
+	<li>Copy the file to a location it will run from, c:\scripts for example</li>
+</ol>
+
+<h2>Scheduled Task: Manual Method</h2>
+
+<ol>
+	<li>Click on the Start Button &gt; Type task &gt; Launch Task Scheduler</li>
+	<li>Right click the Task Scheduler Library folder in the left pane &gt; Create Basic&nbsp;Task...</li>
+	<li>Set the name to VMs Always On and optionally set a Description &gt; Click Next</li>
+	<li>For the Trigger, select When the computer starts &gt; Click Next</li>
+	<li>For the Action, select Start a program&nbsp;&gt; Click Next</li>
+	<li>In the Program/script field, paste the following:
+	<p>C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe</p>
+	</li>
+	<li>In the Add arguments field, paste the following, editing the path to the .ps1 file if necessary:
+	<p>-NoLogo -NoProfile -ExecutionPolicy Bypass -File &quot;C:\Scripts\VMs_Always_On.ps1&quot;</p>
+	</li>
+	<li>Click Next</li>
+	<li>Check the Open the Properties dialog for this task when I click Finish box</li>
+	<li>Click Finish</li>
+	<li>In the Properties dialog, select Run whether&nbsp;user is logged on or not</li>
+	<li>Select the Triggers tab and click the Edit... button</li>
+	<li>Check the Repeat task every: box and set the value to 5 minutes</li>
+	<li>Set the for a duration of value to Indefinitely</li>
+	<li>Click OK to accept the triggers</li>
+	<li>Click OK again to create the scheduled task</li>
+	<li>Enter the password for the user the task will run as</li>
+	<li>To test, stop at least one VM listed in the&nbsp;VMs_Always_On.ps1 file</li>
+	<li>Right click the&nbsp;VMs Always On task &gt; Run</li>
+	<li>Check that the VM is starting as expected</li>
+</ol>
+
+<h2>Scheduled Task: Quick Method</h2>
+
+<ol>
+	<li>Download the Scheduled Task export VMs Always On.xml <a href="https://raw.githubusercontent.com/i12bretro/tutorials/main/_Downloads/VMs%20Always%20On.xml" target="_blank">Download</a></li>
+	<li>Click on the Start Button &gt; Type task &gt; Launch Task Scheduler</li>
+	<li>Right click the Task Scheduler Library folder in the left pane &gt; Import Task...</li>
+	<li>Browse to the downloaded&nbsp;VMs Always On.xml file and select it &gt; Click Open</li>
+	<li>Click the Actions tab &gt; Edit... button</li>
+	<li>In the Add arguments field, update the path to the VMs_Always_On.ps1 file downloaded earlier (Defaults to c:\scripts\)</li>
+	<li>Click OK and OK again to create the scheduled task</li>
+	<li>To test, stop at least one VM listed in the&nbsp;VMs_Always_On.ps1 file</li>
+	<li>Right click the&nbsp;VMs Always On task &gt; Run</li>
+	<li>Check that the VM is starting as expected</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
