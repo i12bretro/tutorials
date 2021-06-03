@@ -33,9 +33,13 @@
             $(document).on('click','input.copy-text',function(){
               theButton = $(this);
 														$('input.copy-text').attr('src','images/clipboard.png');
-							              $('span.copy-animation').removeClass('copy-animation');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
               try {
-                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
                 navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
 																theButton.attr('src','images/clipboard_active.png');
 								              } catch(err) {
@@ -57,8 +61,8 @@
             });
 
             if(window.self !== window.top){
-              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
-            }
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
           });
         </script>
         <link href="css/steps.css" rel="stylesheet" type="text/css" />
@@ -74,7 +78,7 @@
           <h2>Things You Will Need</h2>
 
 <ul>
-	<li>&nbsp;&nbsp;&nbsp; A&nbsp; microSD card at least 4 GB</li>
+	<li>    A  microSD card at least 4 GB</li>
 </ul>
 
 <h2>Downloads and Flashing to MicroSD</h2>
@@ -88,7 +92,7 @@
 	<li>Ignore/close the Windows dialogs to format the inserted microSD card</li>
 </ol>
 
-<h2>Booting to EmuElec for the First Time</h2>
+<h2>Booting to LibreElec for the First Time</h2>
 
 <ol>
 	<li>With an unfolded paperclip, press the reset button hidden inside the 3.5mm AV port</li>
