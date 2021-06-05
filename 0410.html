@@ -1,0 +1,125 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Adding Storage to ProxMox VE</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Adding Storage to ProxMox VE</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Local Storage</h2>
+
+<ol>
+	<li>Install the physical disk into the ProxMox server hardware</li>
+	<li>Power on the ProxMox server</li>
+	<li>Open a web browser and navigate to the ProxMox web UI</li>
+	<li>Log in</li>
+	<li>Click the node with the new disk drive in the left navigation menu</li>
+	<li>Expand Disks &gt; Click ZFS</li>
+	<li>Click the Create ZFS button</li>
+	<li>Give the ZFS storage a name and set Raid Level =&nbsp;Single Disk</li>
+	<li>Select the new disk from the list of drives &gt; Click the Create button</li>
+	<li>That&#39;s it, the new disk is now available to use for storing VMs</li>
+</ol>
+
+<h2>Network Storage</h2>
+
+<ol>
+	<li>Create or navigate to an existing folder to share</li>
+	<li>Right click on the folder &gt; Properties &gt; Sharing tab &gt; Advanced Sharing...</li>
+	<li>Click the Share this folder box</li>
+	<li>Give the share a name (ie ISOs)</li>
+	<li>Click the Permissions button</li>
+	<li>Remove the Everyone group</li>
+	<li>Add users or groups to allow access to the share</li>
+	<li>Click OK on all open dialog boxes</li>
+	<li>Open a web browser and navigate to the ProxMox web UI</li>
+	<li>Log in</li>
+	<li>Select Datacenter from the left navigation menu</li>
+	<li>Click Storage in the left navigation sub menu</li>
+	<li>Click the Add button &gt; CIFS</li>
+	<li>Complete the Add&nbsp;CIFS form as follows
+	<p>ID: ISOs<br />
+	Server: 10.10.27.1<br />
+	Username: i12bretro<br />
+	Password: &lt;password&gt;<br />
+	Share: ISOs<br />
+	Max Backups: 3<br />
+	Content: ISO image</p>
+	</li>
+	<li>Click the Add button</li>
+	<li>That&#39;s it, ProxMox can now see the network share and it can be used to host ISO images for installing operating systems</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
