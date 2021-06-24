@@ -1,0 +1,123 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>TWRP Recovery on Amlogic S905x S912 Android TV Box</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>TWRP Recovery on Amlogic S905x S912 Android TV Box</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Booting TWRP</h2>
+
+<ol>
+	<li>Download TWRP recovery for Amlogic devices <a href="https://drive.google.com/file/d/1F4Iy_zj8Q5qYCavleIo7176A8y_tPxFE/view?usp=sharing" target="_blank">Download</a></li>
+	<li>Rename the downloaded file recovery.img</li>
+	<li>Format a microSD card to FAT32
+	<ol start="1" style="list-style-type: lower-alpha;">
+		<li>Right Click Start &gt; File Explorer</li>
+		<li>Right Click the microSD card &gt; Format...</li>
+		<li>Select FAT32 from the File System dropdown</li>
+		<li>Make sure Quick Format is checked</li>
+		<li>Click Start</li>
+	</ol>
+	</li>
+	<li>Copy recovery.img to the root of a microSD card</li>
+	<li>Safely eject the microSD card</li>
+	<li>Unplug power from the TV box</li>
+	<li>Plug the microSD card into the Amlogic based TV box</li>
+	<li>While holding the reset button on the TV box (sometimes hidden inside the AV port) with a toothpick or unfolded paperclip, plug in the power cord</li>
+	<li>Continue holding the reset button for 10-15 seconds</li>
+	<li>TWRP recovery should load</li>
+</ol>
+
+<h2>Installing TWRP (optional)</h2>
+
+<p>Only install TWRP if it is required by a custom ROM, otherwise, booting to it from microSD when needed will suffice</p>
+
+<ol>
+	<li>With the device in TWRP recovery, select Install from the main menu</li>
+	<li>Select Install Image from the lower right</li>
+	<li>Select Storage from the lower right &gt; Select MicroSD Card &gt; Click OK</li>
+	<li>Select recovery.img from the listing</li>
+	<li>Select Recovery from the partition listing</li>
+	<li>Click and drag the slider to the right to begin flashing</li>
+	<li>The flash should complete in just a few seconds</li>
+	<li>Once completed successfully, power off the Android TV box</li>
+	<li>Remove the microSD card</li>
+	<li>While holding the reset button, power the TV box back on</li>
+	<li>Continue holding the reset button for 10-15 seconds</li>
+	<li>TWRP recovery should load, this time from the recovery partition</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
