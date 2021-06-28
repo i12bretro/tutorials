@@ -1,0 +1,191 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Run ArchLinux on Amlogic S905x S912 S905w Android TV Box</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Run ArchLinux on Amlogic S905x S912 S905w Android TV Box</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <p><em>This might be a roundabout way of getting ArchLinux up and running on Amlogic based TV boxes, but it worked for me. It builds upon the great work done by the Armbian development team. Arch provides a generic ARMv8 root filesystem download on their site. In this tutorial, we will be flashing Armbian to a SD card and then replacing the Debian filesystem with the downloaded ArchLinux root FS. The tutorial uses the dd command, which does not hold your hand or offer any warnings or confirmations. TAKE YOUR TIME AND PROCEED AT YOUR OWN RISK</em></p>
+
+<h2>Things You Will Need</h2>
+
+<ul>
+	<li>A microSD card at least 8 GB</li>
+</ul>
+
+<h2>Downloads and Flashing to MicroSD</h2>
+
+<ol>
+	<li>Download Armbian <a href="https://users.armbian.com/balbes150/arm-64/Armbian_20.10_Arm-64_bullseye_current_5.9.0.img.xz" target="_blank">Download</a></li>
+	<li>Download ArchLinux for ARM <a href="http://os.archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz" target="_blank">Download</a></li>
+	<li>Insert the microSD card to write Armbian/Arch Linux to</li>
+	<li>Run the following commands in a terminal window:
+	<div class="codeBlock"># install prerequisites<br />
+	sudo apt install xz-utils -y<br />
+	# extract downloaded armbian image<br />
+	unxz ~/Downloads/Armbian_20.10_Arm-64_bullseye_current_5.9.0.img.xz<br />
+	# list out disks<br />
+	sudo fdisk -l<br />
+	# run the following to restore the Armbian .img to the target device<br />
+	# replace sdx with the correct source disk<br />
+	# MAKE ABSOLUTELY CERTAIN THE OUTPUT TARGET IS CORRECT<br />
+	# OR YOU COULD POTENTIALLY DAMAGE YOUR OS<br />
+	# OR OTHER STORAGE DEVICES ATTACHED TO THE PC<br />
+	# restore img<br />
+	sudo dd if=~/Downloads/Armbian_20.10_Arm-64_bullseye_current_5.9.0.img of=/dev/sdx bs=4M status=progress<br />
+	# after the dd completes, run the following to list mounted drives and partitions<br />
+	df -h<br />
+	# locate the ROOTFS partition on the SD card, using sdx from above<br />
+	# delete the armbian OS filesystem, replace the path with the SD card ROOTFS partition<br />
+	sudo rm /media/i12bretro/ROOTFS/* -r<br />
+	# extract the archlinux rootfs to the SD card ROOTFS partition, replace the path with the SD card ROOTFS partition<br />
+	sudo tar -xf ~/Downloads/ArchLinuxARM-aarch64-latest.tar.gz -C /media/i12bretro/ROOTFS</div>
+	</li>
+</ol>
+
+<h2>Configure MicroSD Card for ArchLinux</h2>
+
+<ol>
+	<li>Open the BOOT partition of the microSD card in a file browser</li>
+	<li>Rename the appropriate file from below to u-boot.ext on the root of the SD card
+	<p>u-boot-s905 (for s905)<br />
+	u-boot-s905x-s912 (for s905x and s912)<br />
+	u-boot-s905x2-s922 (for s905x2 and s922)</p>
+	</li>
+	<li>Edit /extlinux/extlinux.conf in a text editor
+	<ol start="1" style="list-style-type: lower-alpha;">
+		<li>Comment out rk-3399 lines by adding #</li>
+		<li>Uncomment aml s9xx FDT and APPEND lines by removing #</li>
+		<li>Update the FDT line to point to a working .dtb file for your device
+		<div class="codeBlock"># aml s9xxx<br />
+		FDT /dtb/amlogic/meson-gxl-s905w-tx3-mini.dtb<br />
+		APPEND root=LABEL=ROOTFS rootflags=data=writeback rw console=ttyAML0,115200n8 console=tty0 no_console_suspend consoleblank=0 fsck.fix=yes fsck.repair=yes net.ifnames=0</div>
+		</li>
+		<li>Save</li>
+		<li>Close</li>
+	</ol>
+	</li>
+	<li>Safely eject the microSD</li>
+	<li>Insert microSD card to Android TV box</li>
+</ol>
+
+<h2>Booting to ArchLinux for the First Time</h2>
+
+<ol>
+	<li>Plug the power adapter into the Android TV box</li>
+	<li>If the device has never booted from external storage before the stock Android OS will load</li>
+	<li>In Android, navigate to the application drawer &gt; Run Update &amp; Backup</li>
+	<li>Select Local &gt; Navigate to the microSD card &gt; aml_autoscript.zip</li>
+	<li>Select Update</li>
+	<li>The system will reboot twice and should then begin booting ArchLinux from the microSD card</li>
+	<li>You should see the ArchLinux terminal running startup scripts</li>
+	<li>When prompted, login with username: root password: root<br />
+	NOTE: the default user level account is username: alarm password: alarm</li>
+	<li>Run the following commands to install sudo and create a new sudo user
+	<div class="codeBlock"># change the root password<br />
+	passwd<br />
+	# delete the default alarm user<br />
+	userdel -r alarm<br />
+	# initialize pacman keyring<br />
+	pacman-key --init<br />
+	pacman-key --populate archlinuxarm<br />
+	# update software repositories<br />
+	pacman -Syu<br />
+	# install sudo<br />
+	pacman -S sudo<br />
+	# create a new user account<br />
+	# change i12bretro in all the commands below to the new username<br />
+	useradd --create-home i12bretro<br />
+	# set the new user&#39;s password<br />
+	passwd i12bretro<br />
+	# add the user to the wheel group<br />
+	usermod -aG wheel i12bretro<br />
+	# add the user to the sudoers file<br />
+	nano /etc/sudoers<br />
+	# uncomment the following line by removing the # symbol<br />
+	%wheel ALL=(ALL) ALL</div>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to sudoers</li>
+	<li>Exit out of the root session and login with the newly created user account</li>
+	<li>Verify that sudo is working by running the following command
+	<div class="codeBlock">sudo pacman -Syu</div>
+	</li>
+	<li>Welcome to ArchLinux running on your Amlogic Android TV box</li>
+</ol>
+
+<p>Special thanks to the developers and forum members over at <a href="https://armbian.com" target="_blank">Armbian.com</a> and <a href="https://archlinuxarm.org/" target="_blank">ArchLinuxARM.org</a> for making this possible</p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
