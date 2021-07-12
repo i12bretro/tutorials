@@ -91,7 +91,7 @@
 	# start the OpenFire service<br />
 	sudo systemctl enable --now openfire<br />
 	# install MySQL/MariaDB<br />
-	sudo apt&nbsp;install mariadb-server<br />
+	sudo apt install mariadb-server<br />
 	# configure the MySQL database<br />
 	sudo su<br />
 	mysql_secure_installation</code></li>
@@ -110,14 +110,14 @@
 	MariaDB [(none)]&gt; USE openfire;<br />
 	MariaDB [(none)]&gt; source /usr/share/openfire/resources/database/openfire_mysql.sql;<br />
 	MariaDB [(none)]&gt; QUIT;</code></li>
-	<li>Open a web&nbsp;browser and open to http://localhost:9090/setup/index.jsp</li>
+	<li>Open a web browser and open to http://localhost:9090/setup/index.jsp</li>
 	<li>Select a language &gt; Click Continue</li>
 	<li>Set the XMPP domain name and input the server fully qualified domain name &gt; Click Continue</li>
 	<li>Select Standard Database Connection &gt; Click Continue</li>
 	<li>Enter the following database parameters:
 	<p>Database Driver Presets:MySQL<br />
 	JDBC Driver Class: com.mysql.jdbc.Driver<br />
-	Database URL:jdbc:mysql://127.0.0.1/openfire?useUnicode=true characterEncoding=UTF-8&amp;characterSetResults=UTF-8<br />
+	Database URL:jdbc:mysql://127.0.0.1/openfire?useUnicode=true&amp;characterEncoding=UTF-8&amp;characterSetResults=UTF-8<br />
 	Username: openfire<br />
 	Password: 0p3nF1re!!</p>
 	</li>
