@@ -16,12 +16,18 @@ ol li { padding: 0px; font-size: 25px; margin-left: 6px; }
 ol li a { font-size: 0.5em; vertical-align: middle;}
 ol li p { font-size: 0.7em; font-weight: bold; margin: 15px 50px; vertical-align: middle;}
 div.codeBlock, textarea,code.codeBlock { width: 80%; display: block; font-size: 0.6em; margin: 10px 25px; padding: 5px; background: #000; color: #0f0; font-family:'Courier New', Courier, monospace; box-shadow: 2px 2px 10px #333; }
+div.PS, textarea.PS, code.PS { background: #012456; color: #eeedf0; }
+div.CMD, textarea.CMD, code.CMD { color: #eeedf0; }
 ol li span { transition: opacity .5s ease-in-out; }
 .strikethrough { display: inline-block; position: relative; opacity: 0.5; margin-left: 6px; }
 .strikethrough:after {content: ''; position: absolute; display: block; width: 100%; height: 2px; box-shadow: 0 1px rgba(255,255,255,0.6); margin-top: -0.6em; background: black; transform-origin: center left; animation: strikethrough 1s 0.0s cubic-bezier(.5, 0, .1, 1) 1; transition: transform 1s cubic-bezier(.5, 0, .1, 1); }
 @keyframes strikethrough { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
 input.copy-text { position: absolute; vertical-align: text-top; height: 14px; width: 14px; margin-left: -27px; padding: 3px 5px; }
-span.copy-animation {  animation: textSelect 0.75s linear; }
+span.copy-animation { animation: textSelect 0.75s linear; }
+span.copy-animation-ps { animation: textSelectPS 0.75s linear; }
+span.copy-animation-cmd { animation: textSelectCMD 0.75s linear; }
 
 @keyframes textSelect { 0% { background-color:#000; color: #0f0; } 30% { background: #0f0; color: #000; box-shadow: inset 100px 0 0 0 #0f0; } 70% { background: #0f0; color: #000; } 100% {background-color:#000; color: #0f0; } }
+@keyframes textSelectPS { 0% { background-color:#012456; color: #eeedf0; } 30% { background: #eeedf0; color: #012456; box-shadow: inset 100px 0 0 0 #eeedf0; } 70% { background: #eeedf0; color: #012456; } 100% {background-color:#012456; color: #eeedf0; } }
+@keyframes textSelectCMD { 0% { background-color:#000; color: #eeedf0; } 30% { background: #eeedf0; color: #000; box-shadow: inset 100px 0 0 0 #eeedf0; } 70% { background: #eeedf0; color: #000; } 100% {background-color:#000; color: #eeedf0; } }
