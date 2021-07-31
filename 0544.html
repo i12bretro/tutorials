@@ -1,0 +1,122 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Running a Windows 11 VM in ProxMox VE</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Running a Windows 11 VM in ProxMox VE</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Log into the ProxMox web UI</li>
+	<li>Select a storage from the left navigation pane to download the .iso to</li>
+	<li>Select ISO Images in the left sub-navigation pane</li>
+	<li>If running ProxMox 6, download the Windows 11 iso <a href="https://archive.org/download/win11insider2200065/22000.65.210704-1725.CO_RELEASE_SVC_IM_CLIENTMULTI_X64FRE_EN-US.ISO" target="_blank">Download</a> and upload it to the ProxMox ISO image library</li>
+	<li>If on ProxMox 7, click Download from URL and paste the download URL from above &gt; Click Query URL &gt; Click Download</li>
+	<li>Right click the ProxMox node name &gt; Create VM</li>
+	<li>Type Windows11 in the name field &gt; Next</li>
+	<li>Set the Type to Microsoft Windows and select the Windows 11 iso</li>
+	<li>Leave the defaults on the System tab &gt; Next</li>
+	<li>On the Hard Disk tab, set the Disk size to 32 &gt; Next</li>
+	<li>On the CPU tab, set Cores to 2 &gt; Next</li>
+	<li>On the Memory tab, set the Memory to 4096 &gt; Next</li>
+	<li>Leave the defaults on the Network tab &gt; Next</li>
+	<li>Verify the summary and click Finish</li>
+	<li>Right click the Windows11 VM in the left navigation pane &gt; Start</li>
+	<li>Click console in the left sub-navigation menu</li>
+	<li>Click Next</li>
+	<li>Click Install Now</li>
+	<li>Click I don&#39;t have a product key</li>
+	<li>Select the edition you&#39;d like to install</li>
+	<li>Check the I accept box &gt; Click Next</li>
+	<li>Click Custom (advanced) &gt; Click Next</li>
+	<li>Select the drive to install to &gt; Click Next</li>
+	<li>Wait for Windows to copy files, the VM will reboot</li>
+	<li>Select a Region &gt; Click Yes</li>
+	<li>Select a Keyboard layout &gt; Click Yes</li>
+	<li>Click Skip</li>
+	<li>Enter a name for the VM &gt; Click Next</li>
+	<li>Select Set up for work or school &gt; Click Next</li>
+	<li>Click Sign-in options</li>
+	<li>Click Join domain instead</li>
+	<li>Enter a username &gt; Click Next</li>
+	<li>Enter a password &gt; Click Next</li>
+	<li>Re-type the password &gt; Click Next</li>
+	<li>Select and answer 3 security questions</li>
+	<li>Uncheck everything &gt; Click Accept</li>
+	<li>Wait while updates are downloaded and installed</li>
+	<li>Welcome to Windows 11</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
