@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>i12bretro Tutorials</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+		<script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+		<link href="css/steps.css" rel="stylesheet" type="text/css" />
+		<style>
+			table { width: 65%; max-width: 950px; }
+			tr { line-height: 24px; }
+			tbody tr td { vertical-align: bottom; }
+			.dataTables_filter { position: absolute; top: 50px; right: 100px; z-index: 100; }
+		</style>
+	</head>
+	<body>
+		<div id="gridContainer">
+			<div class="topMargin"></div>
+			<div id="listName" class="topMargin">
+				<h1>i12bretro Tutorials</h1>
+			</div>
+			<div></div>
+			<div id="content">
+				<table border="0" cellspacing="2" cellpadding="2" align="center">
+					<thead>
+						<tr><th width="80">ID</th><th>Title</th><th width="175">Last Modified</th></tr>
+					</thead>
+					<tbody id="tutorialList">
+					
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</body>
+	<script>
+		$.ajax({ type:'GET', url: 'https://github.com/i12bretro/tutorials/file-list/main', success: function(html){ 
+				m = null;
+				regex = /<div role="rowheader".*?>.*?<a.*?href="\/i12bretro\/tutorials\/commit\/(.*?)">(\d{4}): (.*?)<\/a>.*?<time-ago.*?>(.*?)<\/time-ago>/gmsi
+				while ( (m = regex.exec( html )) != null  ){
+          $('#tutorialList').append('<tr><td align="center">'+ m[2] +'</td><td align="left"><a href="https://i12bretro.github.io/tutorials/'+ m[2] +'.html" target="_blank">'+ m[3] +'</a></td><td align="center">'+ m[4] +'</td></tr>');
+				}
+				initTable();
+			}
+		});
+		
+		function initTable(){
+			$('table').DataTable({'paging':   false });
+		}
+	</script>
+</html>
