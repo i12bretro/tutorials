@@ -1,0 +1,195 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Apache Subversion Basics with TortoiseSVN</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Apache Subversion Basics with TortoiseSVN</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Install&nbsp;TortoiseSVN</h2>
+
+<ol>
+	<li>Download TortoiseSVN <a href="https://tortoisesvn.net/downloads.html" target="_blank">Download</a></li>
+	<li>Install TortoiseSVN</li>
+</ol>
+
+<h2>Creating a New Repository</h2>
+
+<ol>
+	<li>Navigate to where you are storing your Subversion repository databases</li>
+	<li>Create a new folder matching the application name</li>
+	<li>Inside the new folder, right click in the whitespace &gt; TortoiseSVN &gt; Create respository here</li>
+	<li>When the dialog appears, click the Create folder structure option, this will create the standard &quot;trunk&quot;, &quot;branches&quot; and &quot;tags&quot; directories inside the new repository</li>
+</ol>
+
+<h2>Creating a Working Directory</h2>
+
+<ol>
+	<li>Create a folder to contain the working copy of the code, this could be on a development web server</li>
+	<li>Inside the new application folder, right click in the whitespace &gt; SVN Checkout...</li>
+	<li>Input the URL&nbsp;to the repository to work with, this can be either a file:// or http(s)://&nbsp;URL if Apache HTTPD has been setup for Subversion (Video link: )<br />
+	Examples:<br />
+	file:///E:/SVN_Repos/new_code/trunk<br />
+	https://svn.i12bretro.local/new_code/trunk</li>
+</ol>
+
+<h2>Committing Changes to the Repository</h2>
+
+<ol>
+	<li>After completing code changes, right click in the white space of the working directory &gt; SVN Commit...</li>
+	<li>Input <u>meaningful comments</u> about the changes completed</li>
+	<li>Click OK</li>
+</ol>
+
+<h2>Importing Existing Code Into Subversion</h2>
+
+<ol>
+	<li>Create the Subversion repository using the steps above</li>
+	<li>Navigate to the folder that contains your code</li>
+	<li>Right click in the whitespace &gt; TortoiseSVN &gt; Import...</li>
+	<li>Input the URL&nbsp;to the repository to work with, this can be either a file:// or http(s)://&nbsp;URL if Apache HTTPD has been setup for Subversion (Video link: )<br />
+	Examples:<br />
+	file:///E:/SVN_Repos/import_code/trunk<br />
+	http://svn.i12bretro.local/import_code/trunk</li>
+	<li>Input a meaningful comment&nbsp;about the state of the code being imported</li>
+	<li>To convert the current directory into a working directory after successfully importing the code into the repository, simply&nbsp;right click in the whitespace &gt; SVN Checkout...</li>
+	<li>Input the&nbsp;URL&nbsp;to the repository to work with</li>
+	<li>Verify the checkout path, making sure no unwanted sub-directories were added based on the repository URL (for example, I&#39;ve found that TortoiseSVN will add /trunk to the checkout directory)</li>
+	<li>Click OK</li>
+	<li>A dialog will display stating that the directory selected is not empty &gt; Confirm the target folder path and Click Checkout</li>
+</ol>
+
+<h2>Deploying Updates with Subversion Workflow</h2>
+
+<ol>
+	<li>After completing development and testing the code, you&#39;ll be ready to deploy it to a production environment</li>
+	<li>Navigate to the folder on the production environment &gt; Right click in the whitespace &gt; SVN Checkout...</li>
+	<li>Input the URL&nbsp;to the repository to work with, this can be either a file:// or http(s)://&nbsp;URL if Apache HTTPD has been setup for Subversion<br />
+	Examples:<br />
+	file:///E:/SVN_Repos/import_code/trunk<br />
+	https://svn.i12bretro.local/import_code/trunk</li>
+	<li>After the checkout completes the production directory will contain an exact copy of code in&nbsp;/trunk of the repository</li>
+</ol>
+
+<h2>Relocating Subversion Repository</h2>
+
+<p>This is useful if the location (file path or URL) of the repository has changed but the repository remains the same. For example, migrating to a new server or from file paths to Apache HTTPD based URLs</p>
+
+<ol>
+	<li>Navigate to the working directory in Windows Explorer</li>
+	<li>Right click in the white space&nbsp;&gt; TortoiseSVN &gt; Relocate...</li>
+	<li>Input the URL&nbsp;to the new location of the matching repository<br />
+	Examples:<br />
+	file:///E:/SVN_Repos/import_code/trunk<br />
+	https://svn.i12bretro.local/import_code/trunk</li>
+	<li>A dialog stating the relocate succeeded should be displayed</li>
+	<li>Right click in the white space &gt; TortoiseSVN &gt; Repo-browser</li>
+	<li>The new updated URL should be displayed</li>
+</ol>
+
+<h2>Tagging Releases</h2>
+
+<p>Once development and testing are completed for a version of the code, you can create a tag in Subversion. This is a snapshot of the code set and can we used to roll back to the exact version in the future if needed</p>
+
+<ol>
+	<li>Right click in the whitespace anywhere in Windows</li>
+	<li>Select TortoiseSVN &gt; Repo-browser</li>
+	<li>Input the URL to the repository to work with</li>
+	<li>Right click on the trunk folder in the left navigation pane &gt; Copy to...</li>
+	<li>Input the URL to the new tag to create, for example&nbsp;http://svn.i12bretro.local/code_repo/tags/1.0</li>
+	<li>Click OK</li>
+	<li>Input a comment such as &quot;Creating v1.0 tag&quot; &gt; Click OK</li>
+	<li>In the Repo browser, expand the tags directory to see the newly created tag</li>
+	<li>To revert back to this version of the code, just use the tag URL when checking out into a working directory, for example&nbsp;http://svn.i12bretro.local/code_repo/tags/1.0</li>
+</ol>
+
+<h2>Include a directory in the repository, but ignore its contents</h2>
+
+<p>This scenario is useful for a directory that is required by the application but where the contents is unique to the deployment. For example, an upload, temp, log or attachment directory.</p>
+
+<ol>
+	<li>Right click on the directory &gt; TortoiseSVN &gt; Properties</li>
+	<li>Click the New... button &gt; Other</li>
+	<li>Select svn:ignore from the Property name dropdown</li>
+	<li>Type * in the Property value field</li>
+	<li>Click OK</li>
+	<li>Right click in the white space &gt; SVN Commit...</li>
+	<li>Type a meaningful comment denoting the change</li>
+	<li>Click OK</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
