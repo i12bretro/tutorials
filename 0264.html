@@ -37,6 +37,8 @@
               try {
                 if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
                   $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
                 } else {
                   $('#'+ theButton.attr('rel')).addClass('copy-animation');
                 }
@@ -75,25 +77,27 @@
           </div>
           <div></div>
           <div id="content">
-          <p>I love the idea of the Raspberry Pi, but there are some cheaper alternative single board computers that offer a similar experience for a fraction of the cost. While the community support isn&#39;t quite what it is for the Pi, there are a ton of projects you can accomplish on the cheap with these little hidden gems. Keep an eye on AliExpress and Amazon and you can find SBC&#39;s sporting quad core ARM process with 2-4 GB of RAM for under $30, including a power supply and IR remote control.</p>
+          <p><em>DISCLAIMER: This process will overwrite the current Android ROM on your TV box. I have tested these steps on my own devices, but I am not responsible if you damage or brick your device. Verify the ROM will work on your device before starting and make sure to backup any data you do not want to lose before proceeding.</em></p>
+
+<p>I love the idea of the Raspberry Pi, but there are some cheaper alternative single board computers that offer a similar experience for a fraction of the cost. While the community support isn&#39;t quite what it is for the Pi, there are a ton of projects you can accomplish on the cheap with these little hidden gems. Keep an eye on AliExpress and Amazon and you can find SBC&#39;s sporting quad core ARM process with 2-4 GB of RAM for under $30, including a power supply and IR remote control.</p>
 
 <p>The box used in this video is a M8S (RK3288) I picked up on eBay for $15.99 shipped. It sports a Quad Core Rockchip RK3288 @ 1.8GHz and 2 GB of DDR3 RAM.<br />
 https://www.ebay.com/itm/264726126644</p>
 
 <h2>!! Warnings !!</h2>
 
-<p>This will remove the Android OS that came with the device. Make sure you have a backup of the Android image before proceeding in case you want to revert to the stock Android image in the future. On my box the wifi and remote control did not function and the wired networking was really slow.&nbsp;</p>
+<p>This will remove the Android OS that came with the device. Make sure you have a backup of the Android image before proceeding in case you want to revert to the stock Android image in the future. On my box the wifi and remote control did not function and the wired networking was really slow. </p>
 
 <h2>Things You Will Need</h2>
 
 <ul>
-	<li>&nbsp;&nbsp;&nbsp; A USB A to USB A cable</li>
+	<li>    A USB A to USB A cable</li>
 </ul>
 
 <h2>Preparing the TV Box to Boot from MicroSD</h2>
 
 <ol>
-	<li>Download the&nbsp;RK3288_Nougat.zip <a href="https://drive.google.com/file/d/1LZaN8a9R8QDsy418AbUTXkjE-KN-kovq/view?usp=sharing" target="_blank">Download</a></li>
+	<li>Download the RK3288_Nougat.zip <a href="https://drive.google.com/file/d/1LZaN8a9R8QDsy418AbUTXkjE-KN-kovq/view?usp=sharing" target="_blank">Download</a></li>
 	<li>Download RK3288_Files.zip <a href="https://drive.google.com/file/d/10YXYevWoSFLf-L-0d0ZnWuC-ZhFk1Xas/view?usp=sharing" target="_blank">Download</a></li>
 	<li>Extract RK3288_Nougat.zip</li>
 	<li>Extract RK3288_Files.zip</li>
@@ -107,12 +111,12 @@ https://www.ebay.com/itm/264726126644</p>
 	<li>Unplug the USB cable from the PC</li>
 	<li>While holding in the reset button on the TV Box, connect a USB cable from the OTG port to a USB port on your computer</li>
 	<li>Click the Firmware Button</li>
-	<li>Navigate to the extracted RK3288_Nougat files &nbsp;&gt; Select the HPH NT-V6 RK3288 Custom Nougat ROM v1.0 2018-12-19.img file &gt; Click the Upgrade button</li>
+	<li>Navigate to the extracted RK3288_Nougat files  &gt; Select the HPH NT-V6 RK3288 Custom Nougat ROM v1.0 2018-12-19.img file &gt; Click the Upgrade button</li>
 	<li>After the process completes, unplug the USB cable from the PC and power on the TV box</li>
 	<li>Plug in the TV box and the custom Android Nougat image should boot</li>
 </ol>
 
-<p>Source:&nbsp;<a href="https://forum.freaktab.com/forum/tv-player-support/rk3288-devices/nagrace-3288-devices/755354-hph-nt-v6-rk3288-custom-nougat-rom" target="_blank">https://forum.freaktab.com/forum/tv-player-support/rk3288-devices/nagrace-3288-devices/755354-hph-nt-v6-rk3288-custom-nougat-rom</a></p>
+<p>Source: <a href="https://forum.freaktab.com/forum/tv-player-support/rk3288-devices/nagrace-3288-devices/755354-hph-nt-v6-rk3288-custom-nougat-rom" target="_blank">https://forum.freaktab.com/forum/tv-player-support/rk3288-devices/nagrace-3288-devices/755354-hph-nt-v6-rk3288-custom-nougat-rom</a></p>
           </div>
         </div>
       </body>
