@@ -37,6 +37,8 @@
               try {
                 if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
                   $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
                 } else {
                   $('#'+ theButton.attr('rel')).addClass('copy-animation');
                 }
@@ -61,8 +63,8 @@
             });
 
             if(window.self !== window.top){
-              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
-            }
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
           });
         </script>
         <link href="css/steps.css" rel="stylesheet" type="text/css" />
@@ -75,7 +77,9 @@
           </div>
           <div></div>
           <div id="content">
-          <ol>
+          <p><em>DISCLAIMER: This process will overwrite the current Android ROM on your TV box. I have tested these steps on my own devices, but I am not responsible if you damage or brick your device. Verify the ROM will work on your device before starting and make sure to backup any data you do not want to lose before proceeding.</em></p>
+
+<ol>
 	<li>Download the atvXperience Image <a href="https://drive.google.com/file/d/16YSotFxOmtXAPZfVvzHCXRQxOiianCdl/view?usp=sharing" target="_blank">Download</a></li>
 	<li>Download Amlogic USB Burning Tool <a href="https://drive.google.com/file/d/1OU_O7qq_mtpRO8ELWhycQD4R036Nw0iW/view" target="_blank">Download</a></li>
 	<li>Extract the downloaded Amlogic USB Burning Tool</li>
