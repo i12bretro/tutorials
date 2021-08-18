@@ -37,6 +37,8 @@
               try {
                 if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
                   $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
                 } else {
                   $('#'+ theButton.attr('rel')).addClass('copy-animation');
                 }
@@ -75,7 +77,9 @@
           </div>
           <div></div>
           <div id="content">
-          <ol>
+          <p><em>DISCLAIMER: This process will overwrite the current Android ROM on your TV box. I have tested these steps on my own devices, but I am not responsible if you damage or brick your device. Verify the ROM will work on your device before starting and make sure to backup any data you do not want to lose before proceeding.</em></p>
+
+<ol>
 	<li>Download the atvXperience Image <a href="https://drive.google.com/file/d/17q43aZwndNosICLHXt7C0q-qpopGV1lt/view?usp=sharing" target="_blank">Download</a></li>
 	<li>Download Amlogic USB Burning Tool <a href="https://drive.google.com/file/d/1Igj5CimoGS-irKKI5H8iEVzxY23W387G/view?usp=sharing" target="_blank">Download</a></li>
 	<li>Extract the downloaded Amlogic USB Burning Tool</li>
@@ -93,7 +97,7 @@
 	<li>Enjoy a clean and fast Android TV experience on your Amlogic TV Box</li>
 </ol>
 
-<p>Source:&nbsp;<a href="https://forum.atvxperience.com/viewtopic.php?f=3&amp;t=2728">https://forum.atvxperience.com/viewtopic.php?f=3&amp;t=2728</a></p>
+<p>Source: <a href="https://forum.atvxperience.com/viewtopic.php?f=3&amp;t=2728">https://forum.atvxperience.com/viewtopic.php?f=3&amp;t=2728</a></p>
           </div>
         </div>
       </body>
