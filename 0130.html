@@ -37,6 +37,8 @@
               try {
                 if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
                   $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
                 } else {
                   $('#'+ theButton.attr('rel')).addClass('copy-animation');
                 }
@@ -61,8 +63,8 @@
             });
 
             if(window.self !== window.top){
-              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
-            }
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
           });
         </script>
         <link href="css/steps.css" rel="stylesheet" type="text/css" />
@@ -75,7 +77,9 @@
           </div>
           <div></div>
           <div id="content">
-          <ol>
+          <p><em>DISCLAIMER: This process will overwrite the current Android ROM on your TV box. I have tested these steps on my own devices, but I am not responsible if you damage or brick your device. Verify the ROM will work on your device before starting and make sure to backup any data you do not want to lose before proceeding.</em></p>
+
+<ol>
 	<li>Download Aidan&#39;s Android TV ROM v7.1 <a href="https://drive.google.com/drive/mobile/folders/17uJLtj6egJBmvVLv1CoQEsTq_vwIkL6a/1xAyL12LVljkWDhrev9RcOBXDU6eI3Snd?usp=sharing&amp;sort=13&amp;direction=a" target="_blank">Download</a></li>
 	<li>Download Amlogic Burning Tool v2.2.0 <a href="https://drive.google.com/file/d/1OU_O7qq_mtpRO8ELWhycQD4R036Nw0iW/view" target="_blank">Download</a></li>
 	<li>Optional, Download Magisk v20.4 for root access <a href="https://drive.google.com/file/d/1_YblR6FEbkE7hQbSrG9HRcSYUiIVCpd3/view?usp=sharing" target="_blank">Download</a>
@@ -97,9 +101,9 @@
 	<li>Enjoy a clean and fast Android TV experience on your S905x device</li>
 </ol>
 
-<p>&nbsp;</p>
+<p> </p>
 
-<p>&nbsp;</p>
+<p> </p>
 
 <p>For more information read the original XDA thread at <a href="https://forum.xda-developers.com/android-stick--console-computers/amlogic/rom-aidans-android-tv-custom-rom-7-1-2-t4104869" target="_blank">https://forum.xda-developers.com/android-stick--console-computers/amlogic/rom-aidans-android-tv-custom-rom-7-1-2-t4104869</a></p>
           </div>
