@@ -37,6 +37,8 @@
               try {
                 if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
                   $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
                 } else {
                   $('#'+ theButton.attr('rel')).addClass('copy-animation');
                 }
@@ -61,8 +63,8 @@
             });
 
             if(window.self !== window.top){
-              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
-            }
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
           });
         </script>
         <link href="css/steps.css" rel="stylesheet" type="text/css" />
@@ -75,7 +77,9 @@
           </div>
           <div></div>
           <div id="content">
-          <ol>
+          <p><em>DISCLAIMER: This process will overwrite the current Android ROM on your TV box. I have tested these steps on my own devices, but I am not responsible if you damage or brick your device. Verify the ROM will work on your device before starting and make sure to backup any data you do not want to lose before proceeding.</em></p>
+
+<ol>
 	<li>Download Aidan&#39;s Android TV 9 ROM <a href="https://drive.google.com/drive/folders/1CG9OjZDmp6xgJDYssWK4XgYmvdFIzGe6?sort=13&amp;direction=a" target="_blank">Download</a></li>
 	<li>Download Amlogic Burning Tool v2.2.0 <a href="https://drive.google.com/file/d/1OU_O7qq_mtpRO8ELWhycQD4R036Nw0iW/view" target="_blank">Download</a></li>
 	<li>Extract Amlogic Burning Tool v2.2.0</li>
@@ -89,7 +93,7 @@
 	<li>Once the process completes (100%: Burning Successfully) click the Stop button</li>
 	<li>Disconnect the TV box from the PC USB</li>
 	<li>Connect the TV box to an HDMI display and power it on</li>
-	<li>Enjoy a clean and fast Android TV experience on your S905w&nbsp;device</li>
+	<li>Enjoy a clean and fast Android TV experience on your S905w device</li>
 </ol>
 
 <p>For more information read the original XDA thread at <a href="https://forum.xda-developers.com/t/v4-s905w-s912-rom-android-tv-9-pie-aidans-custom-rom-stable-3139-mi-box-firmware-port-to-amlogic-boxes.4199287" target="_blank">https://forum.xda-developers.com/t/v4-s905w-s912-rom-android-tv-9-pie-aidans-custom-rom-stable-3139-mi-box-firmware-port-to-amlogic-boxes.4199287</a></p>
