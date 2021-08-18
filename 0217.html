@@ -37,6 +37,8 @@
               try {
                 if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
                   $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
                 } else {
                   $('#'+ theButton.attr('rel')).addClass('copy-animation');
                 }
@@ -61,8 +63,8 @@
             });
 
             if(window.self !== window.top){
-              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
-            }
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
           });
         </script>
         <link href="css/steps.css" rel="stylesheet" type="text/css" />
@@ -75,7 +77,9 @@
           </div>
           <div></div>
           <div id="content">
-          <p>While the atvXperience image is a very well made image for Amlogic TV devices I don&#39;t recommend using it on TV boxes with only 1 GB of RAM. I originally used this on a Sunvell T95x that has <span class="style-scope yt-formatted-string" dir="auto">Amlogic S905x @ 2GHz and 1 GB of DDR3 RAM but the experience was very sluggish and mutlitasking was almost impossible. After a few weeks I grabbed a Tanix TX9s with an Octa Core Amlogic S912 @ 2GHz and 2 GB of DDR3 RAM and have been using this image on it for well over a year with no issues and solid performance. </span></p>
+          <p><em>DISCLAIMER: This process will overwrite the current Android ROM on your TV box. I have tested these steps on my own devices, but I am not responsible if you damage or brick your device. Verify the ROM will work on your device before starting and make sure to backup any data you do not want to lose before proceeding.</em></p>
+
+<p>While the atvXperience image is a very well made image for Amlogic TV devices I don&#39;t recommend using it on TV boxes with only 1 GB of RAM. I originally used this on a Sunvell T95x that has <span class="style-scope yt-formatted-string" dir="auto">Amlogic S905x @ 2GHz and 1 GB of DDR3 RAM but the experience was very sluggish and mutlitasking was almost impossible. After a few weeks I grabbed a Tanix TX9s with an Octa Core Amlogic S912 @ 2GHz and 2 GB of DDR3 RAM and have been using this image on it for well over a year with no issues and solid performance. </span></p>
 
 <ol>
 	<li>Download the atvXperience Image <a href="https://drive.google.com/drive/folders/16-VxlnS-eys0bTFwEP6iyxkgQba9NUX0?usp=sharing" target="_blank">Download</a></li>
