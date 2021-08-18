@@ -37,6 +37,8 @@
               try {
                 if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
                   $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
                 } else {
                   $('#'+ theButton.attr('rel')).addClass('copy-animation');
                 }
@@ -75,7 +77,9 @@
           </div>
           <div></div>
           <div id="content">
-          <ol>
+          <p><em>DISCLAIMER: This process will overwrite the current Android ROM on your TV box. I have tested these steps on my own devices, but I am not responsible if you damage or brick your device. Verify the ROM will work on your device before starting and make sure to backup any data you do not want to lose before proceeding.</em></p>
+
+<ol>
 	<li>Download the RedPoisonATV Image <a href="https://drive.google.com/open?id=1-Qb15L768rrJUQJ8WXRGo2KCXUKSPRVQ" target="_blank">Download</a></li>
 	<li>Download Amlogic USB Burning Tool <a href="https://drive.google.com/file/d/1Igj5CimoGS-irKKI5H8iEVzxY23W387G/view?usp=sharing" target="_blank">Download</a></li>
 	<li>Extract the downloaded Amlogic USB Burning Tool</li>
@@ -90,12 +94,12 @@
 	<li>Once the process completes (100%: Burning Successfully) click the Stop button</li>
 	<li>Disconnect the TV box from the PC USB</li>
 	<li>Connect the TV box to an HDMI display and power it on</li>
-	<li>Welcome to&nbsp;RedPoisonATV</li>
+	<li>Welcome to RedPoisonATV</li>
 </ol>
 
-<p>Additional downloads:&nbsp;http://poison.freaktab.org/filevault/</p>
+<p>Additional downloads: http://poison.freaktab.org/filevault/</p>
 
-<p>Source:&nbsp;<a href="https://forum.freaktab.com/forum/tv-player-support/amlogic-based-tv-players/s912/others-aml-s912/firmware-roms-tools-by/759954-rom-redpoisonatv-s912-stable-new-version-v2" target="_blank">https://forum.freaktab.com/forum/tv-player-support/amlogic-based-tv-players/s912/others-aml-s912/firmware-roms-tools-by/759954-rom-redpoisonatv-s912-stable-new-version-v2</a></p>
+<p>Source: <a href="https://forum.freaktab.com/forum/tv-player-support/amlogic-based-tv-players/s912/others-aml-s912/firmware-roms-tools-by/759954-rom-redpoisonatv-s912-stable-new-version-v2" target="_blank">https://forum.freaktab.com/forum/tv-player-support/amlogic-based-tv-players/s912/others-aml-s912/firmware-roms-tools-by/759954-rom-redpoisonatv-s912-stable-new-version-v2</a></p>
           </div>
         </div>
       </body>
