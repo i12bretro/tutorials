@@ -1,0 +1,153 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Try Out Citrix Hypervisor (XenServer) in VirtualBox</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Try Out Citrix Hypervisor (XenServer) in VirtualBox</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <p>NOTE: This is a helpful exercise to get familiar with the Citrix Hypervisor (XenServer)&nbsp;user interface and terminology&nbsp;but is not recommended for production use.&nbsp;</p>
+
+<ol>
+	<li>Download the Citrix Hypervisor (XenServer) .iso file <a href="https://www.citrix.com/downloads/citrix-hypervisor/product-software/hypervisor-82-express-edition.html" target="_blank">Download</a></li>
+	<li>Create an account to complete the download</li>
+	<li>Launch Virtualbox</li>
+	<li>Create a New VM by selecting Machine &gt; New
+	<p>Name: XenServer<br />
+	Machine Folder: C:\VMs<br />
+	Type: Linux<br />
+	Version: Other&nbsp;(64-bit)<br />
+	Memory Size: 8192 MB<br />
+	Hard disk: Create a virtual hard disk now</p>
+	</li>
+	<li>Click Create</li>
+	<li>On the Create Virtual Hard Disk dialog
+	<p>Name the virtual disk image XenServer.vdi<br />
+	File size: 500&nbsp;GB<br />
+	Hard disk file type: VDI<br />
+	Storage on physical hard disk: Dynamically Allocated</p>
+	</li>
+	<li>Click Create</li>
+	<li>Select the VM and Click Settings</li>
+	<li>Select System &gt; Processor</li>
+	<li>Give the VM at least 2 processors</li>
+	<li>Check the Enable Nested VT-x/AMD-V</li>
+	<li>Select Display</li>
+	<li>Slide the Video Memory to 128 MB</li>
+	<li>Select Network</li>
+	<li>Set the attached to dropdown to Bridged Adapter</li>
+	<li>Select Storage</li>
+	<li>Click on the CD-ROM drive</li>
+	<li>Select the disc dropdown to the right &gt; Choose a virtual optical disc file...</li>
+	<li>Browse to and select the downloaded Citrix Hypervisor (XenServer)&nbsp;.iso file</li>
+	<li>Click OK</li>
+	<li>Select the hard disk dropdown to the right</li>
+	<li>Click the Create button at the top</li>
+	<li>Change the size to 500 GB &gt; Click Create</li>
+	<li>Click OK to accept the settings</li>
+	<li>Make sure the XenServer VM is selected and click Start &gt; Normal</li>
+	<li>Select a keyboard mapping &gt; Ok</li>
+	<li>Select Ok to begin the installation</li>
+	<li>Select Accept EULA</li>
+	<li>Press Spacebar to select the 500GB VBOX HARDDISK</li>
+	<li>Arrow down and check the Enable thin provisioning box</li>
+	<li>Select Ok</li>
+	<li>Select Local Media &gt; Ok</li>
+	<li>Enter and confirm a root password</li>
+	<li>Configure the network &gt; Ok</li>
+	<li>Specify a hostname &gt; Ok</li>
+	<li>Set the time zone &gt; Ok</li>
+	<li>Select Using NTP &gt; Ok</li>
+	<li>Select Ok at the NTP server setup</li>
+	<li>Select Install Citrix Hypervisor</li>
+	<li>Select No at the supplemental packs installation screen</li>
+	<li>After the installation completes, select Devices &gt;&nbsp;Optical Drives &gt; Remove disk from virtual drive&nbsp;</li>
+	<li>Select Ok to reboot</li>
+	<li>Welcome to Citrix Hypervisor (XenServer) inside VirtualBox</li>
+</ol>
+
+<h2>Installing Citrix XenCenter</h2>
+
+<ol>
+	<li>Go back to the download page and download XenCenter&nbsp;<a href="https://www.citrix.com/downloads/citrix-hypervisor/product-software/hypervisor-82-express-edition.html" target="_blank">Download</a></li>
+	<li>Install the downloaded .msi</li>
+	<li>Launch Citrix XenCenter</li>
+	<li>Click the Add a Server option in the main window</li>
+	<li>Enter the IP address and root password to the Citrix Hypervisor VM</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
