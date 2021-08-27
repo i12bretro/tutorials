@@ -37,6 +37,8 @@
               try {
                 if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
                   $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
                 } else {
                   $('#'+ theButton.attr('rel')).addClass('copy-animation');
                 }
@@ -97,7 +99,7 @@
 	<li>Set the KVM OpenCore disk as the first boot option &gt; Click OK</li>
 	<li>Right click the ProxMox node name &gt; Console</li>
 	<li>Run the following commands in the terminal
-	<div class="codeBlock"># edit the VM conf file, chnage 1100 to the VM ID for the Big Sur VM<br />
+	<div class="codeBlock"># edit the VM conf file, change 1100 to the VM ID for the Big Sur VM<br />
 	nano /etc/pve/qemu-server/1100.conf</div>
 	</li>
 	<li>If running on an Intel CPU, add the following line to the bottom of the .conf file:
