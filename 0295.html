@@ -1,0 +1,132 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Convert VirtualBox VM to ProxMox VE</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Convert VirtualBox VM to ProxMox VE</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>On the VirtualBox host, launch VirtualBox</li>
+	<li>Right click the VM to convert &gt; Settings</li>
+	<li>Select Storage from the left navigation</li>
+	<li>Click the virtual hard disk and copy the Location value for the full path of the disk to the clipboard</li>
+	<li>Right click on the Start menu &gt; Run &gt; type cmd.exe &gt; Press Enter</li>
+	<li>Enter the following commands in the command prompt
+	<div class="codeBlock"># change directory to VirtualBox installation<br />
+	cd %programfiles%\Oracle\VirtualBox<br />
+	# convert the .vdi to raw .img<br />
+	VBoxManage clonehd --format RAW &quot;pasted\full\path\to.vdi&quot; &quot;pasted\full\path\to.raw&quot;</div>
+	</li>
+	<li>Once the .vdi to .raw conversion completes, open a web browser and navigate to the ProxMox web UI https://ProxMoxDNSorIP:8006/</li>
+	<li>Click the Create VM button at the top right</li>
+	<li>On the General tab, enter a VM Name and note the VM ID generated &gt; click Next</li>
+	<li>On the OS tab select Do not use any media and set the Guest OS &gt; click Next</li>
+	<li>On the System tab click Next</li>
+	<li>On the Hard Disk tab set the Disk size to 0.001 &gt; click Next</li>
+	<li>On the CPU tab set the number of CPUs &gt; click Next</li>
+	<li>On the Memory tab set the amount of memory to allocate in MiB &gt; click Next</li>
+	<li>On the Network tab click Next</li>
+	<li>On the Confirm tab review the settings and click Finish</li>
+	<li>Select the newly created VM from the left navigation panel &gt; Hardware</li>
+	<li>Click the Hard Disk to select it</li>
+	<li>Click the Detach button to detach the hard disk from the VM</li>
+	<li>Click the Unused disk</li>
+	<li>Click the Remove button to permanently delete it</li>
+	<li><label for="cb_li_27606_33">Download WinSCP </label><label for="cb_li_27606_33"><a href="https://winscp.net/eng/downloads.php" target="_blank">Download</a></label></li>
+	<li><label for="cb_li_178035_34">Extract WinSCP and run the executable</label></li>
+	<li><label for="cb_li_764421_35">Connect to the ProxMox IP server via WinSCP</label></li>
+	<li><label for="cb_li_542634_36">Copy the VirtualBox created .raw file to a location on the ProxMox server that has enough free disk space, /root for example</label></li>
+	<li>Back in the browser, open the ProxMox host Shell</li>
+	<li>Run the following command to import the raw disk, modify the .raw file name and VM ID noted earlier
+	<div class="codeBlock"># import the raw disk<br />
+	# usage:<br />
+	# qm importdisk &lt;VM ID&gt; /root/&lt;source disk file&gt;.raw &lt;destination storage pool name&gt;<br />
+	qm importdisk 100 vbox.raw HDD_500GB --format qcow2</div>
+	</li>
+	<li>Once the disk import completes, select the target VM from the left navigation menu &gt; Hardware</li>
+	<li>Double click the Unused Disk &gt; Click the Add button</li>
+	<li>Select Options from the left navigation sub-menu</li>
+	<li>Double click Boot Order</li>
+	<li>Check the Enabled box next to the hard disk</li>
+	<li>Drag the Hard disk up in the boot order as needed, typically below the CD-ROM device</li>
+	<li>Click OK</li>
+	<li>Click the Start button in the top right of the screen</li>
+	<li>Click the Console link to watch the boot process</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
