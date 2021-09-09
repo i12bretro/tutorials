@@ -1,0 +1,115 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Control Brave Browser Settings via GPO</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Control Brave Browser Settings via GPO</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Importing and Setting Brave Browser GPO</h2>
+
+<ol>
+	<li>Download the Brave Browser group policy administration templates <a href="https://github.com/Prowler2/Brave-Browser-GPO-Policy" target="_blank">Download</a></li>
+	<li>Extract the downloaded .zip file</li>
+	<li>On a domain controller, copy the contents of /Policy Templates/v80.0.3987.116/ to&nbsp;C:\Windows\Sysvol\sysvol\%domainname%\Policies\PolicyDefinitions\</li>
+	<li>Right click on the Start button &gt; Run &gt; type gpmc.msc &gt; Press Enter</li>
+	<li>Expand Forest: %domainname% &gt; Domains &gt; %domainname%</li>
+	<li>Right click on the domain name &gt; Create a GPO in this domain, and link it here...</li>
+	<li>Name the new GPO Brave Browser</li>
+	<li>Right click the Brave Browser GPO &gt; Edit...</li>
+	<li>In the Group Policy Management Editor expand Computer Configuration &gt; Policies &gt; Administrative Templates &gt; Brave Browser</li>
+	<li>Browse the available policy options and set them as needed
+	<p>Example: Brave Browser &gt; Enable reporting of usage and crash-related data: Disabled</p>
+	</li>
+	<li>Close the&nbsp;Group Policy Management Editor</li>
+	<li>Right click the Brave Browser GPO &gt; Enforced</li>
+</ol>
+
+<h2>Testing the Policy</h2>
+
+<ol>
+	<li>On a domain machine with the Brave Browser installed, right click on the Start button &gt; Run &gt; type cmd &gt; Press Enter</li>
+	<li>Type gpupdate /force</li>
+	<li>After the group policy update completes, launch the Brave Browser</li>
+	<li>In the address bar, type brave://policy</li>
+	<li>The policy set from GPO should be listed</li>
+	<li>If the setting is displayed in the Brave Browser GUI, navigate to it and verify the value is set correctly</li>
+</ol>
+
+<p>Extra special thanks to Prowler2 on GitHub for putting these GPO configurations together&nbsp;<a href="https://github.com/Prowler2/Brave-Browser-GPO-Policy" target="_blank">https://github.com/Prowler2/Brave-Browser-GPO-Policy</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
