@@ -23,7 +23,7 @@
               theElement.empty();
               for(l=0;l<lines.length;l++){
                 if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
-									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
 									                } else {
                   theElement.append(lines[l]);
                 }
@@ -33,9 +33,15 @@
             $(document).on('click','input.copy-text',function(){
               theButton = $(this);
 														$('input.copy-text').attr('src','images/clipboard.png');
-							              $('span.copy-animation').removeClass('copy-animation');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
               try {
-                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
                 navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
 																theButton.attr('src','images/clipboard_active.png');
 								              } catch(err) {
@@ -57,8 +63,8 @@
             });
 
             if(window.self !== window.top){
-              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
-            }
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
           });
         </script>
         <link href="css/steps.css" rel="stylesheet" type="text/css" />
@@ -71,24 +77,24 @@
           </div>
           <div></div>
           <div id="content">
-          <p>mRemoteNG is a fork of mRemote: an open source, tabbed, multi-protocol, remote connections manager for Windows. mRemoteNG creates a tabbed interface for RDP, VNC, SSH and many other connection protocols.&nbsp;</p>
+          <p>mRemoteNG is a fork of mRemote: an open source, tabbed, multi-protocol, remote connections manager for Windows. mRemoteNG creates a tabbed interface for RDP, VNC, SSH and many other connection protocols. </p>
 
 <p>This tutorial assumes the target host already has an FTP server configured and running</p>
 
-<h2>Creating the FileZilla&nbsp;External Tool</h2>
+<h2>Creating the FileZilla External Tool</h2>
 
 <ol>
-	<li>Download FileZilla FTP client&nbsp;<a href="https://filezilla-project.org/download.php?show_all=1" target="_blank">Download</a></li>
+	<li>Download FileZilla FTP client <a href="https://filezilla-project.org/download.php?show_all=1" target="_blank">Download</a></li>
 	<li>Extract the downloaded FileZilla .zip file</li>
 	<li>Rename the extracted folder to FileZilla</li>
-	<li>Copy the entire extracted FileZilla folder to the&nbsp;mRemoteNG installation directory, usually C:\Program Files (x86)\mRemoteNG</li>
+	<li>Copy the entire extracted FileZilla folder to the mRemoteNG installation directory, usually C:\Program Files (x86)\mRemoteNG</li>
 	<li>Launch mRemoteNG</li>
-	<li>Click Tools&nbsp;&gt; External Tools</li>
+	<li>Click Tools &gt; External Tools</li>
 	<li>Click the New Button at the top left</li>
-	<li>Set the following values to add the ability to quickly send a WOL packet. Replace the broadcast address (192.168.0.255) with the correct broadcast address for the subnet of your network
+	<li>Set the following values to add the ability to quickly FTP to the host
 	<p>Display Name: FileZilla<br />
-	Filename:&nbsp;.\FileZilla\FileZilla.exe<br />
-	Arguments:&nbsp;ftp://%hostname%<br />
+	Filename: .\FileZilla\FileZilla.exe<br />
+	Arguments: ftp://%hostname%<br />
 	Try to Integrate: checked<br />
 	Run Elevated: checked</p>
 	</li>
