@@ -1,0 +1,110 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Testing Upgrading Windows 10 to Windows 11 In-Place</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Testing Upgrading Windows 10 to Windows 11 In-Place</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Log into the Windows 10 device to update</li>
+	<li>If running in a VM or on older hardware, or you get an error relating to TPM, Secure Boot or insufficient RAM, follow the steps below to bypass some of the hardware checks Windows 11 setup does
+	<ol start="1" style="list-style-type: lower-alpha;">
+		<li>Open a web browser and navigate to the following <a href="https://gist.githubusercontent.com/AveYo/c74dc774a8fb81a332b5d65613187b15/raw/23d8788d48b23dcd648ca6ea644dd30d811a4231/Skip_TPM_Check_on_Dynamic_Update_v2.cmd" target="_blank">GitHub</a></li>
+		<li>Copy the script to the clipboard</li>
+		<li>Open a text editor such as notepad</li>
+		<li>Paste the copied text </li>
+		<li>Save the file as BypassTPM.cmd on the desktop</li>
+		<li>Double click the file to disable TPM checks</li>
+		<li>Click Yes to confirm on any popups</li>
+	</ol>
+	</li>
+	<li>Download the Windows 11 iso <a href="https://www.microsoft.com/en-us/software-download/windows11" target="_blank">Download</a></li>
+	<li>Double click the downloaded .iso file to mount it</li>
+	<li>If it doesn&#39;t open automatically, open File Explorer and navigate to the mounted Windows 11 .iso</li>
+	<li>Right click setup.exe &gt; Run as administrator</li>
+	<li>After the Windows 11 installer initializes, click Next</li>
+	<li>Click Accept on the Applicable notices and license terms dialog</li>
+	<li>Click the Change what to keep text</li>
+	<li>Select Keep personal files and apps &gt; Next<br />
+	<em>NOTE: If the </em>Keep personal files and apps<em> option is grayed out then Windows has found a reason it can&#39;t do an in place upgrade without losing personal data and applications. Cancel out of the installer and backup personal data before trying again</em></li>
+	<li>Click Install</li>
+</ol>
+
+<p>About Windows 11: <a href="https://www.microsoft.com/en-us/windows/windows-11" target="_blank">https://www.microsoft.com/en-us/windows/windows-11</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
