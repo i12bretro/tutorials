@@ -1,0 +1,111 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Addendum - Running a MacOS Big Sur VM in ProxMox VE</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Addendum - Running a MacOS Big Sur VM in ProxMox VE</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <p><em>This is an addendum to the tutorial on installing a <a href="https://youtu.be/uvXH1fRq1Eg" target="_blank">MacOS Big Sur VM on Proxmox VE</a>. The steps below will allow the VM to boot without having the OpenCore .iso mounted, as we&#39;ll be copying the EFI boot files onto the virtual hard disk.</em></p>
+
+<h2>Configuring Booting Without OpenCore Mounted</h2>
+
+<ol>
+	<li>Log into the MacOSBigSur VM</li>
+	<li>Launch a web browser and download the KVM OpenCore EFI folder <a href="https://github.com/thenickdude/KVM-Opencore/releases" target="_blank">Download</a></li>
+	<li>Start LaunchPad from the dock</li>
+	<li>Search terminal &gt; Click Terminal to launch it</li>
+	<li>Run the following commands in the terminal window
+	<div class="codeBlock CMD">git clone https://github.com/corpnewt/MountEFI<br />
+	cd MountEFI<br />
+	chmod +x MountEFI.command<br />
+	./MountEFI.command</div>
+	</li>
+	<li>Enter the number that corresponds to the OS11 drive created during the installation &gt; Press Enter</li>
+	<li>Open a Finder window</li>
+	<li>Navigate to the mounted EFI location</li>
+	<li>If an existing EFI folder exists, rename the it to EFI.orig</li>
+	<li>Copy the KVM OpenCoreEFI folder downloaded earlier to the mounted EFI partition</li>
+	<li>Once the EFI folder is copied, shutdown the VM</li>
+	<li>Click the MacOSBigSur VM &gt; Select Hardware from the left sub-navigation menu</li>
+	<li>Click the OpenCore Hard Disk to select it &gt; Click Detach</li>
+	<li>Click the detached OpenCore Hard Disk to select it again &gt; Click Remove</li>
+	<li>Right click the MacOSBigSur VM in the left navigation pane &gt; Start</li>
+	<li>Click console in the left sub-navigation menu to verify the VM still boots into Big Sur without the OpenCore disc image mounted</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
