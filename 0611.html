@@ -1,0 +1,133 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install FTP Server on Linux (Debian/Ubuntu)</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install FTP Server on Linux (Debian/Ubuntu)</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Installing the FTP Server</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in terminal
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade<br />
+	# install proftpd<br />
+	sudo apt install proftpd -y<br />
+	# start proftpd service<br />
+	sudo systemctl enable proftpd --now</div>
+	</li>
+</ol>
+
+<h2>Configuring the FTP Server</h2>
+
+<p>In this example we will be allowing FTP to the /var/www directory to alter web server files</p>
+
+<ol>
+	<li>Continue with the following commands
+	<div class="codeBlock"># add current user to www-data group<br />
+	sudo usermod -aG www-data $USER<br />
+	# re-authenticate the user for the new group to take effect<br />
+	su $USER<br />
+	# list the users groups<br />
+	# www-data should be listed<br />
+	id<br />
+	# change owner of /var/www to the www-data group<br />
+	sudo chown -R www-data:www-data /var/www<br />
+	# change permissions recursively<br />
+	sudo chmod -R ug+rw /var/www</div>
+	</li>
+</ol>
+
+<h2>Testing the FTP Server</h2>
+
+<ol>
+	<li>Download a FTP client, in this tutorial we&#39;ll be using FileZilla FTP Client <a href="https://filezilla-project.org/download.php" target="_blank">Download</a></li>
+	<li>Install FileZilla FTP Client</li>
+	<li>Input the Linux devices IP address or DNS name and the Linux user&#39;s username and password &gt; Click Quickconnect</li>
+	<li>Click the / at the top of the right file tree to get to the rootfs</li>
+	<li>Navigate to /var/www</li>
+	<li>Create a test file or folder</li>
+	<li>You now have FTP access to your Linux server using your standard Linux credentials</li>
+</ol>
+
+<p>Documentation for ProFTPD: <a href="http://www.proftpd.org/docs/" target="_blank">http://www.proftpd.org/docs/</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
