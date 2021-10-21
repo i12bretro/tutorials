@@ -87,9 +87,12 @@
 	# update software repositories<br />
 	apt update<br />
 	# remove no subscription nag popup<br />
+	# if running promox 6<br />
 	sed -i.bak &#39;s/NotFound/Active/g&#39; /usr/share/perl5/PVE/API2/Subscription.pm<br />
-	systemctl restart pveproxy.service<br />
-	apt --reinstall install proxmox-widget-toolkit</div>
+	# if running proxmox 7<br />
+	sed -Ezi.bak &quot;s/(Ext.Msg.show\(\{\s+title: gettext\(&#39;No valid sub)/void\(\{ \/\/\1/g&quot; /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js<br />
+	# restart pveproxy service<br />
+	systemctl restart pveproxy.service</div>
 	</li>
 	<li>After running the commands, log out of ProxMox VE web UI and log back in</li>
 </ol>
