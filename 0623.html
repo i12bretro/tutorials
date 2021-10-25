@@ -100,7 +100,21 @@
 	<li>Select Apple Mac OS X and macOS 11 &gt; Click Next</li>
 	<li>Name the VM MacOS 11 and set the path to store the VM files &gt; Click Next</li>
 	<li>Adjust the disk size if necessary &gt; Click Next</li>
-	<li>Click Finish</li>
+	<li>Click Finish<br />
+	<em>NOTE: If running an AMD process, edit the .vmx file in the folder you specified for the VM an add the following to the bottom of the file and save your changes</em>
+	<p>mc.version = &quot;0&quot;<br />
+	cpuid.0.eax = &quot;0000:0000:0000:0000:0000:0000:0000:1011&quot;<br />
+	cpuid.0.ebx = &quot;0111:0101:0110:1110:0110:0101:0100:0111&quot;<br />
+	cpuid.0.ecx = &quot;0110:1100:0110:0101:0111:0100:0110:1110&quot;<br />
+	cpuid.0.edx = &quot;0100:1001:0110:0101:0110:1110:0110:1001&quot;<br />
+	cpuid.1.eax = &quot;0000:0000:0000:0001:0000:0110:0111:0001&quot;<br />
+	cpuid.1.ebx = &quot;0000:0010:0000:0001:0000:1000:0000:0000&quot;<br />
+	cpuid.1.ecx = &quot;1000:0010:1001:1000:0010:0010:0000:0011&quot;<br />
+	cpuid.1.edx = &quot;0000:0111:1000:1011:1111:1011:1111:1111&quot;<br />
+	smbios.reflectHost = &quot;TRUE&quot;<br />
+	hw.model = &quot;MacBookPro14,3&quot;<br />
+	board-id = &quot;Mac-551B86E5744E2388&quot;</p>
+	</li>
 	<li>Right click on the MacOS11 VM &gt; Power On</li>
 </ol>
 
