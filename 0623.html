@@ -1,0 +1,151 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Running a MacOS Big Sur VM in VMware</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Running a MacOS Big Sur VM in VMware</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Installing and Configuring VMware</h2>
+
+<ol>
+	<li>D<label for="cb_li_364664_0">ownload a MacOS Big Sur .iso </label><label for="cb_li_364664_0"><a href="https://archive.org/search.php?query=Mac%20OS%20Big%20Sur&amp;and[]=mediatype%3A%22software%22" target="_blank">Download</a></label></li>
+	<li>Download VMware Workstation Player <a href="https://www.vmware.com/products/workstation-player.html" target="_blank">Download</a></li>
+	<li>Download MacOS Unlocker for VMware Workstation <a href="https://github.com/paolo-projects/auto-unlocker/releases" target="_blank">Download</a></li>
+	<li>Install VMware Workstation Player, accepting the defaults</li>
+	<li>Extract the downloaded MacOS Unlocker for VMware Workstation</li>
+	<li>Inside the extracted file, right click Unlocker.exe &gt; Run as administrator</li>
+	<li>Wait for the command prompt to close before continuing</li>
+</ol>
+
+<h2>Creating the Big Sur VM</h2>
+
+<ol>
+	<li>Launch VMware Workstation Player</li>
+	<li>Click Continue to use Workstation Player for free for non-commercial use</li>
+	<li>Click Finish</li>
+	<li>Click Create a New Virtual Machine on the right side of the application</li>
+	<li>Select Installer disc image file (iso) &gt; Browse to and select the downloaded MacOS Big Sur .iso &gt; Click Next</li>
+	<li>Select Apple Mac OS X and macOS 11 &gt; Click Next</li>
+	<li>Name the VM MacOS 11 and set the path to store the VM files &gt; Click Next</li>
+	<li>Adjust the disk size if necessary &gt; Click Next</li>
+	<li>Click Finish</li>
+	<li>Right click on the MacOS11 VM &gt; Power On</li>
+</ol>
+
+<h2>Installing MacOS Big Sur</h2>
+
+<ol>
+	<li>After an initialization sequence the MAC OS Setup should start</li>
+	<li>Select a Language &gt; Click the next arrow</li>
+	<li>Select Disk Utility</li>
+	<li>Select the VMware Virtual SATA Hard Drive Media &gt; Click Erase</li>
+	<li>Name the drive OS11 &gt; Set the Format to APFS &gt; Click Erase</li>
+	<li>Click Done &gt; Close Disk Utility</li>
+	<li>Click Install macOS Big Sur</li>
+	<li>Click Continue &gt; Click Agree &gt; Click Agree again</li>
+	<li>Select the OS11 disk &gt; Click Install</li>
+	<li>Wait while Mac OS 11 installs files, the VM will reboot several times</li>
+	<li>Press Enter at the OpenCore boot screen after each reboot to continue the MacOS installation</li>
+	<li>Select your Country &gt; Click Continue</li>
+	<li>Confirm your languages and keyboard layout &gt; Click Continue</li>
+	<li>Click Not Now on the Accessibility screen</li>
+	<li>Click Continue on the Data &amp; Privacy screen</li>
+	<li>Select Not Now on the Migration Assistant screen</li>
+	<li>Select Set Up Later and then Skip on the Apple ID screen</li>
+	<li>Click Agree &gt; Agree again</li>
+	<li>Enter a name, user name, password &gt; Click Continue</li>
+	<li>Click Customize Settings</li>
+	<li>Click Continue &gt; Select Use or Don&#39;t Use for Location Services</li>
+	<li>Pick a timezone &gt; Click Continue</li>
+	<li>Choose whether to share analytics with Apple &gt; Click Continue</li>
+	<li>Click Set Up Later on the Screen Time screen</li>
+	<li>Uncheck the Enable Ask Siri box &gt; Click Continue</li>
+	<li>Pick a theme &gt; Click Continue</li>
+	<li>Welcome to MacOS 11 Big Sur</li>
+</ol>
+
+<h2>Install VMware Tools (optional, but recommended)</h2>
+
+<ol>
+	<li>On the VMware toolbar click VM &gt; Settings &gt; CD/DVD</li>
+	<li>Click Browse next to ISO Image File &gt; Browse to the extracted Unlocker files \tools &gt; Select darwin.iso</li>
+	<li>Click the Connect checkbox</li>
+	<li>Inside the VM, double click the mounted VMware tools and run the installer</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
