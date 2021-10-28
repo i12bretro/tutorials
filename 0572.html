@@ -1,0 +1,192 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Quick Overview of Proxmox VE REST API</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Quick Overview of Proxmox VE REST API</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Creating An API User</h2>
+
+<ol>
+	<li>Log into the Proxmox VE web UI</li>
+	<li>Select Datacenter from the left navigation menu</li>
+	<li>Select Users from the left sub-navigation menu</li>
+	<li>Click the Add button at the top of the main content area</li>
+	<li>Enter the Username API, set the Realm to Proxmox VE authentication server and set and confirm a password &gt; Click Add</li>
+	<li>Select API Tokens from the left sub-navigation menu</li>
+	<li>Select API@pve for the username</li>
+	<li>Enter a secret key into the Token ID field &gt; Click Add
+	<p><em>TIP: Use a random string generator to create a unique Token ID</em> <a href="https://www.random.org/passwords/?num=1&amp;len=24&amp;format=plain&amp;rnd=new" target="_blank">String Generator</a></p>
+	</li>
+	<li>Copy the displayed Token ID and Secret to a text document for use later</li>
+	<li>Close the dialog</li>
+	<li>Select Roles from the left sub-navigation menu</li>
+	<li>Click the Create button at the top of the main content area</li>
+	<li>Name the new role APIAdmin and select all available Privileges &gt; Click Create
+	<p>NOTE: These permissions can be fine-tuned later<br />
+	INFO: More information on each privilege can be found <a href="https://pve.proxmox.com/pve-docs/pve-admin-guide.html#pveum_permission_management" target="_blank">here</a></p>
+	</li>
+	<li>Select Permissions from the left sub-navigation menu</li>
+	<li>Select the Add &gt; User permission at the top of the main content area</li>
+	<li>Set the Path to /, select the API@pve user and set the Role to APIAdmin &gt; Click Add</li>
+</ol>
+
+<h2>Downloading Postman</h2>
+
+<p><em>Postman is an API platform for building and using APIs. Postman simplifies each step of the API lifecycle and streamlines collaboration so you can create better APIs&mdash;faster.</em> - <a href="https://postman.com" target="_blank">https://postman.com</a></p>
+
+<ol>
+	<li>Download Postman <a href="https://github.com/portapps/postman-portable/releases" target="_blank">Download</a></li>
+	<li>Extract or install Postman</li>
+	<li>Launch Postman</li>
+	<li>Click the Skip and go to app link at the bottom left of the splash screen</li>
+	<li>Select File &gt; Settings from the top menu bar</li>
+	<li>Disable SSL Certificate Verification and Send anonymous usage data to Postman &gt; Close the Settings dialog window</li>
+</ol>
+
+<h2>Proxmox API Authentication</h2>
+
+<ol>
+	<li>In Postman, click the + next to the Overview tab to create a new HTTP request tab</li>
+	<li>Complete the HTTP Request form as follows:
+	<ul style="list-style-type: none;">
+		<li>Method: POST</li>
+		<li>URL: https://DNSorIP:8006/api2/json/access/ticket</li>
+		<li>Body: x-www-form-urlencoded
+		<ul>
+			<li>username: API@pve</li>
+			<li>password: &lt;API@pve Password&gt;</li>
+		</ul>
+		</li>
+	</ul>
+	</li>
+	<li>Click the Send button</li>
+	<li>From the response, copy the ticket value and CSRFPreventionToken values to a text document for use later</li>
+</ol>
+
+<h2>Proxmox Version API Call</h2>
+
+<ol>
+	<li>In Postman, click the + next to the Overview tab to create a new HTTP request tab</li>
+	<li>Click the Cookies link below the send button</li>
+	<li>Type the API URL up to /json/, (ie https://DNSorIP:8006/api2/json/) &gt; Click Add</li>
+	<li>Click Add Cookie</li>
+	<li>Replace the Cookie_1 key with PVEAuthCookie</li>
+	<li>Replace the value with the ticket value from authentication response, the result should look like
+	<p>PVEAuthCookie=PVE:API@pve:611F9752::aXrYKYqiv8oV/MetlZl6FC40HSULSj4gt9EjDsTIwq+GXVXpkGyqvMlXqmGP6LP/rUYUgIKkSh9ioEhz91kR9/i+jDobDFIAtjBGLIP4yJVbxbtU6hfJL91YQNyYgvHqkPv4/W6EYWir5+LFQc3womgqVE9gKApk61J8zxFNTTjwh87HbMAtv12fvAqiICEqRMdqvE6ySJF5a8E+rOlqa46MlTbUTnzCbqPTY6tWBYHryy8WS8Typ3aSkOKecup18sCBtzqxnkm9bpws+f8vW9FdJV8eKnR+MbFLQtv/re5Cw/J7RpdvcQvMsZ0JLFWqnTaPgRzBc/mM7xZBKeCiSA==</p>
+	</li>
+	<li>Click Save &gt; Close the Manage Cookies dialog window</li>
+	<li>Complete the HTTP Request form as follows:
+	<ul style="list-style-type: none;">
+		<li>Method: GET</li>
+		<li>URL: https://DNSorIP:8006/api2/json/version</li>
+		<li>Headers: 
+		<ul>
+			<li>CSRFPreventionToken: &lt;CSRFPreventionToken value from authentication response&gt;</li>
+		</ul>
+		</li>
+	</ul>
+	</li>
+	<li>Click the Send button</li>
+	<li>The response body should show details about the current Proxmox version</li>
+</ol>
+
+<h2>Proxmox Nodes API Call</h2>
+
+<ol>
+	<li>In Postman, right click the /version HTTP request tab &gt; Duplicate Tab</li>
+	<li>Change the URL to https://DNSorIP:8006/api2/json/nodes</li>
+	<li>Click the Send button</li>
+	<li>The response body should show details about the available Proxmox node(s)</li>
+</ol>
+
+<h2>Proxmox Node Status API Call</h2>
+
+<ol>
+	<li>In Postman, right click the /version HTTP request tab &gt; Duplicate Tab</li>
+	<li>Change the URL to https://DNSorIP:8006/api2/json/nodes/&lt;node name&gt;/status</li>
+	<li>Click the Send button</li>
+	<li>The response body should show details about the selected Proxmox node</li>
+</ol>
+
+<p>Simple PHP API Communication Demo <a href="https://raw.githubusercontent.com/i12bretro/tutorials/main/_Downloads/proxmox_api.php" target="_blank">Download</a></p>
+
+<p>Proxmox VE API Wiki: <a href="https://pve.proxmox.com/wiki/Proxmox_VE_API" target="_blank">https://pve.proxmox.com/wiki/Proxmox_VE_API</a><br />
+Proxmox VE Visual API Reference: <a href="https://pve.proxmox.com/pve-docs/api-viewer/index.html" target="_blank">https://pve.proxmox.com/pve-docs/api-viewer/index.html</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
