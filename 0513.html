@@ -23,7 +23,7 @@
               theElement.empty();
               for(l=0;l<lines.length;l++){
                 if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
-									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
 									                } else {
                   theElement.append(lines[l]);
                 }
@@ -82,7 +82,7 @@
 <h2>Preparation and Booting Stock Recovery</h2>
 
 <ol>
-	<li>Download TWRP recovery for Tanix TX6 <a href="https://drive.google.com/file/d/18D6plD7LEqHV5CDB01FtG35hFeyHYPBG/view" target="_blank">Download</a></li>
+	<li>Download TWRP recovery for Tanix TX6 <a href="https://drive.google.com/file/d/1GR_ARjOKRgAJEliEZSyMPOAeSKsdUJfV/view?usp=sharing" target="_blank">Download</a></li>
 	<li>Format a microSD card to FAT32
 	<ol start="1" style="list-style-type: lower-alpha;">
 		<li>Right Click Start &gt; File Explorer</li>
