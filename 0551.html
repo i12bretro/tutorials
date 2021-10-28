@@ -23,7 +23,7 @@
               theElement.empty();
               for(l=0;l<lines.length;l++){
                 if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
-									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
 									                } else {
                   theElement.append(lines[l]);
                 }
@@ -86,7 +86,7 @@
 	<li>Right click the ProxMox node name &gt; Create VM</li>
 	<li>Type MacOSBigSur in the name field, set the VM ID to 1100 (unless 1100 is in use) &gt; Next</li>
 	<li>On the OS tab, set the Type field to Other and select the KVM OpenCore .iso in the ISO Image field &gt; Next</li>
-	<li>On the System tab, set the Graphic card field to VMware compatible, BIOS field to OVMF (UEFI), Check the Add EFI Disk checkbox, Machine field to q35 and the SCSI Controller to VirtIO SCSI &gt; Next</li>
+	<li>On the System tab, set the Graphic card field to VMware compatible, BIOS field to OVMF (UEFI), Check the Add EFI Disk checkbox, Uncheck the Pre-Enroll Keys checkbox, Machine field to q35 and the SCSI Controller to VirtIO SCSI &gt; Next</li>
 	<li>On the Hard Disk tab, set the Bus/Device field to VirtIO Block, Disk size field to 64, Cache field to Write back (unsafe) &gt; Next</li>
 	<li>On the CPU tab, set Cores field to 4, Type field to Penryn &gt; Next</li>
 	<li>On the Memory tab, set the Memory to 4096 &gt; Next</li>
