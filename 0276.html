@@ -1,0 +1,149 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Host Your Own Internet Speed Tester With LibreSpeed</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Host Your Own Internet Speed Tester With LibreSpeed</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Basic Installation</h2>
+
+<ol>
+	<li>Log into the Debian/Ubuntu device</li>
+	<li>Run the following commands in a terminal:<br />
+	<code class="codeBlock"># update repositories and install any available software updates<br />
+	sudo apt&nbsp;update<br />
+	sudo apt&nbsp;upgrade<br />
+	# install Apache HTTPD, PHP and GIT<br />
+	sudo apt&nbsp;install git apache2 php libapache2-mod-php<br />
+	# clone the git repo<br />
+	sudo git clone https://github.com/adolfintel/speedtest /var/www/html/speedtest<br />
+	sudo cp /var/www/html/speedtest/example-singleServer-gauges.html /var/www/html/speedtest/index.html<br />
+	# set the owner of the new speedtest directory to www-data<br />
+	sudo chown -R www-data:www-data /var/www/html/speedtest</code></li>
+	<li>Open a web browser and navigate to http://DNSorIP/speedtest</li>
+	<li>The basic speed test functionality will be available, but it lacks the abillity to save and share speed test results. Let&#39;s add a database to enable those features</li>
+</ol>
+
+<h2>Optional Advanced Installation Steps</h2>
+
+<ol>
+	<li>Continue the installation by running&nbsp;the following commands in a terminal:<br />
+	<code class="codeBlock"># install MySQL/MariaDB<br />
+	sudo apt&nbsp;install mariadb-server mariadb-client&nbsp;php-mysql<br />
+	sudo su<br />
+	mysql_secure_installation</code></li>
+	<li>Press Enter to login as root</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL: <code class="codeBlock">mysql -u root -p</code></li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the speedtest database and database user <code class="codeBlock">MariaDB [(none)]&gt; CREATE DATABASE speedtest;<br />
+	MariaDB [(none)]&gt; GRANT ALL ON speedtest.* to &#39;speedtest&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;Sp33dTest!!&#39;;<br />
+	MariaDB [(none)]&gt; FLUSH PRIVILEGES;<br />
+	MariaDB [(none)]&gt; USE speedtest;<br />
+	MariaDB [(none)]&gt;&nbsp;\. /var/www/html/speedtest/results/telemetry_mysql.sql<br />
+	MariaDB [(none)]&gt; EXIT;<br />
+	exit</code></li>
+	<li>Continue with the following commands to setup the speedtest database<br />
+	<code class="codeBlock"># edit telemetry_settings.php<br />
+	sudo nano /var/www/html/speedtest/results/telemetry_settings.php</code></li>
+	<li>Verify/change $db_type = &#39;mysql&#39;;</li>
+	<li>Change $stats_password = &#39;P@$$w0rD&#39;;</li>
+	<li>Change $enable_id_obfuscation = true;</li>
+	<li>Update the Mysql Settings variables to the credentials created earlier
+	<p>$MySql_username = &#39;speedtest&#39;;<br />
+	$MySql_password = &#39;Sp33dTest!!&#39;;<br />
+	$MySql_hostname = &#39;localhost&#39;;<br />
+	$MySql_databasename = &#39;speedtest&#39;;</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to telemetry_settings.php</li>
+	<li>Continue with the following commands in terminal:<br />
+	<code class="codeBlock"># copy an example page with telemetry enabled<br />
+	sudo cp /var/www/html/speedtest/example-singleServer-full.html /var/www/html/speedtest/index.html<br />
+	# restart the apache2 service to enable MySQL<br />
+	sudo systemctl restart apache2</code></li>
+	<li>Open a web browser and navigate to http://DNSorIP/speedtest</li>
+	<li>This time around the speedtest results have been saved to the database and a link is provided to share the results</li>
+</ol>
+
+<p>More Info:&nbsp;<a href="https://github.com/librespeed/speedtest" target="_blank">https://github.com/librespeed/speedtest</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
