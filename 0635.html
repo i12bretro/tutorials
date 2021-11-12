@@ -1,0 +1,118 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Modifying Windows 11 ISO to Remove TPM and Secure Boot Requirements</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Modifying Windows 11 ISO to Remove TPM and Secure Boot Requirements</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Method 1: Use Rufus</h2>
+
+<p><em>This method is handy if you want a quick and easy way to create USB installation media for Windows 11. You will need an 8GB or larger USB flash drive</em></p>
+
+<ol>
+	<li><label for="cb_li_500917_9">Download the Windows 11 iso </label><label for="cb_li_500917_9"><a href="https://www.microsoft.com/en-us/software-download/windows11" target="_blank">Download</a></label></li>
+	<li>Download Rufus version 3.16 or later <a href="https://github.com/pbatard/rufus/releases" target="_blank">Download</a></li>
+	<li>Run the Rufus application</li>
+	<li>Select the target USB device (double check the selection, all data on the USB device will be lost)</li>
+	<li>Click the Select button next to Disk or ISO image &gt; Browse to and select the downloaded Windows 11 iso file</li>
+	<li>Select Extended Windows 11 Installation (no TPM / no Secure Boot) from the Image option dropdown</li>
+	<li>Select MBR from the Partition scheme dropdown</li>
+	<li>Click the Start button to write the modified installation media to the target USB device</li>
+	<li>Wait for Rufus to write the files to the USB device</li>
+	<li>That&#39;s it! Boot to the USB device on any machine you wish to install Windows 11 on</li>
+</ol>
+
+<h2>Method 2: Manual Modifying the .iso</h2>
+
+<p><em>This method is handy if you intend to install a virtual machine or prefer to use Ventoy or burn physical DVD media for your installations</em></p>
+
+<ol>
+	<li><label for="cb_li_500917_9">Download the Windows 11 iso </label><label for="cb_li_500917_9"><a href="https://www.microsoft.com/en-us/software-download/windows11" target="_blank">Download</a></label></li>
+	<li>Download AnyBurn <a href="http://www.anyburn.com/download.php" target="_blank">Download</a></li>
+	<li>Install and launch AnyBurn</li>
+	<li>From the main menu, select Edit image file</li>
+	<li>Click to folder icon &gt; Browse to and select the downloaded Windows 11 iso file &gt; Click Next</li>
+	<li>Select the sources folder in the left directory tree browser</li>
+	<li>Scroll down and click appraiserres.dll to select it &gt; Click Remove at the top of the window &gt; Click Yes to confirm</li>
+	<li>Click Next after removing appraiserres.dll</li>
+	<li>Set a destination location for the updated .iso file</li>
+	<li>Click the Create Now button</li>
+	<li>That&#39;s it! You can now use the .iso file to install a VM or place it on a Ventoy USB flash drive to use on other devices</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
