@@ -1,0 +1,268 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Matrix Synapse Home Server on Debian Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Matrix Synapse Home Server on Debian Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Matrix?</h2>
+
+<blockquote>
+<p>Matrix is an open source project that publishes the<br />
+Matrix open standard for secure, decentralised, real-time communication, and its Apache licensed<br />
+reference implementations. -<a href="https://matrix.org" target="_blank">https://matrix.org</a></p>
+</blockquote>
+
+<h2>What is Synapse?</h2>
+
+<blockquote>
+<p>Synapse is a Matrix &quot;homeserver&quot; implementation developed by the matrix.org core team, written in Python 3/Twisted. -<a href="https://github.com/matrix-org/synapse/" target="_blank">https://github.com/matrix-org/synapse/</a></p>
+</blockquote>
+
+<h2>Installing Synapse</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in terminal
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade<br />
+	# install prerequisites<br />
+	sudo apt install lsb-release wget openssl apt-transport-https -y<br />
+	# add matrix gpg key<br />
+	sudo wget -O /usr/share/keyrings/matrix-org-archive-keyring.gpg https://packages.matrix.org/debian/matrix-org-archive-keyring.gpg<br />
+	# add matrix apt repository<br />
+	echo &quot;deb [signed-by=/usr/share/keyrings/matrix-org-archive-keyring.gpg] https://packages.matrix.org/debian/ $(lsb_release -cs) main&quot; | sudo tee /etc/apt/sources.list.d/matrix-org.list<br />
+	# update software repositories<br />
+	sudo apt update<br />
+	# install synapse<br />
+	sudo apt install matrix-synapse-py3 -y<br />
+	# when prompted, enter localhost as the name of the matrix server<br />
+	# choose whether to share statistics with matrix<br />
+	# install postgresql<br />
+	sudo apt install libpq5 postgresql -y<br />
+	# enable the postgresql service and start it<br />
+	sudo systemctl enable postgresql --now<br />
+	# connect to postgresql<br />
+	sudo -u postgres psql postgres<br />
+	# create synapse database user<br />
+	create user matrix_synapse_rw with password &#39;m@trix!&#39;;<br />
+	# create matrix_synapse database<br />
+	create database matrix_synapse with encoding=&#39;UTF8&#39; lc_collate=&#39;C&#39; lc_ctype=&#39;C&#39; template=&#39;template0&#39; owner=&#39;matrix_synapse_rw&#39;;<br />
+	# close postgresql connection<br />
+	exit<br />
+	# edit the homeserver.yaml file<br />
+	sudo nano /etc/matrix-synapse/homeserver.yaml</div>
+	</li>
+	<li>Press CTRL+W and search for name: sqlite3</li>
+	<li>Comment out the sqlite database parameters by adding a # to the beginning of each of the lines</li>
+	<li>Arrow up slightly and uncomment the psycopg2 database connection and complete it as follows:
+	<p>datebase:<br />
+	&emsp;name: psycopg2<br />
+	&emsp;txn_limit: 10000<br />
+	&emsp;args:<br />
+	&emsp; user: matrix_synapse_rw<br />
+	&emsp; password: m@trix!<br />
+	&emsp; database: matrix_synapse<br />
+	&emsp; host: localhost<br />
+	&emsp; port: 5432<br />
+	&emsp; cp_min: 5<br />
+	&emsp; cp_max: 10</p>
+	</li>
+	<li>Press CTRL+W and search for name: bind_addresses: [</li>
+	<li>Edit the bind addresses value to add either the host servers IP address or set the value to &#39;0.0.0.0&#39; to listen on all interfaces</li>
+	<li>Add the following line at the bottom of the file<br />
+	<p>suppress_key_server_warning: true</p></li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following commands
+	<div class="codeBlock"># generate a randoml string<br />
+	RANDOMSTRING=$(openssl rand -base64 30)<br />
+	# write the random string as registration_shared_secret<br />
+	echo &quot;registration_shared_secret: $RANDOMSTRING&quot; | sudo tee -a /etc/matrix-synapse/homeserver.yaml &gt; /dev/null<br />
+	# restart the synapse service<br />
+	sudo systemctl restart matrix-synapse<br />
+	# create a new synapse user<br />
+	register_new_matrix_user -c /etc/matrix-synapse/homeserver.yaml http://DNSorIP:8008</div>
+	</li>
+	<li>Enter a username, enter and confirm the password and choose if the user is an admin</li>
+	<li>At this point the Matrix Synapse server is running, but only over http</li>
+	<li>Open a web browser and navigate to the http://DNSorIP:8008</li>
+	<li>A message stating It works! Synapse is running should be displayed</li>
+</ol>
+
+<h2>Testing with Element Desktop Application (Optional)</h2>
+
+<ol>
+	<li>To test the Synapse server with a matrix client, continue with the following commands
+	<div class="codeBlock"># add the element.io gpg key<br />
+	sudo wget -O /usr/share/keyrings/element-io-archive-keyring.gpg https://packages.element.io/debian/element-io-archive-keyring.gpg<br />
+	# add the element.io apt repository<br />
+	echo &quot;deb [signed-by=/usr/share/keyrings/element-io-archive-keyring.gpg] https://packages.element.io/debian/ default main&quot; | sudo tee /etc/apt/sources.list.d/element-io.list<br />
+	# update software repositories<br />
+	sudo apt update<br />
+	# install element desktop<br />
+	sudo apt install element-desktop -y</div>
+	</li>
+	<li>Launch the Element application</li>
+	<li>Click Sign In</li>
+	<li>Click the Edit link next to matrix.org</li>
+	<li>Select Other homeserver &gt; type http://DNSorIP:8008 &gt; Click Continue</li>
+	<li>Login using the Synapse username and password created earlier</li>
+	<li>After testing, logout by clicking the username in the top left of the application &gt; Sign out &gt; Select I don&#39;t want my encrypted messages</li>
+</ol>
+
+<h2>Enabling SSL Using Let&#39;s Encrypt</h2>
+
+<p><em>NOTE: In order for Let&#39;s Encrypt to verify ownership of the DNS name, the host certbot is running from must be accessible via port 80 (http) or port 443 (https). For homelab users, this will normally involve port forwarding from the router to the certbot host, which is beyond the scope of this tutorial. Just note, I have forwarded port 80 on my router to the host running certbot for this handshake to complete successfully.</em></p>
+
+<ol>
+	<li>Continue with the following commands in a terminal window
+	<div class="codeBlock"># remove apt version of certbot if installed<br />
+	sudo apt remove certbot -y<br />
+	# install snapd<br />
+	sudo apt install snapd -y<br />
+	# install snap core and update<br />
+	sudo snap install core; sudo snap refresh core<br />
+	# install certbot snap<br />
+	sudo snap install --classic certbot<br />
+	# create certbot symbolic link<br />
+	sudo ln -s /snap/bin/certbot /usr/bin/certbot<br />
+	# if a web server process is currently using port 80, stop it before proceeding<br />
+	# generate a certificate<br />
+	sudo certbot certonly --standalone --preferred-challenges http -d &lt;%DNS NAME%&gt;</div>
+	</li>
+	<li>When prompted, enter an email address and agree to the terms of service</li>
+	<li>Choose whether to share your email and receive emails from certbot</li>
+	<li>Certbot will output information regarding the location of the certificate files</li>
+	<li>Continue with the following commands in a terminal window
+	<div class="codeBlock"># create ssl-certs group<br />
+	sudo groupadd ssl-certs<br />
+	# add matrix-synapse and root users to group<br />
+	sudo usermod -aG ssl-certs matrix-synapse<br />
+	sudo usermod -aG ssl-certs root<br />
+	# verify the members of ssl-cert<br />
+	getent group ssl-certs<br />
+	# set owner group of /etc/letsencrypt<br />
+	sudo chgrp -R ssl-certs /etc/letsencrypt<br />
+	# set permissions on /etc/letsencrypt<br />
+	sudo chmod -R g=rX /etc/letsencrypt<br />
+	# edit the homeserver.yaml file<br />
+	sudo nano /etc/matrix-synapse/homeserver.yaml</div>
+	</li>
+	<li>Press CTRL+W and search for port: 8008</li>
+	<li>Change the tls: false value to true (tls: true)</li>
+	<li>Press CTRL+W and search for tls_certificate_path: </li>
+	<li>Uncomment the line and update to /etc/letsencrypt/live/&lt;%DNS NAME%&gt;/fullchain.pem</li>
+	<li>Arrow down a few lines to find tls_private_key_path</li>
+	<li>Uncomment the line and update to /etc/letsencrypt/live/&lt;%DNS NAME%&gt;/privkey.pem</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following commands in a terminal window
+	<div class="codeBlock"># restart the synapse service<br />
+	sudo systemctl restart matrix-synapse</div>
+	</li>
+</ol>
+
+<h2>Installing Element Web Client (Optional)</h2>
+<link href="https:\/\/github\.com\/vector-im\/element-web\/releases\/tag\/([^/]*)" rel="alternate" type="text\/html" />
+<ol>
+	<li>Continue with the following commands to install the Element web client
+	<div class="codeBlock"># install apache2<br />
+	sudo apt install apache2 -y<br />
+	# lookup the latest release tag<br />
+	regex=&#39;&lt;link rel=&quot;alternate&quot; type=&quot;text\/html&quot; href=&quot;https:\/\/github\.com\/vector-im\/element-web\/releases\/tag\/([^/]*)&quot;&#39; &amp;&amp; response=$(curl -s https://github.com/vector-im/element-web/releases.atom) &amp;&amp; [[ $response =~ $regex ]] &amp;&amp; latestTag=&quot;${BASH_REMATCH[1]}&quot;<br />
+	# download element-web<br />
+	wget -O element.tar.gz https://github.com/vector-im/element-web/releases/download/$latestTag/element-$latestTag.tar.gz<br />
+	# extract element to wwwroot<br />
+	sudo tar xzvf element.tar.gz -C /var/www/html<br />
+	# rename the extracted folder<br />
+	sudo mv /var/www/html/element* /var/www/html/element<br />
+	# set the owner to www-data<br />
+	sudo chown -R www-data:www-data /var/www/html/element<br />
+	# make a copy of the sample config file<br />
+	sudo cp /var/www/html/element/config.sample.json /var/www/html/element/config.json<br />
+	# edit the config file<br />
+	sudo nano /var/www/html/element/config.json</div>
+	</li>
+	<li>Edit the m.homeserver values, replacing the the server_name with an alias and base_url with https://YOURDNSNAME:8008</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Open a web browser and navigate to http://DNSorIP/element</li>
+	<li>Log in using the Synapse username and password created earlier</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
