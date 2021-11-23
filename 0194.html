@@ -1,0 +1,117 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Docker on Windows Server</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Docker on Windows Server</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Launch PowerShell as an administrator and run the following command:
+	<div class="codeBlock">Install-WindowsFeature -Name Containers<br />
+	Restart-Computer -Force</div>
+	</li>
+	<li>The server will reboot</li>
+	<li>After logging back in, relaunch PowerShell and continue with the following commands:
+	<div class="codeBlock">Install-Module -Name DockerMsftProvider -Repository PSGallery -Force<br />
+	# Press Y to install the NuGet provider<br />
+	Install-Package -Name docker -ProviderName DockerMsftProvider -Force<br />
+	Start-Service docker<br />
+	docker image pull mcr.microsoft.com/dotnet/core/aspnet:3.0<br />
+	docker image pull mcr.microsoft.com/dotnet/core/sdk:3.0.100<br />
+	docker container run -d -p 8080:80 sixeyed/whoami-dotnet:3.0</div>
+	</li>
+	<li>Open a web browser and navigate to http://localhost:8080</li>
+	<li>To run another example container, execute the following in PowerShell
+	<div class="codeBlock">docker run hello-world</div>
+	</li>
+	<li>Docker will download the hello-world container and execute it, displaying following output:
+	<p>Hello from Docker!<br />
+	This message shows that your installation appears to be working correctly.</p>
+
+	<p>To generate this message, Docker took the following steps:<br />
+	&nbsp;1. The Docker client contacted the Docker daemon.<br />
+	&nbsp;2. The Docker daemon pulled the &quot;hello-world&quot; image from the Docker Hub.<br />
+	&nbsp; &nbsp; (amd64)<br />
+	&nbsp;3. The Docker daemon created a new container from that image which runs the<br />
+	&nbsp; &nbsp; executable that produces the output you are currently reading.<br />
+	&nbsp;4. The Docker daemon streamed that output to the Docker client, which sent it<br />
+	&nbsp; &nbsp; to your terminal.</p>
+	</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
