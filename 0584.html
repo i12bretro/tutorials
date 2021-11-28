@@ -1,0 +1,165 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install openSIS Student Information System on Debian/Ubuntu Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install openSIS Student Information System on Debian/Ubuntu Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is openSIS (Open Student Information System)</h2>
+
+<blockquote><em>openSIS is a commercial grade, secure, scalable &amp; intuitive Student Information System / School Management Software that just works. It is published by OS4ED, a full life cycle software development company headquartered in the USA. -<a href="https://www.opensis.com/" target="_blank">https://www.opensis.com/</a></em></blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Log into the Linux based device</li>
+	<li>Run the following commands in the terminal
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install some dependencies<br />
+	sudo apt install git apt-transport-https ca-certificates curl -y<br />
+	# install Apache HTTPD and MySQL<br />
+	sudo apt install apache2 mariadb-server mariadb-client -y<br />
+	# install PHP components<br />
+	sudo apt install php7.3 libapache2-mod-php7.3 php7.3-common php7.3-mysql php7.3-ldap php7.3-json php7.3-curl php7.3-zip php7.3-xml php7.3-mbstring -y<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the openSIS database and database user
+	<div class="codeBlock">CREATE DATABASE openSIS DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;<br />
+	GRANT ALL ON openSIS.* TO &#39;openSIS_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;Op3nS!S&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands to download and extract openSIS in the Apache webroot
+	<div class="codeBlock"># clone from git<br />
+	sudo git clone https://github.com/OS4ED/openSIS-Classic.git /var/www/html/openSIS<br />
+	# cd into the new openSIS directory<br />
+	cd /var/www/html/openSIS<br />
+	# checkout the latest version<br />
+	sudo git checkout &quot;$(git tag --sort=v:refname | tail -n1)&quot;<br />
+	# set permissions on the openSIS directory<br />
+	sudo chown -R www-data:www-data /var/www/html/openSIS<br />
+	# edit mysql strict mode<br />
+	sudo nano /etc/mysql/conf.d/strict_mode.cnf</div>
+	</li>
+	<li>Paste the following into strict_mode.cnf
+	<p>[mysqld]<br />
+	sql_mode=IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following commands in the terminal
+	<div class="codeBlock"># restart mariadb service<br />
+	sudo systemctl restart mariadb</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP/openSIS</li>
+	<li>Click the New Installation option</li>
+	<li>Click the Continue button</li>
+	<li>Complete the MySQL connection form as follows
+	<p>Server: localhost<br />
+	Port: 3306<br />
+	MySQL Username: openSIS_rw<br />
+	MySQL Password: Op3nS!S</p>
+	</li>
+	<li>Click the Save &amp; Next button</li>
+	<li>Enter the database name openSIS &gt; Click the Save &amp; Next button</li>
+	<li>Wait while the database schema is built</li>
+	<li>Complete the School Information form &gt; Click the Save &amp; Next button</li>
+	<li>Complete the Site Admin Account form &gt; Click the Save &amp; Next button</li>
+	<li>Click the Proceed to openSIS Login button</li>
+	<li>Login using the admin account credentials created earlier</li>
+	<li>Welcome to openSIS</li>
+</ol>
+
+<p>More Info: <a href="https://github.com/OS4ED/openSIS-Classic/wiki/openSIS-Installation-Instructions" target="_blank">https://github.com/OS4ED/openSIS-Classic/wiki/openSIS-Installation-Instructions</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
