@@ -1,0 +1,118 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Enabling LDAP/Active Directory Authentication in Apache Guacamole</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Enabling LDAP/Active Directory Authentication in Apache Guacamole</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Open a terminal and run the following commands:
+	<div class="codeBlock">wget http://mirror.metrocast.net/apache/guacamole/1.2.0/binary/guacamole-auth-ldap-1.2.0.tar.gz<br />
+	<b>tar</b> -xzf guacamole-auth-ldap-1.2.0.tar.gz<br />
+	sudo mkdir /etc/guacamole/extensions<br />
+	sudo cp ~/guacamole-auth-ldap-1.2.0/guacamole-auth-ldap-1.2.0.jar /etc/guacamole/extensions<br />
+	sudo nano /etc/guacamole/guacamole.properties</div>
+	</li>
+	<li>Edit the guacamole.properties file adding the following values:
+	<p>### LDAP SETTINGS<br />
+	ldap-hostname:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; i12bretrodc.i12bretro.local<br />
+	ldap-port:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 389<br />
+	ldap-encryption-method: none</p>
+
+	<p>ldap-user-base-dn:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DC=i12bretro,DC=local<br />
+	ldap-username-attribute: sAMAccountName</p>
+
+	<p>ldap-search-bind-dn:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CN=readonly_svc,CN=Users,DC=i12bretro,DC=local<br />
+	ldap-search-bind-password: Read0nly!!<br />
+	<br />
+	ldap-user-search-filter: (&amp;(objectClass=user)(memberOf:1.2.840.113556.1.4.1941:=CN=GuacamoleUsers,CN=Users,DC=i12bretro,DC=local))</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to save the changes and exit</li>
+	<li>Back in the terminal, run the following command to restart Tomcat
+	<div class="codeBlock">sudo systemctl restart tomcat9</div>
+	</li>
+	<li>Open a web browser and navigate to Guacamole</li>
+	<li>Test logging in with a valid Active Directory username and password
+	<p>Note: to use an Active Directory account in Guacamole as a Guacamole administrator you must manually create the User in Guacamole &gt; Settings &gt; Users. After logging in with the account it will see Active Directory and Guacamole specific users simultaneously</p>
+	</li>
+</ol>
+
+<p>https://enterprise.glyptodon.com/doc/latest/authenticating-users-with-ldap-12812314.html<br />
+https://guacamole.apache.org/doc/gug/ldap-auth.html#ldap-downloading</p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
