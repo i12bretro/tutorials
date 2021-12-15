@@ -1,0 +1,112 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Web Based Subversion Repository Browsing with WebSVN</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Web Based Subversion Repository Browsing with WebSVN</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Prerequisites</h2>
+
+<ul>
+	<li>Subversion installed on the web server (Video tutorial: )</li>
+	<li>Apache with PHP support</li>
+</ul>
+
+<h2>Installing WebSVN</h2>
+
+<p>From the project&#39;s GitHub:<br />
+WebSVN offers a view onto your Subversion repositories that&#39;s been designed to reflect the Subversion methodology. You can view the log of any file or directory and see a list of all the files changed, added or deleted in any given revision. You can also view the differences between two versions of a file so as to see exactly what was changed in a particular revision.</p>
+
+<ol>
+	<li>Download WebSVN&nbsp;<a href="https://github.com/websvnphp/websvn" target="_blank">Download</a></li>
+	<li>Extract the WebSVN&nbsp;files</li>
+	<li>Rename the extracted folder WebSVN</li>
+	<li>Copy the entire extracted folder&nbsp;to Apache install directory/htdocs</li>
+	<li>Make a copy of the&nbsp;include/distconfig.php and name it config.php</li>
+	<li>Edit config.php in a text editor</li>
+	<li>Find $config-&gt;parentPath and set the value to the parent path of the Subversion repositories&nbsp;(ie G:\\SVN)</li>
+	<li>Save the file</li>
+	<li>Open a web browser and navigate to http(s)://DNSorIP/WebSVN</li>
+	<li>Enjoy a web based view into your Subversion repositories</li>
+</ol>
+
+<p>If you receive errors about svn.exe or other svn commands failing, make sure the Subversion /bin directory is in the system path and that the user running the web server process has read access to the Subversion parent path specified in config.php</p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
