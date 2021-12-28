@@ -1,0 +1,213 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install a Self-Hosted Bitwarden/Vaultwarden Password Vault on Debian</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install a Self-Hosted Bitwarden/Vaultwarden Password Vault on Debian</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Bitwarden?</h2>
+
+<p><em>Bitwarden is a free and open-source password management service that stores sensitive information such as website credentials in an encrypted vault. The Bitwarden platform offers a variety of client applications including a web interface, desktop applications, browser extensions, mobile apps, and a CLI. Bitwarden offers a cloud-hosted service as well as the ability to deploy the solution on-premises. - <a href="https://en.wikipedia.org/wiki/Bitwarden" target="_blank">https://en.wikipedia.org/wiki/Bitwarden</a></em></p>
+
+<h2>Install Bitwarden/Vaultwarden</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal window
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install prerequisites<br />
+	sudo apt install git curl build-essential pkg-config libssl-dev openssl libssl1.1 libmariadb-dev-compat libmariadb-dev -y<br />
+	# add nodejs software repository<br />
+	curl -sL https://deb.nodesource.com/setup_16.x | sudo bash -<br />
+	# install nodejs<br />
+	sudo apt install nodejs -y<br />
+	# install rust, enter 1 at the prompt<br />
+	curl https://sh.rustup.rs -sSf | sudo sh<br />
+	# configure the shell<br />
+	source $HOME/.cargo/env<br />
+	# clone vaultwarden from git<br />
+	git clone https://github.com/dani-garcia/vaultwarden.git ./vaultwarden<br />
+	# cd into the new directory<br />
+	cd vaultwarden/<br />
+	# checkout latest version<br />
+	git checkout &quot;$(git tag --sort=v:refname | tail -n1)&quot;<br />
+	# build vaultwarden with mysql support<br />
+	cargo build --features mysql,sqlite --release<br />
+	# cd back one directory<br />
+	cd ..<br />
+	# clone web from git<br />
+	git clone https://github.com/bitwarden/web.git ./web<br />
+	# cd into the new web<br />
+	cd web/<br />
+	# checkout the latest version<br />
+	git checkout &quot;$(git tag --sort=v:refname | tail -n1)&quot;<br />
+	# update submodule<br />
+	git submodule update --init --recursive<br />
+	# download web patch<br />
+	wget https://raw.githubusercontent.com/dani-garcia/bw_web_builds/master/patches/$(git tag --sort=v:refname | tail -n1).patch<br />
+	# apply patch<br />
+	git apply $(git tag --sort=v:refname | tail -n1).patch --verbose<br />
+	# clean npm cache<br />
+	npm cache clean --force<br />
+	# initialize npm<br />
+	npm run sub:init<br />
+	# install npm dependencies<br />
+	npm install<br />
+	# fix npm vulnerabilities<br />
+	npm audit fix<br />
+	# build web vault<br />
+	npm run dist<br />
+	# copy the build directory into vaultwarden/web-vault<br />
+	cp -a build ../vaultwarden/target/release/web-vault<br />
+	# cd into vaultwarden<br />
+	cd ../vaultwarden/target/release/<br />
+	# create a data directory<br />
+	mkdir data<br />
+	# run vaultwarden<br />
+	./vaultwarden</div>
+	</li>
+	<li>Open a web browser and navigate to https://DNSorIP:8000</li>
+	<li>Click the Create Account button</li>
+	<li>Complete the form by entering an Email Address, Name, Master Password and Password Hint (optional) &gt; Click Submit</li>
+	<li>Login with the account created in the last step</li>
+	<li>Welcome to your self-hosted Bitwarden password vault</li>
+</ol>
+
+<h2>Run Bitwarden/Vaultwarden as a Service (Optional, but recommended)</h2>
+
+<ol>
+	<li>Press CTRL + C to kill the running Vaultwarden process</li>
+	<li>Continue with the following steps to run Vaultwarden as a service
+	<div class="codeBlock"># cd to vaultwarden/target/release<br />
+	cd ~/vaultwarden/target/release<br />
+	# copy the .env template<br />
+	sudo cp ../../.env.template /etc/vaultwarden.env<br />
+	# copy vaultwarden executable<br />
+	sudo cp vaultwarden /usr/bin/vaultwarden<br />
+	# make vaultwarden executable<br />
+	sudo chmod +x /usr/bin/vaultwarden<br />
+	# create vaultwarden user<br />
+	sudo useradd -m -d /var/lib/vaultwarden vaultwarden<br />
+	# copy existing data directory<br />
+	sudo cp -R data /var/lib/vaultwarden/<br />
+	# copy web-vault directory<br />
+	sudo cp -R web-vault /var/lib/vaultwarden/<br />
+	# set ownership permissions<br />
+	sudo chown -R vaultwarden:vaultwarden /var/lib/vaultwarden<br />
+	# create service file<br />
+	sudo nano /etc/systemd/system/vaultwarden.service</div>
+	</li>
+	<li>Paste the following configuration into vaultwarden.service
+	<p>[Unit]<br />
+	Description=Vaultwarden Server<br />
+	<br />
+	# Only sqlite<br />
+	After=network.target</p>
+
+	<p>[Service]<br />
+	User=vaultwarden<br />
+	Group=vaultwarden<br />
+	EnvironmentFile=/etc/vaultwarden.env<br />
+	ExecStart=/usr/bin/vaultwarden<br />
+	PrivateTmp=true<br />
+	PrivateDevices=true<br />
+	ProtectHome=true<br />
+	ProtectSystem=strict<br />
+	WorkingDirectory=/var/lib/vaultwarden<br />
+	ReadWriteDirectories=/var/lib/vaultwarden<br />
+	AmbientCapabilities=CAP_NET_BIND_SERVICE</p>
+
+	<p>[Install]<br />
+	WantedBy=multi-user.target</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to vaultwarden.service</li>
+	<li>Continue with the following commands to enable the site and start vaultwarden:
+	<div class="codeBlock"># reload systemd services<br />
+	sudo systemctl daemon-reload<br />
+	# start vaultwarden service on boot and now<br />
+	sudo systemctl enable vaultwarden --now</div>
+	</li>
+	<li>Refresh the open web browser to verify Bitwarden is accessible</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
