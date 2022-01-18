@@ -1,0 +1,176 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Setup Pi-Hole as a Recursive DNS Server with Unbound</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Setup Pi-Hole as a Recursive DNS Server with Unbound</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Installing and Configuring Unbound</h2>
+
+<ol>
+	<li>Run the following commands in a terminal window:
+	<div class="codeBlock"># install unbound<br />
+	sudo apt install unbound<br />
+	# update root hints file<br />
+	wget https://www.internic.net/domain/named.root -qO- | sudo tee /var/lib/unbound/root.hints<br />
+	# edit unbound configuration<br />
+	sudo nano /etc/unbound/unbound.conf.d/pi-hole.conf</div>
+	</li>
+	<li>Paste the following configuration into pi-hole.conf
+	<p>server:<br />
+	&nbsp; &nbsp; # If no logfile is specified, syslog is used<br />
+	&nbsp; &nbsp; # logfile: &quot;/var/log/unbound/unbound.log&quot;<br />
+	&nbsp; &nbsp; verbosity: 0</p>
+
+	<p>&nbsp; &nbsp; interface: 127.0.0.1<br />
+	&nbsp; &nbsp; port: 5335<br />
+	&nbsp; &nbsp; do-ip4: yes<br />
+	&nbsp; &nbsp; do-udp: yes<br />
+	&nbsp; &nbsp; do-tcp: yes</p>
+
+	<p>&nbsp; &nbsp; # May be set to yes if you have IPv6 connectivity<br />
+	&nbsp; &nbsp; do-ip6: no</p>
+
+	<p>&nbsp; &nbsp; # You want to leave this to no unless you have *native* IPv6. With 6to4 and<br />
+	&nbsp; &nbsp; # Terredo tunnels your web browser should favor IPv4 for the same reasons<br />
+	&nbsp; &nbsp; prefer-ip6: no</p>
+
+	<p>&nbsp; &nbsp; # Use this only when you downloaded the list of primary root servers!<br />
+	&nbsp; &nbsp; # If you use the default dns-root-data package, unbound will find it automatically<br />
+	&nbsp; &nbsp; #root-hints: &quot;/var/lib/unbound/root.hints&quot;</p>
+
+	<p>&nbsp; &nbsp; # Trust glue only if it is within the server&#39;s authority<br />
+	&nbsp; &nbsp; harden-glue: yes</p>
+
+	<p>&nbsp; &nbsp; # Require DNSSEC data for trust-anchored zones, if such data is absent, the zone becomes BOGUS<br />
+	&nbsp; &nbsp; harden-dnssec-stripped: yes</p>
+
+	<p>&nbsp; &nbsp; # Don&#39;t use Capitalization randomization as it known to cause DNSSEC issues sometimes<br />
+	&nbsp; &nbsp; # see https://discourse.pi-hole.net/t/unbound-stubby-or-dnscrypt-proxy/9378 for further details<br />
+	&nbsp; &nbsp; use-caps-for-id: no</p>
+
+	<p>&nbsp; &nbsp; # Reduce EDNS reassembly buffer size.<br />
+	&nbsp; &nbsp; # Suggested by the unbound man page to reduce fragmentation reassembly problems<br />
+	&nbsp; &nbsp; edns-buffer-size: 1472</p>
+
+	<p>&nbsp; &nbsp; # Perform prefetching of close to expired message cache entries<br />
+	&nbsp; &nbsp; # This only applies to domains that have been frequently queried<br />
+	&nbsp; &nbsp; prefetch: yes</p>
+
+	<p>&nbsp; &nbsp; # One thread should be sufficient, can be increased on beefy machines. In reality for most users running on small networks or on a single machine, it should be unnecessary to seek performance enhancement by increasing num-threads above 1.<br />
+	&nbsp; &nbsp; num-threads: 1</p>
+
+	<p>&nbsp; &nbsp; # Ensure kernel buffer is large enough to not lose messages in traffic spikes<br />
+	&nbsp; &nbsp; so-rcvbuf: 1m</p>
+
+	<p>&nbsp; &nbsp; # Ensure privacy of local IP ranges<br />
+	&nbsp; &nbsp; private-address: 192.168.0.0/16<br />
+	&nbsp; &nbsp; private-address: 169.254.0.0/16<br />
+	&nbsp; &nbsp; private-address: 172.16.0.0/12<br />
+	&nbsp; &nbsp; private-address: 10.0.0.0/8<br />
+	&nbsp; &nbsp; private-address: fd00::/8<br />
+	&nbsp; &nbsp; private-address: fe80::/10</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to pi-hole.conf</li>
+	<li>Continue with the following commands in terminal
+	<div class="codeBlock"># restart the unbound service<br />
+	sudo service unbound restart<br />
+	# test a DNS lookup via unbound<br />
+	dig github.io @127.0.0.1 -p 5335</div>
+	</li>
+	<li>Back in the web browser, navigate back to the Pi-Hole web interface</li>
+	<li>Log in if you are not already</li>
+	<li>Select Settings &gt; DNS</li>
+	<li>Uncheck any of the previously selected upstream DNS servers</li>
+	<li>Check the box next to Custom 1 (IPv4)</li>
+	<li>Enter 127.0.0.1#5335 as the address</li>
+	<li>Scroll down and click the Save button</li>
+</ol>
+
+<h2>Testing the Changes</h2>
+
+<ol>
+	<li>Open a new tab in the web browser and navigate to https://yahoo.com</li>
+	<li>Go back into Pi-Hole and select Query Log from the left navigation</li>
+	<li>Filter the results on www.yahoo.com</li>
+	<li>You should see entries showing the DNS requests forwarding to localhost#5335</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
