@@ -1,0 +1,161 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Observium on Debian/Ubuntu</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Observium on Debian/Ubuntu</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal window
+	<div class="codeBlock"># install prerequisites<br />
+	sudo apt install libapache2-mod-php7.3 php7.3-cli php7.3-mysql php7.3-gd php7.3-json php-pear snmp fping mariadb-server mariadb-client python-mysqldb rrdtool subversion whois mtr-tiny ipmitool graphviz imagemagick apache2 -y<br />
+	# create a directory for observium<br />
+	sudo mkdir -p /opt/observium<br />
+	# download latest observium release<br />
+	sudo wget http://www.observium.org/observium-community-latest.tar.gz<br />
+	sudo tar zxvf observium-community-latest.tar.gz --directory /opt<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the Observium database and database user
+	<div class="codeBlock">CREATE DATABASE observium DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;<br />
+	GRANT ALL ON observium.* to &#39;observium_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;0b5erv1um!!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands
+	<div class="codeBlock">sudo cp /opt/observium/config.php.default /opt/observium/config.php<br />
+	sudo nano /opt/observium/config.php</div>
+	</li>
+	<li>Update the MySQL connection information</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to config.php</li>
+	<li>Continue with the following commands
+	<div class="codeBlock"># create the database objects<br />
+	/opt/observium/discovery.php -u<br />
+	# create the logs directory<br />
+	sudo mkdir -p /opt/observium/logs<br />
+	# create RRDs directory<br />
+	sudo mkdir /opt/observium/rrd<br />
+	sudo chown www-data:www-data /opt/observium/rrd<br />
+	# create observium apache2 configuration<br />
+	sudo nano /etc/apache2/sites-available/observium.conf</div>
+	</li>
+	<li>Paste the following configuration
+	<p>Listen 8001<br />
+	<br />
+	&lt;VirtualHost *:8001&gt;<br />
+	&nbsp; &nbsp; DocumentRoot /opt/observium/html<br />
+	&nbsp; &nbsp; &lt;Directory /&gt;<br />
+	&nbsp; &nbsp; &nbsp; &nbsp; AllowOverride All<br />
+	&nbsp; &nbsp; &nbsp; &nbsp; Options FollowSymLinks MultiViews<br />
+	&nbsp; &nbsp; &nbsp; &nbsp; Require all granted<br />
+	&nbsp; &nbsp; &lt;/Directory&gt;<br />
+	&lt;/VirtualHost&gt;</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to observium.conf</li>
+	<li>Continue with the following commands
+	<div class="codeBlock"># enable required apache modules<br />
+	sudo a2enmod rewrite<br />
+	# enable the observium site<br />
+	sudo a2ensite observium<br />
+	# restart apache2 service<br />
+	sudo systemctl restart apache2<br />
+	# create an admin user account<br />
+	/opt/observium/adduser.php i12bretro supersecurepw 10</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP:8001</li>
+	<li>Log into Observium with the user created above</li>
+	<li>Welcome to Observium</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
