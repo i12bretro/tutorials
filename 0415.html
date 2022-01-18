@@ -1,0 +1,257 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install LibreNMS on Debian/Ubuntu</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install LibreNMS on Debian/Ubuntu</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Log into the Debian device</li>
+	<li>Run the following commands in a terminal:
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install software updates<br />
+	sudo apt upgrade -y<br />
+	# install pre-requisites<br />
+	sudo apt install acl curl composer fping git graphviz imagemagick mariadb-client mariadb-server mtr-tiny nmap rrdtool snmp snmpd whois unzip python3-pymysql python3-dotenv python3-redis python3-setuptools python3-systemd python3-pip -y<br />
+	# install Apache and MySQL<br />
+	sudo apt install apache2 libapache2-mod-fcgid mariadb-server mariadb-client -y<br />
+	# install PHP components<br />
+	sudo apt install php7.3-cli php7.3-curl php7.3-fpm php7.3-gd php7.3-json php7.3-mbstring php7.3-mysql php7.3-snmp php7.3-xml php7.3-zip -y<br />
+	# create librenms user<br />
+	sudo useradd librenms -d /opt/librenms -M -r -s &quot;$(which bash)&quot;<br />
+	# clone librenms github repo<br />
+	sudo git clone https://github.com/librenms/librenms.git /opt/librenms<br />
+	# set permissions<br />
+	sudo chown -R librenms:librenms /opt/librenms<br />
+	sudo chmod 771 /opt/librenms<br />
+	sudo setfacl -d -m g::rwx /opt/librenms/rrd /opt/librenms/logs /opt/librenms/bootstrap/cache/ /opt/librenms/storage/<br />
+	sudo setfacl -R -m g::rwx /opt/librenms/rrd /opt/librenms/logs /opt/librenms/bootstrap/cache/ /opt/librenms/storage/<br />
+	# install PHP dependencies<br />
+	sudo su - librenms<br />
+	./scripts/composer_wrapper.php install --no-dev<br />
+	exit<br />
+	# set time zone for PHP fpm<br />
+	sudo nano /etc/php/7.3/fpm/php.ini</div>
+	</li>
+	<li>Press CTRL+W to search &gt; type timezone &gt; Press Enter</li>
+	<li>Remove the ; to uncomment the line</li>
+	<li>Type in a valid timezone (<a href="https://php.net/manual/en/timezones.php" target="_blank">https://php.net/manual/en/timezones.php</a>)</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to php.ini</li>
+	<li>Continue with the following commands in a terminal:
+	<div class="codeBlock"># set time zone for PHP cli<br />
+	sudo nano /etc/php/7.3/cli/php.ini</div>
+	</li>
+	<li>Press CTRL+W to search &gt; type timezone &gt; Press Enter</li>
+	<li>Remove the ; to uncomment the line</li>
+	<li>Type in a valid timezone (<a href="https://php.net/manual/en/timezones.php" target="_blank">https://php.net/manual/en/timezones.php</a>)</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to php.ini</li>
+	<li>Continue with the following commands in a terminal:</li>
+	<li>
+	<div class="codeBlock"># set system time zone<br />
+	sudo timedatectl set-timezone America/New_York<br />
+	# edit mariaDB configuration<br />
+	sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf</div>
+	</li>
+	<li>Paste the following under the [mysqld] section
+	<p>innodb_file_per_table=1<br />
+	lower_case_table_names=0</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to 50-server.cnf</li>
+	<li>Continue with the following commands in a terminal:
+	<div class="codeBlock"># restart mariadb service<br />
+	sudo systemctl restart mariadb<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the LibreNMS database and database user
+	<div class="codeBlock">CREATE DATABASE librenms CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;<br />
+	CREATE USER &#39;librenms_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;Libr3NM$!&#39;;<br />
+	GRANT ALL PRIVILEGES ON librenms.* TO &#39;librenms_rw&#39;@&#39;localhost&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># make a copy of www.conf<br />
+	sudo cp /etc/php/7.3/fpm/pool.d/www.conf /etc/php/7.3/fpm/pool.d/librenms.conf<br />
+	# edit librenms.conf<br />
+	sudo nano /etc/php/7.3/fpm/pool.d/librenms.conf</div>
+	</li>
+	<li>Replace [www] with [librenms]</li>
+	<li>Change the user and group to librenms
+	<p>user = librenms<br />
+	group = librenms</p>
+	</li>
+	<li>Change the listen to php-fpm-librenms.sock
+	<p>listen = /run/php-fpm-librenms.sock</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to librenms.conf</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># create librenms apache conf<br />
+	sudo nano /etc/apache2/sites-available/librenms.conf</div>
+	</li>
+	<li>Paste the following configuration into librenms.vhost
+	<p>&lt;VirtualHost *:80&gt;<br />
+	DocumentRoot /opt/librenms/html/<br />
+	#ServerName  librenms.example.com</p>
+
+	<p>AllowEncodedSlashes NoDecode<br />
+	&lt;Directory &quot;/opt/librenms/html/&quot;&gt;<br />
+	Require all granted<br />
+	AllowOverride All<br />
+	Options FollowSymLinks MultiViews<br />
+	&lt;/Directory&gt;</p>
+
+	<p># Enable http authorization headers<br />
+	&lt;IfModule setenvif_module&gt;<br />
+	SetEnvIfNoCase ^Authorization$ &quot;(.+)&quot; HTTP_AUTHORIZATION=$1<br />
+	&lt;/IfModule&gt;</p>
+
+	<p>&lt;FilesMatch &quot;.+\.php$&quot;&gt;<br />
+	SetHandler &quot;proxy:unix:/run/php-fpm-librenms.sock|fcgi://localhost&quot;<br />
+	&lt;/FilesMatch&gt;<br />
+	&lt;/VirtualHost&gt;</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to librenms.conf</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># enable the librenms site and reload apache<br />
+	sudo a2dissite 000-default<br />
+	sudo a2enmod proxy_fcgi setenvif rewrite<br />
+	sudo a2ensite librenms.conf<br />
+	sudo systemctl restart apache2<br />
+	sudo systemctl restart php7.3-fpm<br />
+	# install dispatcher service<br />
+	sudo su - librenms<br />
+	pip3 install -r requirements.txt<br />
+	exit<br />
+	sudo cp /opt/librenms/misc/librenms.service /etc/systemd/system/librenms.service<br />
+	sudo systemctl enable --now librenms.service<br />
+	# enable snmp<br />
+	sudo cp /opt/librenms/snmpd.conf.example /etc/snmp/snmpd.conf<br />
+	sudo nano /etc/snmp/snmpd.conf</div>
+	</li>
+	<li>Change RANDOMSTRINGGOESHERE to a unique community string to use for SNMP</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to snmpd.conf</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># download librenms snmp<br />
+	sudo curl -o /usr/bin/distro https://raw.githubusercontent.com/librenms/librenms-agent/master/snmp/distro<br />
+	# set permissions<br />
+	sudo chmod +x /usr/bin/distro<br />
+	# restart snmp service<br />
+	sudo systemctl enable snmpd<br />
+	sudo systemctl restart snmpd</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP//install</li>
+	<li>The LibreNMS setup screen should be displayed</li>
+	<li>Click the Configure Database icon</li>
+	<li>Select MySQL and fill out the database connection information as follows
+	<p>Host: localhost<br />
+	Port: 3306<br />
+	User: librenms_rw<br />
+	Password: Libr3NM$!<br />
+	Database Name: librenms</p>
+	</li>
+	<li>Click the Check Credentials button</li>
+	<li>Click the Build Database button</li>
+	<li>Once the database has been created successfully, click the Created Admin User icon</li>
+	<li>Enter a username, password and email address &gt; Click the Add User button</li>
+	<li>Click the Finish Install icon</li>
+	<li>Click the validate your install link</li>
+	<li>Log in using the admin user credentials created earlier</li>
+	<li>Welcome to LibreNMS</li>
+</ol>
+
+<p>Source: <a href="https://docs.librenms.org/Installation/Install-LibreNMS/" target="_blank">https://docs.librenms.org/Installation/Install-LibreNMS/</a></p>
+
+<p>Check out <strong>for day in life</strong> on YouTube for more on LibreNMS: <a href="https://www.youtube.com/playlist?list=PLxiGkbpIzunT_YOwUEukOB6DpF8N8MXkQ" target="_blank">https://www.youtube.com/playlist?list=PLxiGkbpIzunT_YOwUEukOB6DpF8N8MXkQ</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
