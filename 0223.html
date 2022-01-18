@@ -1,0 +1,136 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Installing WebIssues Bug and Enhancement Tracker on Windows</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Installing WebIssues Bug and Enhancement Tracker on Windows</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is WebIssues?</h2>
+
+<blockquote><em>WebIssues is an open source, multi-platform system for issue tracking and team collaboration. It can be used to store, share and track issues with various attributes, description, comments and file attachments. It is easy to install and use but has many capabilities and is highly customizable. -<a href="https://webissues.mimec.org/" target="_blank">https://webissues.mimec.org/</a></em></blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Download XAMPP <a href="https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/" target="_blank">Download</a></li>
+	<li>Download WebIssues <a href="https://github.com/mimecorg/webissues/releases" target="_blank">Download</a></li>
+	<li><label for="cb_li_917989_0">Download Microsoft Visual C++ </label><label for="cb_li_917989_0"><a href="https://aka.ms/vs/16/release/vc_redist.x64.exe" target="_blank">Download</a></label></li>
+	<li>Install Microsoft Visual C++</li>
+	<li>Right click the downloaded XAMPP .zip file &gt; Extract All...</li>
+	<li>Right click the downloaded WebIssues .zip file &gt; Extract All...</li>
+	<li>Rename the extracted folder webissues</li>
+	<li>Cut the webissues folder inside the XAMPP/htdocs directory</li>
+	<li>Copy the extracted XAMPP directory to a safe location to run from, C:\Program Files for example</li>
+	<li>Run XAMPP/setup_xampp.bat to update the configuration files with the new server location</li>
+	<li>Navigate to XAMPP/php and edit php.ini</li>
+	<li>Find the following lines and remove the ; to uncomment them
+	<p>extension=imap</p>
+	</li>
+	<li>Run XAMPP/xampp-control.exe</li>
+	<li>Click the Start button next to Apache and MySQL</li>
+	<li>Navigate to XAMPP/mysql/bin</li>
+	<li>Hold the SHIFT key and right click in the white space &gt; Open PowerShell window here...</li>
+	<li>Type the following in the PowerShell window to setup the webissues database
+	<div class="codeBlock">.\mysql -u root<br />
+	CREATE DATABASE webissues;<br />
+	GRANT ALL ON webissues.* TO &#39;webissues_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;W3b1ssu3s!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP/webissues</li>
+	<li>Click the Configure Database link</li>
+	<li>Select a Language &gt; Click Next</li>
+	<li>Select Create new database tables and MySQL &gt; Complete the form as follows
+	<p>Host name: localhost<br />
+	Database name: webissues<br />
+	User name: webissues_rw<br />
+	Password: W3b1ssu3s!</p>
+	</li>
+	<li>Click Next at the bottom right of the page</li>
+	<li>Give the server a name and enter and confirm a password for the admin user &gt; Click Next</li>
+	<li>Review the installation summary &gt; Click Install</li>
+	<li>After the installation completes click the Web Client link</li>
+	<li>Welcome to WebIssues</li>
+</ol>
+
+<p>Source: <a href="https://doc.mimec.org/webissues-guide/installation.html" target="_blank">https://doc.mimec.org/webissues-guide/installation.html</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
