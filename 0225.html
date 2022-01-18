@@ -1,0 +1,205 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Self-hosted URL Shortener with Shlink</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Self-hosted URL Shortener with Shlink</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Shlink?</h2>
+
+<blockquote><em>A PHP-based self-hosted URL shortener that can be used to serve shortened URLs under your own custom domain.</em> -<a href="https://github.com/shlinkio/shlink" target="_blank">https://github.com/shlinkio/shlink</a></blockquote>
+
+<h2>Installing Shlink</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal:
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install software updates<br />
+	sudo apt upgrade -y<br />
+	# install pre-requisites<br />
+	sudo apt install lsb-release apt-transport-https ca-certificates -y<br />
+	# add php gpg key<br />
+	sudo wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg<br />
+	# add php apt repository<br />
+	echo &quot;deb https://packages.sury.org/php/ $(lsb_release -sc) main&quot; | sudo tee /etc/apt/sources.list.d/php.list<br />
+	# update software repositories<br />
+	sudo apt update<br />
+	# install Apache HTTPD and MySQL<br />
+	sudo apt-get install apache2 mariadb-server mariadb-client -y<br />
+	# install PHP components<br />
+	sudo apt install php8.0 libapache2-mod-php8.0 php8.0-curl php8.0-intl php8.0-gd php8.0-pdo php8.0-fpm php8.0-common php8.0-mysql php8.0-xml php8.0-apcu -y<br />
+	# enable/disable apache2 modules<br />
+	sudo a2dismod mpm_prefork php8.0<br />
+	sudo a2enmod mpm_event rewrite proxy_fcgi setenvif php8.0<br />
+	sudo a2enconf php8.0-fpm<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the ShlinkIO database and database user
+	<div class="codeBlock"># NOTE: update the password with a secure password<br />
+	CREATE DATABASE shlinkio;<br />
+	GRANT ALL ON shlinkio.* to &#39;shlinkio_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;$hlink10!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands to download and extract shlinkio
+	<div class="codeBlock"># download latest shlink.io version<br />
+	sudo wget https://github.com/shlinkio/shlink/releases/download/v2.6.2/shlink2.6.2_php8.0_dist.zip<br />
+	# extract the zip archive<br />
+	sudo unzip shlink2.6.2_php8.0_dist.zip -d /var/www<br />
+	# rename the extracted folder<br />
+	sudo mv /var/www/shlink* /var/www/shlinkio<br />
+	# set the owner of the new shlinkio directory to www-data<br />
+	sudo chown -R www-data:www-data /var/www/shlinkio<br />
+	# run the shlinkio installer<br />
+	sudo -u www-data php /var/www/shlinkio/bin/install</div>
+	</li>
+	<li>Type 0 for MySQL &gt; Press Enter</li>
+	<li>Type shlinkio for the database name &gt; Press Enter</li>
+	<li>Press enter to use localhost for the database host</li>
+	<li>Press enter to accept the default MySQL port</li>
+	<li>Type shlinkio_rw for the database username &gt; Press Enter</li>
+	<li>Type the shlinkio_rw password created earlier &gt; Press Enter</li>
+	<li>Press Enter at the Unix socket prompt</li>
+	<li>Enter the default domain name to use for shortened URLs,</li>
+	<li>Type 0 for http &gt; Press Enter</li>
+	<li>Press Enter to validate long URLs</li>
+	<li>Press Enter to accept the default shortened URL length</li>
+	<li>Press Enter to say no to having shlink resolve page titles</li>
+	<li>Press Enter to track orphan visits</li>
+	<li>Press Enter at the GeoLite2 license key prompt</li>
+	<li>Press Enter to anonymize report IP addresses</li>
+	<li>Enter 301 for the kind of redirect &gt; Press Enter</li>
+	<li>Press Enter to accept the default redirect cache value</li>
+	<li>Press Enter to accept displaying a 404 for all 3 redirects options</li>
+	<li>Press Enter to leave parameter name blank</li>
+	<li>Type No to enable safety check &gt; Press Enter</li>
+	<li>Type /shlinkio for the path &gt; Press Enter</li>
+	<li>Press Enter at the integrations prompt</li>
+	<li>With the installation completed, run the following command to create a shlinkio.conf apache configuration
+	<div class="codeBlock"># download shlinkio web client<br />
+	sudo wget https://github.com/shlinkio/shlink-web-client/releases/download/v3.1.0/shlink-web-client_3.1.0_dist.zip<br />
+	# extract the zip archive<br />
+	sudo unzip shlink-web-client_3.1.0_dist.zip<br />
+	# move the extracted files to the web root<br />
+	sudo mv ./shlink-web-client*/* /var/www/html<br />
+	sudo nano /etc/apache2/sites-available/shlinkio.conf</div>
+	</li>
+	<li>Paste the following configuration into shlinkio.conf
+	<p>Alias /shlinkio &quot;/var/www/shlinkio/public/&quot;<br />
+	&lt;Directory /var/www/shlinkio/public&gt;<br />
+	Options FollowSymlinks Includes ExecCGI<br />
+	AllowOverride All<br />
+	Require all granted<br />
+	Order allow,deny<br />
+	allow from all<br />
+	&lt;/Directory&gt;<br />
+	<directory shlinkio=""></directory></p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to shlinkio.conf</li>
+	<li>Continue with the following commands to enable the site and restart Apache:
+	<div class="codeBlock"># enable the shlinkio site<br />
+	sudo a2ensite shlinkio<br />
+	# restart apache2 service for the changes to take effect<br />
+	sudo systemctl restart apache2<br />
+	# generate an API key<br />
+	sudo -u www-data php /var/www/shlinkio/bin/cli api-key:generate</div>
+	</li>
+	<li>Copy the generated API key to the clipboard</li>
+	<li>Open a web browser and navigate to http://DNSorIP</li>
+	<li>Click the add your first server link</li>
+	<li>Enter a name for the server, the URL should be http://DNSorIP/shlinkio and paste the copied API key from earlier</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
