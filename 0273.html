@@ -1,0 +1,156 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Installing phpBB Forum/Bulletin Board on Debian</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Installing phpBB Forum/Bulletin Board on Debian</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Log into the Debian device</li>
+	<li>Run the following commands in a terminal:
+	<div class="codeBlock"># update repositories and install any available software updates<br />
+	sudo apt update<br />
+	sudo apt upgrade -y<br />
+	# install Apache HTTPD and MySQL<br />
+	sudo apt-get install apache2 mariadb-server mariadb-client curl<br />
+	# install PHP components<br />
+	sudo apt install php php-mysql php-cli php-json php-opcache php-gd php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the phpbb database and database user
+	<div class="codeBlock">CREATE DATABASE phpbb DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;<br />
+	GRANT ALL ON phpbb.* TO &#39;phpbb_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;!!phpBB##&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands to download and extract phpBB in the Apache webroot
+	<div class="codeBlock"># download latest phpbb version<br />
+	sudo wget -O phpbb.tar.gz https://download.phpbb.com/pub/release/3.3/3.3.2/phpBB-3.3.2.tar.bz2<br />
+	# extract phpbb.tar.gz<br />
+	sudo tar xvf phpbb.tar.gz --directory /var/www<br />
+	# rename phpbb folder<br />
+	sudo mv /var/www/phpBB* /var/www/phpbb<br />
+	# create a new phpbb.conf file to configure the site<br />
+	sudo nano /etc/apache2/sites-available/phpbb.conf</div>
+	</li>
+	<li>Paste the following configuration into phpbb.conf<br />
+	<p>Alias /phpbb &quot;/var/www/phpbb/&quot;<br />
+	&lt;Directory /var/www/phpbb/&gt;<br />
+	&nbsp; &nbsp; AllowOverride All<br />
+	&lt;/Directory&gt;</p></li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to phpbb.conf</li>
+	<li>Continue with the following commands to enable the site and restart Apache:
+	<div class="codeBlock"># enable the phpbb site and required PHP modules<br />
+	sudo a2ensite phpbb<br />
+	sudo a2enmod rewrite<br />
+	# set the owner of the new phpbb directory to www-data<br />
+	sudo chown -R www-data:www-data /var/www/phpbb<br />
+	# restart apache2 service<br />
+	sudo systemctl restart apache2</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP/phpbb</li>
+	<li><label for="cb_li_138017_24">The phpBB introduction screen should be displayed</label></li>
+	<li><label for="cb_li_138017_24">Click the Install tab</label></li>
+	<li><label for="cb_li_138017_24">Click the Install button</label></li>
+	<li>Input an administrator username, email address and password &gt; Click Submit</li>
+	<li>Enter the database hostname, username, password and database name &gt; Click Submit</li>
+	<li>Click the Submit button on the&nbsp;Server configuration page</li>
+	<li>Click the Submit button on the E-mail configuration page</li>
+	<li>Enter a title and short description on the&nbsp;Bulletin board configuration page &gt; Click Submit</li>
+	<li>When the installation completes run the following command in terminal to delete the /install directory<br />
+	sudo rm /var/www/phpbb/install -r</li>
+	<li>In a web browser, navigate to http://DNSorIP/phpbb</li>
+	<li>Welcome to your very own, self-hosted forum with phpBB</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
