@@ -1,0 +1,154 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Self-hosted Wikipedia Style Wiki with MediaWiki on Debian</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Self-hosted Wikipedia Style Wiki with MediaWiki on Debian</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Log into the Debian device</li>
+	<li>Run the following commands in a terminal:
+	<div class="codeBlock"># update repositories and install any available software updates<br />
+	sudo apt update<br />
+	sudo apt upgrade -y<br />
+	# install Apache HTTPD and MySQL<br />
+	sudo apt-get install apache2 mariadb-server mariadb-client curl<br />
+	# install PHP components<br />
+	sudo apt install php php-common php-mysql php-cli php-json php-opcache php-gd php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the MediaWiki database and database user
+	<div class="codeBlock">CREATE DATABASE wikidb;<br />
+	GRANT ALL ON wikidb.* TO &#39;wikiuser&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;WikiW1k1Wh@t!!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands to download and extract MediaWiki in the Apache webroot
+	<div class="codeBlock"># download latest MediaWiki version<br />
+	sudo wget -O mediawiki.tar.gz https://releases.wikimedia.org/mediawiki/1.35/mediawiki-1.35.1.tar.gz<br />
+	# extract mediawiki.tar.gz<br />
+	sudo tar xzvf mediawiki.tar.gz --directory /var/www/html<br />
+	# rename mediawiki folder<br />
+	sudo mv /var/www/html/mediawiki* /var/www/html/wiki<br />
+	# set the owner of the new wiki directory to www-data<br />
+	sudo chown -R www-data:www-data /var/www/html/wiki<br />
+	# restart apache2 service<br />
+	sudo systemctl restart apache2</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP/wiki</li>
+	<li>Click the set up the wiki first link</li>
+	<li>Select a language &gt; Click Continue</li>
+	<li>Scroll to the bottom of the page and click Continue</li>
+	<li>Enter the database host, name, username and password &gt; Click Continue
+	<p>Host: localhost<br />
+	Name: wikidb<br />
+	Username: wikiuser<br />
+	Password:&nbsp;WikiW1k1Wh@t!!</p>
+	</li>
+	<li>Leave&nbsp;Use the same account as for installation checked and click Continue</li>
+	<li>Give the Wiki a name and create an administrator username&nbsp;and password</li>
+	<li>Uncheck the Share data about this installation with MediaWiki developers&nbsp;box</li>
+	<li>Check the&nbsp;I&#39;m bored already, just install the wiki box</li>
+	<li>Click Continue and the Continue again to begin the installation</li>
+	<li>After the installation completes click Continue</li>
+	<li>Download the generated LocalSettings.php to the Downloads&nbsp;directory</li>
+	<li>Run the following command in terminal to place the LocalSettings.php in the correct location
+	<div class="codeBlock">sudo mv ~/Downloads/LocalSettings.php /var/www/html/wiki</div>
+	</li>
+	<li>Back in the browser&nbsp;click the enter your wiki link</li>
+	<li>Click the Log In link at the top right</li>
+	<li>Log in with the administrator account created during the installation&nbsp;</li>
+	<li>Welcome to WikiMedia</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
