@@ -1,0 +1,192 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Create a Secure Web Based Password Vault with Keepass Web</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Create a Secure Web Based Password Vault with Keepass Web</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Log into the Debian device</li>
+	<li>Run the following commands in a terminal:
+	<div class="codeBlock"># update repositories and install any available software updates<br />
+	sudo apt&nbsp;update<br />
+	sudo apt&nbsp;upgrade<br />
+	# install apache2<br />
+	sudo apt install apache2<br />
+	# download and extract keepass web<br />
+	wget https://github.com/keeweb/keeweb/archive/gh-pages.zip<br />
+	sudo unzip gh-pages.zip -d /var/www/html/<br />
+	sudo mv /var/www/html/keeweb-gh-pages /var/www/html/keepass<br />
+	# create webdav directory and set permissions<br />
+	sudo mkdir /var/www/html/webdav<br />
+	sudo chown -R www-data:www-data /var/www/html/webdav<br />
+	# change permissions on the newly setup application folder<br />
+	sudo chown -R www-data:www-data /var/www/html/keepass<br />
+	# create a new keepass.conf file to configure the site<br />
+	sudo nano /etc/apache2/sites-available/keepass.conf</div>
+	</li>
+	<li>Paste the following directives into keepass.conf
+	<p>DavLockDB &quot;/var/www/html/webdav/DavLock&quot;<br />
+	&nbsp; &lt;Location /keepass &gt;<br />
+	&nbsp; RewriteEngine on<br />
+	&nbsp; RewriteCond %{REQUEST_METHOD} OPTIONS<br />
+	&nbsp; RewriteRule ^(.*)$ blank.html [R=200,L,E=HTTP_ORIGIN:%{HTTP:ORIGIN}]<br />
+	&nbsp; # Don&#39;t require LDAP authentication for a healthcheck<br />
+	&nbsp; SetEnvIf Request_URI &quot;^/healhcheck&quot; accessgranted=1<br />
+	&nbsp; &nbsp; Order deny,allow<br />
+	&nbsp; &nbsp; Satisfy any<br />
+	&nbsp; &nbsp; Deny from all<br />
+	&nbsp; &nbsp; Allow from env=accessgranted<br />
+	&nbsp; &nbsp; AuthType Basic<br />
+	&nbsp; &nbsp; AuthBasicProvider ldap<br />
+	&nbsp; &nbsp; AuthLDAPURL &quot;ldap://i12bretro.local:389/DC=i12bretro,DC=local?sAMAccountName?sub?(objectClass=user)&quot; NONE<br />
+	&nbsp; &nbsp; AuthLDAPBindDN &quot;readonly_svc@i12bretro.local&quot;<br />
+	&nbsp; &nbsp; AuthLDAPBindPassword &quot;Read0nly!!&quot;<br />
+	&nbsp; &nbsp; AuthName &quot;Restricted Area [i12bretro.local]&quot;<br />
+	&nbsp; &nbsp; # to authenticate a domain group, specify the full DN<br />
+	&nbsp; &nbsp; AuthLDAPGroupAttributeIsDN on<br />
+	&nbsp; &nbsp; require ldap-group CN=WebAuthAccess,CN=Users,DC=i12bretro,DC=local<br />
+	&nbsp; &lt;/Location&gt; &nbsp;<br />
+	&nbsp;&nbsp;&lt;Location &quot;/webdav&quot;&gt;<br />
+	&nbsp; &nbsp; DAV On<br />
+	&nbsp; &nbsp; AuthType &quot;Basic&quot;<br />
+	&nbsp; &nbsp; AuthName &quot;webdav&quot;<br />
+	&nbsp; &nbsp; Options Indexes<br />
+	&nbsp; &nbsp; Header always set Access-Control-Allow-Origin &quot;*&quot;<br />
+	&nbsp; &nbsp; Header always set Access-Control-Allow-Headers &quot;origin, content-type, cache-control, accept, authorization, if-match, destination, overwrite&quot;<br />
+	&nbsp; &nbsp; Header always set Access-Control-Expose-Headers &quot;ETag&quot;<br />
+	&nbsp; &nbsp; Header always set Access-Control-Allow-Methods &quot;GET, HEAD, POST, PUT, OPTIONS, MOVE, DELETE, COPY, LOCK, UNLOCK&quot;<br />
+	&nbsp; &nbsp; Header always set Access-Control-Allow-Credentials &quot;true&quot;<br />
+	&nbsp; &lt;/Location&gt;</p>
+	</li>
+	<li>Edit the index.html file and modify the kw-config meta tag, setting the value to config.json
+	<div class="codeBlock"># <meta name="kw-config" content="config.json"><br />
+	sudo nano /var/www/html/keepass/index.html</div>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to index.html</li>
+	<li>Create and edit config.json to by running the following command:
+	<div class="codeBlock">sudo nano /var/www/html/keepass/config.json</div>
+	</li>
+	<li>Paste the following in to config.json
+	<p>{<br />
+	&nbsp;&nbsp; &nbsp;&quot;settings&quot;: {<br />
+	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&quot;theme&quot;: &quot;fb&quot;,<br />
+	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&quot;autoSave&quot;: true,<br />
+	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&quot;autoSaveInterval&quot;: 1,<br />
+	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&quot;canOpenDemo&quot;: false,<br />
+	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&quot;dropbox&quot;: false,<br />
+	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&quot;gdrive&quot;: false,<br />
+	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&quot;onedrive&quot;: false,<br />
+	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&quot;canExportXml&quot;: true<br />
+	&nbsp;&nbsp; &nbsp;},<br />
+	&nbsp;&nbsp; &nbsp;&quot;files&quot;: [{<br />
+	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&quot;storage&quot;: &quot;webdav&quot;,<br />
+	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&quot;name&quot;: &quot;Database&quot;,<br />
+	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&quot;path&quot;: &quot;/webdav/database.kdbx&quot;<br />
+	&nbsp;&nbsp; &nbsp;}]<br />
+	}</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to config.json</li>
+	<li>Continue by executing the following commands in terminal:
+	<div class="codeBlock"># enable the keepass site and required Apache&nbsp;modules<br />
+	sudo a2ensite keepass<br />
+	sudo a2enmod dav dav_fs ldap authnz_ldap rewrite headers<br />
+	# restart apache2 service for the changes to take effect<br />
+	sudo systemctl restart apache2</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP/keepass</li>
+	<li>Authenticate with a valid LDAP user account</li>
+	<li>Click the New icon</li>
+	<li>Click the New link in the lower left hand corner</li>
+	<li>Enter a Master password and re-type it to confirm</li>
+	<li>Enter a Name for the keepass database</li>
+	<li>Click the Save to... button &gt; File</li>
+	<li>Save the database to ~/database.kdbx</li>
+	<li>Close the browser</li>
+	<li>Continue by executing the following commands in terminal:
+	<div class="codeBlock"># copy the keepass database to webdav directory<br />
+	sudo mv ~/database.kdbx /var/www/html/webdav/</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP/keepass</li>
+	<li>Enter the master password created earlier</li>
+	<li>Enjoy your web based keepass editor</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
