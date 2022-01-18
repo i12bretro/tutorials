@@ -1,0 +1,137 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Running LibrePhotos in Docker on Debian 10</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Running LibrePhotos in Docker on Debian 10</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Install&nbsp;Docker</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Execute the following commands in a terminal:
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install necessary packages for https apt calls<br />
+	sudo apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common<br />
+	# add docker GPG key<br />
+	curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -<br />
+	# add docker software repository<br />
+	sudo add-apt-repository &quot;deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable&quot;<br />
+	# install docker<br />
+	sudo apt update<br />
+	sudo apt install docker-ce docker-ce-cli containerd.io<br />
+	# create a docker group<br />
+	sudo groupadd docker<br />
+	# add the current user to the docker group<br />
+	sudo usermod -aG docker $USER<br />
+	# install docker-compose<br />
+	sudo curl -L &quot;https://github.com/docker/compose/releases/download/1.28.0/docker-compose-$(uname -s)-$(uname -m)&quot; -o /usr/local/bin/docker-compose<br />
+	# make docker-compose executable<br />
+	sudo chmod +x /usr/local/bin/docker-compose</div>
+	</li>
+</ol>
+
+<h2>Running the LibrePhoto Docker Container</h2>
+
+<ol>
+	<li>After installing Docker, continue with the following commands in terminal:
+	<div class="codeBlock"># download librephotos compose.yml and sample .env<br />
+	wget https://raw.githubusercontent.com/LibrePhotos/librephotos/dev/docker-compose.yml<br />
+	wget https://raw.githubusercontent.com/LibrePhotos/librephotos/dev/librephotos.env<br />
+	# create a copy of the sample .env<br />
+	cp librephotos.env .env<br />
+	# edit the .env<br />
+	nano .env</div>
+	</li>
+	<li>Scroll down the .env file and change the /home/username/ text to ~/</li>
+	<li>Open a web browser and navigate to https://rb.gy/emgmwo to generate a new shhhhKey</li>
+	<li>Set the correct timezone</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to .env</li>
+	<li>Run the following command in terminal to start LibrePhoto
+	<div class="codeBlock">sudo docker-compose up -d</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP:3000</li>
+	<li>Welcome to LibrePhoto</li>
+</ol>
+
+<p>Source: https://github.com/LibrePhotos/librephotos</p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
