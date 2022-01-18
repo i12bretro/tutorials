@@ -1,0 +1,133 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Setting Up Apache Subversion on Debian/Ubuntu</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Setting Up Apache Subversion on Debian/Ubuntu</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Installing Apache Subversion</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal:
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install apache<br />
+	sudo apt install apache2<br />
+	# install subversion and apache modules<br />
+	sudo apt install subversion libapache2-mod-svn<br />
+	# create a new subversion group<br />
+	sudo groupadd subversion<br />
+	# add user(s) to the new group<br />
+	sudo addgroup i12bretro subversion<br />
+	# create the repository directory and set permissions<br />
+	sudo mkdir /var/lib/svn<br />
+	sudo chown -R www-data:subversion /var/lib/svn/<br />
+	sudo chmod -R 770 /var/lib/svn/<br />
+	# create a test repository<br />
+	sudo svnadmin create /var/lib/svn/Youtube_TEST<br />
+	# enable apache modules<br />
+	sudo a2enmod dav dav_svn<br />
+	# create a new svn.conf file to configure the site<br />
+	sudo nano /etc/apache2/sites-available/svn.conf</div>
+	</li>
+	<li>Paste the following configuration into svn.conf
+	<p>Alias /svn /var/lib/svn<br />
+	<br />
+	&lt;Location /svn&gt;<br />
+	&nbsp; &nbsp;DAV svn<br />
+	&nbsp; &nbsp;SVNListParentPath On<br />
+	&nbsp; &nbsp;SVNParentPath /var/lib/svn<br />
+	&nbsp; &nbsp;Require all granted<br />
+	&nbsp; &nbsp;AllowOverride None<br />
+	&lt;/Location&gt;</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to svn.conf</li>
+	<li>Continue with the following commands to enable the site and restart Apache:
+	<div class="codeBlock"># enable the svn site<br />
+	sudo a2ensite svn<br />
+	# restart apache2 service for the changes to take effect<br />
+	sudo systemctl restart apache2</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP/svn/Youtube_TEST</li>
+	<li>A bare bones directory listing of the &quot;Youtube_TEST - Revision 0: /&quot; should be displayed</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
