@@ -1,0 +1,203 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Installing RedMine Project Management Software on Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Installing RedMine Project Management Software on Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Log into the Debian device</li>
+	<li>Run the following commands in a terminal:
+	<div class="codeBlock"># update repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade<br />
+	# install Apache2, Ruby, MySQL/MariaDB and redmine dependencies<br />
+	sudo apt install ruby-dev apache2 libapache2-mod-passenger mariadb-server build-essential libxslt1-dev libmariadb-dev libxml2-dev zlib1g-dev imagemagick libmagickwand-dev curl<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the Redmine database and database user
+	<div class="codeBlock">CREATE DATABASE redmine CHARACTER SET utf8mb4;<br />
+	GRANT ALL ON redmine.* to &#39;redmine&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;R3dM1n3!!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands to download and extract Redmine
+	<div class="codeBlock"># create redmine user<br />
+	sudo useradd -r -m -d /opt/redmine -s /usr/bin/bash redmine<br />
+	# add redmine user to www-data group<br />
+	sudo usermod -aG redmine www-data<br />
+	# download latest redmine version<br />
+	sudo wget -O redmine.tar.gz https://www.redmine.org/releases/redmine-4.1.2.tar.gz<br />
+	# extract redmine.tar.gz<br />
+	sudo -u redmine tar xzf redmine.tar.gz -C /opt/redmine/ --strip-components=1<br />
+	# authenticate as the redmine user<br />
+	sudo su - redmine<br />
+	# create copies of example configuration files<br />
+	cp /opt/redmine/config/configuration.yml{.example,}<br />
+	cp /opt/redmine/public/dispatch.fcgi{.example,}<br />
+	cp /opt/redmine/config/database.yml{.example,}<br />
+	# edit database.yml<br />
+	nano /opt/redmine/config/database.yml</div>
+	</li>
+	<li>Update the following values in database.yml
+	<p>production:<br />
+	adapter: mysql2<br />
+	database: redmine<br />
+	host: localhost<br />
+	username: redmine<br />
+	password: &quot;R3dM1n3!!&quot;</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to database.yml</li>
+	<li>Continue with the following commands
+	<div class="codeBlock"># exit redmine login<br />
+	exit<br />
+	# cd to /opt/redmine<br />
+	cd /opt/redmine<br />
+	# install bundler<br />
+	sudo gem install bundler<br />
+	# authenticate as the redmine user<br />
+	sudo su - redmine<br />
+	# install dependencies<br />
+	bundle install --without development test --path vendor/bundle<br />
+	# generate store secret<br />
+	bundle exec rake generate_secret_token<br />
+	# create database objects<br />
+	RAILS_ENV=production bundle exec rake db:migrate<br />
+	# insert database data<br />
+	RAILS_ENV=production REDMINE_LANG=en bundle exec rake redmine:load_default_data<br />
+	# reset permissions<br />
+	chmod -R 755 /opt/redmine<br />
+	# exit redmine login<br />
+	exit<br />
+	# cd to /opt/redmine<br />
+	cd /opt/redmine<br />
+	# start the redmine server<br />
+	sudo bundle exec rails server webrick -e production<br />
+	# create redmine apache2 conf<br />
+	sudo nano /etc/apache2/sites-available/redmine.conf</div>
+	</li>
+	<li>Paste the following configuration into redmine.conf
+	<p>Listen 3000<br />
+	&lt;VirtualHost *:3000&gt;<br />
+	ServerName redmine.kifarunix-demo.com<br />
+	RailsEnv production<br />
+	DocumentRoot /opt/redmine/public</p>
+
+	<p>&lt;Directory &quot;/opt/redmine/public&quot;&gt;<br />
+	Allow from all<br />
+	Require all granted<br />
+	&lt;/Directory&gt;</p>
+
+	<p>ErrorLog ${APACHE_LOG_DIR}/redmine_error.log<br />
+	CustomLog ${APACHE_LOG_DIR}/redmine_access.log combined<br />
+	&lt;/VirtualHost&gt;</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to redmine.conf</li>
+	<li>Continue with the following commands to enable the site and restart Apache:
+	<div class="codeBlock"># enable the required Apache modules<br />
+	sudo a2enmod passenger<br />
+	# enable redmine site<br />
+	sudo a2ensite redmine<br />
+	# restart apache2 service for the changes to take effect<br />
+	sudo systemctl restart apache2</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP:3000</li>
+	<li>Log in with the username admin and password admin</li>
+	<li>Enter the password admin and set and confirm a new password for the admin user</li>
+	<li>Welcome to Redmine</li>
+</ol>
+
+<p>Source: <a href="https://www.redmine.org/projects/redmine/wiki/RedmineInstall" target="_blank">https://www.redmine.org/projects/redmine/wiki/RedmineInstall</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
