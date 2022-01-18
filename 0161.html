@@ -1,0 +1,119 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Adding Self-Signed PKI to Linux Trusted Certificate Authorities</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Adding Self-Signed PKI to Linux Trusted Certificate Authorities</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Exporting Certificates from XCA</h2>
+
+<ol>
+	<li>Launch XCA</li>
+	<li>Open the PKI database if it is not already (File &gt; Open DataBase), enter password</li>
+	<li>Click on the Certificates tab</li>
+	<li>Right click the Intermediate CA certificate &gt; Export &gt; File</li>
+	<li>Set the file name with a .crt extension and verify the export format is PEM (*.crt)</li>
+	<li>Click OK</li>
+	<li>Right click the Root CA certificate &gt; Export &gt; File</li>
+	<li>Set the file name with a .crt extension and verify the export format is PEM (*.crt)</li>
+	<li>Click OK</li>
+</ol>
+
+<h2>Trusting the CA Ceritificates in a Linux Environment</h2>
+
+<ol>
+	<li>Download WinSCP <a href="https://winscp.net/eng/downloads.php" target="_blank">Download</a></li>
+	<li>Extract WinSCP and run the executable</li>
+	<li>Connect to the target Linux device server via WinSCP</li>
+	<li>Copy the created .crt files to ~/</li>
+	<li>Log into the target Linux device (console or ssh)</li>
+	<li>Run the following commands in a terminal window:
+	<div class="codeBlock">sudo mkdir /usr/local/share/ca-certificates/self-signed<br />
+	sudo cp ~/root-ca.crt /usr/local/share/ca-certificates/self-signed<br />
+	sudo cp ~/intermediate-ca.crt /usr/local/share/ca-certificates/self-signed<br />
+	sudo update-ca-certificates</div>
+	</li>
+	<li>An ouput stating 2 added should display</li>
+	<li>Run the following command in a terminal window and verify the imported certificate authorities display in the list
+	<div class="codeBlock">sudo ls /etc/ssl/certs</div>
+	</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
