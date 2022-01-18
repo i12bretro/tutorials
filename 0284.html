@@ -1,0 +1,238 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Setting Up OpenWRT OpenVPN Server and Certificate Creation</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Setting Up OpenWRT OpenVPN Server and Certificate Creation</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Create Required Certificates</h2>
+
+<ol>
+	<li>Launch XCA</li>
+	<li>Open the PKI database if it is not already (File &gt; Open DataBase), enter password</li>
+	<li>Click on the Certificates tab, right click on your Intermediate CA certificate</li>
+	<li>Select New</li>
+	<li>On the Source tab, make sure Use this Certificate for signing is selected</li>
+	<li>Verify your Intermediate CA certificate is selected from the drop down</li>
+	<li>Click the Subject tab</li>
+	<li>Complete the Distinguished Name section
+	<p>internalName: OpenVPN Server<br />
+	countryName: US<br />
+	stateOrProvinceName: Virginia<br />
+	localityName: Northern<br />
+	organizationName: i12bretro<br />
+	organizationUnitName: i12bretro Certificate Authority<br />
+	commonName: vpn.i12bretro.local</p>
+	</li>
+	<li>Click the Generate a New Key button</li>
+	<li>Enter a name and set the key size to at least 2048</li>
+	<li>Click Create</li>
+	<li>Click on the Extensions tab</li>
+	<li>Set the Type dropdown to End Endity</li>
+	<li>Check the box next to Subject Key Identifier</li>
+	<li>Update the validity dates to fit your needs</li>
+	<li>Click the Key Usage tab</li>
+	<li>Under Key Usage select Digital Signature and Key Encipherment</li>
+	<li>Under Extended Key Usage select TLS Web Server Authentication</li>
+	<li>Click the Netscape tab</li>
+	<li>Deselect all options and clear the Netscape Comment field</li>
+	<li>Click OK to create the certificate</li>
+	<li>Click on the Certificates tab, right click on your Intermediate CA certificate again</li>
+	<li>Select New</li>
+	<li>On the Source tab, make sure Use this Certificate for signing is selected</li>
+	<li>Verify your Intermediate CA certificate is selected from the drop down</li>
+	<li>Click the Subject tab</li>
+	<li>Complete the Distinguished Name section
+	<p>internalName: OpenVPN Client #1<br />
+	countryName: US<br />
+	stateOrProvinceName: Virginia<br />
+	localityName: Northern<br />
+	organizationName: i12bretro<br />
+	organizationUnitName: i12bretro Certificate Authority<br />
+	commonName: VPN Client 1</p>
+	</li>
+	<li>Click the Generate a New Key button</li>
+	<li>Enter a name and set the key size to at least 2048</li>
+	<li>Click Create</li>
+	<li>Click on the Extensions tab</li>
+	<li>Set the Type dropdown to End Endity</li>
+	<li>Check the box next to Subject Key Identifier</li>
+	<li>Update the validity dates to fit your needs</li>
+	<li>Click the Key Usage tab</li>
+	<li>Under Key Usage select Digital Signature, Key Agreement</li>
+	<li>Under Extended Key Usage select TLS Web Client Authentication</li>
+	<li>Click the Netscape tab</li>
+	<li>Deselect all options and clear the Netscape Comment field</li>
+	<li>Click OK to create the certificate</li>
+	<li>On the Certificates tab, click the OpenVPN Server certificate</li>
+	<li>Select Extra &gt; Generate DH Parameter</li>
+	<li>Type 2048 for DH parameter bits</li>
+	<li>Click OK</li>
+	<li>Select a location for dh2048.pem and click Save</li>
+</ol>
+
+<h2>Exporting Required Files for OpenVPN</h2>
+
+<ol>
+	<li>In XCA, click on the Certificates tab</li>
+	<li>Right click the Intermediate CA certificate &gt; Export &gt; File</li>
+	<li>Set the file name with a .pem extension and verify the export format is PEM chain (*.pem)</li>
+	<li>Click OK</li>
+	<li>Right click the OpenVPN Server certificate &gt; Export &gt; File</li>
+	<li>Set the file name with a .crt extension and verify the export format is PEM (*.crt)</li>
+	<li>Click OK</li>
+	<li>Right click the OpenVPN Client #1 certificate &gt; Export &gt; File</li>
+	<li>Set the file name with a .crt extension and verify the export format is PEM (*.crt)</li>
+	<li>Click OK</li>
+	<li>Click on the Private Keys tab</li>
+	<li>Right click the OpenVPN Server key &gt; Export &gt; File</li>
+	<li>Set the file name with a .pk8 extension and verify the export format is PKCS #8 (*.pk8)</li>
+	<li>Click OK</li>
+	<li>Right click the OpenVPN Client #1 key&gt; Export &gt; File</li>
+	<li>Set the file name with a .pk8 extension and verify the export format is PKCS #8 (*.pk8)</li>
+	<li>Click OK</li>
+</ol>
+
+<h2>Setting Up OpenVPN Server in OpenWRT</h2>
+
+<ol>
+	<li>Open a web browser and navigate to your OpenWRT IP address</li>
+	<li>Login when prompted</li>
+	<li>Select System &gt; Software from the navigation menu</li>
+	<li>Click on the Update lists button to update the software repositories</li>
+	<li>Click the Dismiss button once the update has completed</li>
+	<li>Type openvpn in the filter field</li>
+	<li>Click the Install... button next to openvpn-openssl</li>
+	<li>Click the Install button to confirm installing with dependencies</li>
+	<li>Click the Dismiss button once the install has completed</li>
+	<li>Click the Install... button next to luci-app-openvpn</li>
+	<li>Click the Install button to confirm installing with dependencies</li>
+	<li>Click the Dismiss button once the install has completed</li>
+	<li>Refresh the browser window</li>
+	<li>Select VPN &gt; OpenVPN from the navigation menu</li>
+	<li>Under the Template based configuration heading, enter OpenVPNServer as the Instance name and select Server configuration for a routed multi-client VPN as the template &gt; Click Add</li>
+	<li>Click the Edit button across from the newly created OpenVPNServer entry</li>
+	<li>Next to ca, click the button, browse to and upload the previously exported CA .pem file</li>
+	<li>Select the ca .pem file to be used</li>
+	<li>Next to dh, click the button, browse to and upload the previously exported dh2048.pem file</li>
+	<li>Select the dh2048.pem file to be used</li>
+	<li>Next to cert, click the button, browse to and upload the previously exported OpenVPN server .crt file</li>
+	<li>Select the .crt file to be used</li>
+	<li>Next to key, click the button, browse to and upload the previously exported OpenVPN server .pk8 file</li>
+	<li>Select the ca .pk8 file to be used</li>
+	<li>Click the Additional Field dropdown &gt; Select proto &gt; Click Add</li>
+	<li>Set the value of proto to udp</li>
+	<li>Click the Additional Field dropdown &gt; Select port &gt; Click Add</li>
+	<li>Set the value of port to 1194</li>
+	<li>Click the Additional Field dropdown &gt; Select dev_type &gt; Click Add</li>
+	<li>Set the value of dev_type to tun</li>
+	<li>Scroll to the bottom of the page and click the Save &amp; Apply button</li>
+	<li>Select VPN &gt; OpenVPN from the navigation menu</li>
+	<li>Check the Enabled checkbox next to the OpenVPNServer entry and click the Save &amp; Apply button</li>
+	<li>After a few seconds the page will refresh and the OpenVPN server should be running<br />
+	<span style="font-size:16px;"><em>NOTE: If the server is not running, check the system logs for troubleshooting by selecting Status &gt; System Log from the navigation menu</em></span></li>
+</ol>
+
+<h2>Installing OpenVPN Client Software and Testing</h2>
+
+<ol>
+	<li>Download the OpenVPN software <a href="https://openvpn.net/community-downloads/" target="_blank">Download</a></li>
+	<li>Run the installer with all the default values</li>
+	<li>Click the Start button and search OpenVPN GUI</li>
+	<li>Select OpenVPN GUI from the results to start the application</li>
+</ol>
+
+<h2>Creating the OpenVPN Client Profile</h2>
+
+<ol>
+	<li>Download the OVPN template <a href="https://drive.google.com/open?id=1cwgQfCoQmDOMbY1kW7JK4q07ijHdl37y" target="_blank">Download</a></li>
+	<li>Rename the .ovpn template something meaningful</li>
+	<li>Edit the .ovpn template replacing the following:
+	<p>&lt;#replace with dynamic dns#&gt; with a dynamic DNS or external IP address to your server<br />
+	&lt;#replace with CA chain#&gt; with the contents of CA_Chain.pem<br />
+	&lt;#replace with client 1 cert #&gt; with the contents of OpenVPN_Client #1.crt<br />
+	&lt;#replace with client 1 key #&gt; with the contents of OpenVPN_Client #1.pk8</p>
+	</li>
+	<li>Save your changes</li>
+	<li>Copy the .ovpn template to OpenVPN install directory/config</li>
+	<li>Right click OpenVPN GUI in the system tray &gt; Connect</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
