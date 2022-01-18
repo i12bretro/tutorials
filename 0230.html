@@ -1,0 +1,171 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Installing WordPress on Debian</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Installing WordPress on Debian</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Log into the Debian device</li>
+	<li>Run the following commands in a terminal:
+	<div class="codeBlock"># update repositories and install any available software updates<br />
+	sudo apt update<br />
+	sudo apt upgrade -y<br />
+	# install Apache HTTPD and MySQL<br />
+	sudo apt-get install apache2 mariadb-server mariadb-client curl<br />
+	# install PHP components<br />
+	sudo apt&nbsp;install php php-mysql php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the WordPress&nbsp;database and database user
+	<div class="codeBlock">CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;<br />
+	GRANT ALL ON wordpress.* TO &#39;wordpress_user&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;W0rdPr3ss!!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands to download and extract WordPress&nbsp;in the Apache webroot
+	<div class="codeBlock"># download latest wordpress version<br />
+	sudo wget https://wordpress.org/latest.tar.gz<br />
+	# extract latest.tar.gz<br />
+	sudo mkdir /var/www/wordpress<br />
+	sudo tar xzvf latest.tar.gz --directory /var/www<br />
+	# create a new wordpress.conf file to configure the site<br />
+	sudo nano /etc/apache2/sites-available/wordpress.conf</div>
+	</li>
+	<li>Paste the following configuration into wordpress.conf
+	<p>Alias /wordpress &quot;/var/www/wordpress/&quot;<br />
+	&lt;Directory /var/www/wordpress/&gt;<br />
+	&nbsp; &nbsp; AllowOverride All<br />
+	&lt;/Directory&gt;</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to wordpress.conf</li>
+	<li>Continue with the following commands to enable the site and restart Apache:
+	<div class="codeBlock"># enable the Wordpress site and required PHP modules<br />
+	sudo a2ensite wordpress<br />
+	sudo a2enmod rewrite<br />
+	# create a .htaccess file<br />
+	sudo touch /var/www/wordpress/.htaccess<br />
+	# copy the sample wordpress config<br />
+	sudo cp /var/www/wordpress/wp-config-sample.php /var/www/wordpress/wp-config.php<br />
+	# create an upgrade directory<br />
+	sudo mkdir /var/www/wordpress/wp-content/upgrade<br />
+	# set the owner of the new wordpress directory to www-data<br />
+	sudo chown -R www-data:www-data /var/www/wordpress<br />
+	# change additional permissions<br />
+	sudo find /var/www/wordpress/ -type d -exec chmod 750 {} \;<br />
+	sudo find /var/www/wordpress/ -type f -exec chmod 640 {} \;<br />
+	# generate secure secret keys, copy the output for use shortly<br />
+	curl -s https://api.wordpress.org/secret-key/1.1/salt/<br />
+	# edit wp-config.conf<br />
+	sudo nano /var/www/wordpress/wp-config.php</div>
+	</li>
+	<li>Press CTRL+W and search for&nbsp;define(&#39;AUTH_KEY&#39;</li>
+	<li>Paste the secure secret keys generated earlier, overwriting the template</li>
+	<li>Press CTRL+W and search for&nbsp;define(&#39;DB_NAME&#39;</li>
+	<li>Update the database name, username and password</li>
+	<li>Press CTRL+W and search for define(&#39;FS_METHOD&#39;</li>
+	<li>Set the value to &#39;direct&#39;</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to wp-config.conf</li>
+	<li>Continue the setup by running the following commands in terminal
+	<div class="codeBlock"># restart apache2 service<br />
+	sudo systemctl restart apache2</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP/wordpress</li>
+	<li>The Wordpress setup screen should be displayed</li>
+	<li>Select a language &gt; Click Continue</li>
+	<li>Create a site title and WordPress login &gt; Click Install WordPress</li>
+	<li>When the installation completes, login with the WordPress credentials created in the previous step</li>
+	<li>Welcome to your very own, self-hosted WordPress installation</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
