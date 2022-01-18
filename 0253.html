@@ -1,0 +1,147 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Web Based Download Utility with Aria2 WebUI on Windows</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Web Based Download Utility with Aria2 WebUI on Windows</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Quick Setup</h2>
+
+<ol>
+	<li>Download aria2 <a href="https://github.com/aria2/aria2/releases" target="_blank">Download</a></li>
+	<li>Download webui-aria2 <a href="https://github.com/ziahamza/webui-aria2" target="_blank">Download</a></li>
+	<li>Extract the downloaded webui .zip file</li>
+	<li>Extract the downloaded aria2 .zip file</li>
+	<li>Rename the extracted folder aria2</li>
+	<li>Copy the aria2 folder to a permanant location such as C:\Program Files</li>
+	<li>Hold the SHIFT key and right click in the white space &gt; Open PowerShell windows here...</li>
+	<li>Run the following command to start aria2 with the RPC server enabled
+	<div class="codeBlock">.\aria2c.exe --dir=C:\Downloads --enable-rpc=true --rpc-allow-origin-all=true --rpc-listen-all=true --rpc-listen-port=6800 --rpc-secret=SomethingSecure -D</div>
+	</li>
+	<li>Navigate back to the extracted webui-aria2 folder and into the docs directory</li>
+	<li>Double click index.html to open it in the default web browser</li>
+	<li>Select Settings &gt; Connection Settings from the top navigation menu</li>
+	<li>Scroll down to the&nbsp;Enter the secret token field and paste the rpc-secret string, SomethingSecure in this example</li>
+	<li>Scroll down and click the Save Connection configuration button</li>
+	<li>The webui will now be able to communicate with aria2 over RPC</li>
+</ol>
+
+<h2>Starting Aria2 on System Boot</h2>
+
+<ol>
+	<li>Open File Explorer and navigate to C:\Program Files\Aria2 (or wherever Aria2 is installed)</li>
+	<li>Right click in the white space &gt; New &gt; Text Document</li>
+	<li>Name the new doucment aria2.conf</li>
+	<li>Edit the new aria2.conf file in a text editor</li>
+	<li>Paste the following basic configuration into the file
+	<p>dir=C:\Downloads<br />
+	enable-rpc=true<br />
+	rpc-allow-origin-all=true<br />
+	rpc-listen-all=true<br />
+	rpc-listen-port=6800<br />
+	rpc-secret=SomethingSecure</p>
+	</li>
+	<li>Save the aria2.conf file</li>
+	<li>Click on the Start Button &gt; Type task &gt; Launch Task Scheduler</li>
+	<li>Right click the Task Scheduler Library folder in the left pane &gt; Create Basic&nbsp;Task...</li>
+	<li>Set the name to Aria2 and optionally set a Description &gt; Click Next</li>
+	<li>For the Trigger, select When the computer starts &gt; Click Next</li>
+	<li>For the Action, select Start a program&nbsp;&gt; Click Next</li>
+	<li>In the Program/script field, paste the following, editing the path if Aria2&nbsp;is installed somewhere else
+	<p>&quot;%ProgramFiles%\aria2\aria2c.exe&quot;</p>
+	</li>
+	<li>In the Add Arguments field, paste the following, again editing the path if necessary
+	<p>--conf-path=&quot;%ProgramFiles%\aria2\aria2.conf&quot; -D</p>
+	</li>
+	<li>Click Next</li>
+	<li>Click Finish</li>
+	<li>In the Properties dialog, click the Change User or Group... button</li>
+	<li>Type System in the Object name field &gt; Click OK</li>
+	<li>Check the Run with highest privileges box</li>
+	<li>Click OK to create the scheduled task</li>
+	<li>Right click the Aria2 scheduled task &gt; Run</li>
+	<li>Right click the task bar &gt; Task Manager</li>
+	<li>Select the Details tab and aria2c.exe should be running</li>
+	<li>Open the aria2-webui page to very it has connected</li>
+</ol>
+
+<p>Additional Aria2 documentation, including how to setup SSL,&nbsp;can be found at&nbsp;<a href="https://aria2.github.io/manual/en/html/aria2c.html#options" target="_blank">https://aria2.github.io/manual/en/html/aria2c.html#options</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
