@@ -1,0 +1,160 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Web Based Download Utility with Aria2 WebUI on Debian/Ubuntu</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Web Based Download Utility with Aria2 WebUI on Debian/Ubuntu</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Quick Setup</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal window
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install aria2<br />
+	sudo apt install aria2 -y<br />
+	# run the aria2 RPC server<br />
+	sudo aria2c --dir=/home/$USER/Downloads --enable-rpc=true --rpc-allow-origin-all=true --rpc-listen-all=true --rpc-listen-port=6800 --rpc-secret=SomethingSecure -D<br />
+	# install git<br />
+	sudo apt install git -y<br />
+	# make a working directory<br />
+	mkdir aria2-webui<br />
+	# clone the aria2 webui github repository<br />
+	git clone https://github.com/ziahamza/webui-aria2.git ./aria2-webui</div>
+	</li>
+	<li>Open a file explorer and navigate to ~/aria2-webui/docs</li>
+	<li>Double click index.html to open it in the default web browser</li>
+	<li>Select Settings &gt; Connection Settings from the top navigation menu</li>
+	<li>Scroll down to the&nbsp;Enter the secret token field and paste the rpc-secret string, SomethingSecure in this example</li>
+	<li>Scroll down and click the Save Connection configuration button</li>
+	<li>The webui will now be able to communicate with aria2 over RPC</li>
+</ol>
+
+<h2>Starting Aria2 on System Boot</h2>
+
+<ol>
+	<li>Run the following commands in a terminal window
+	<div class="codeBlock"># kill aria2 if it is running<br />
+	sudo killall aria2c<br />
+	# create aria2 conf directory<br />
+	sudo mkdir /etc/aria2 -p<br />
+	# create aria2.conf<br />
+	sudo nano /etc/aria2/aria2.conf</div>
+	</li>
+	<li>Paste the following into the aria2.conf file
+	<p>dir=/home/i12bretro/Downloads<br />
+	enable-rpc=true<br />
+	rpc-allow-origin-all=true<br />
+	rpc-listen-all=true<br />
+	rpc-listen-port=6800<br />
+	rpc-secret=SomethingSecure</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to aria2.conf</li>
+	<li>Continue with the following commands in terminal
+	<div class="codeBlock"># create the service file<br />
+	sudo nano /etc/systemd/system/aria2.service</div>
+	</li>
+	<li>Paste the following into the aria2.service file
+	<p>[Unit]<br />
+	Description=Aria2c<br />
+	Requires=network.target<br />
+	After=dhcpcd.service</p>
+
+	<p>[Service]<br />
+	ExecStart=/usr/bin/aria2c --conf-path=/etc/aria2/aria2.conf</p>
+
+	<p>[Install]<br />
+	WantedBy=default.target</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to aria2.service</li>
+	<li>Continue with&nbsp;the following commands to start the new service on system boot
+	<div class="codeBlock"># set the service to start on system boot<br />
+	sudo systemctl enable aria2<br />
+	# start the service now<br />
+	sudo systemctl start aria2</div>
+	</li>
+	<li>Reboot the system</li>
+	<li>Once the system comes back up, relaunch aria2-webui in a web browser and verify it can connect to the aria2&nbsp;RPC server</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
