@@ -1,0 +1,122 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Installing phpBB Forum/Bulletin Board on Windows</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Installing phpBB Forum/Bulletin Board on Windows</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Download XAMPP <a href="https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/" target="_blank">Download</a></li>
+	<li>Download phpBB&nbsp;<a href="https://download.phpbb.com/pub/release/3.3/3.3.2/phpBB-3.3.2.zip" target="_blank">Download</a></li>
+	<li><label for="cb_li_917989_0">Download Microsoft Visual C++&nbsp;</label><label for="cb_li_917989_0"><a href="https://aka.ms/vs/16/release/vc_redist.x64.exe" target="_blank">Download</a></label></li>
+	<li>Install&nbsp;Microsoft Visual C++</li>
+	<li>Right click the downloaded&nbsp;XAMPP file &gt;&nbsp;Extract All...</li>
+	<li>Right click the downloaded&nbsp;phpBB .zip file &gt; Extract All...</li>
+	<li>Rename the extracted phpBB3 folder phpBB</li>
+	<li>Cut&nbsp;the phpBB folder inside the XAMPP/htdocs directory</li>
+	<li>Copy the extracted XAMPP directory to a safe location to run from, C:\Program Files for example</li>
+	<li>Run XAMPP/setup_xampp.bat to update the configuration files with the new server location</li>
+	<li>Run XAMPP/xampp-control.exe</li>
+	<li>Click the Start button next to Apache and MySQL</li>
+	<li>Navigate to XAMPP/mysql/bin</li>
+	<li>Hold the SHIFT key and right click in the white space &gt; Open PowerShell windows here...</li>
+	<li>Type the following in the PowerShell window to setup the phpbb database
+	<div class="codeBlock">./mysql -u root<br />
+	CREATE DATABASE phpbb DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;<br />
+	GRANT ALL ON phpbb.* TO &#39;phpbb_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;!!phpBB##&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP/phpBB</li>
+	<li><label for="cb_li_138017_24">The phpBB introduction screen should be displayed</label></li>
+	<li><label for="cb_li_138017_24">Click the Install tab</label></li>
+	<li><label for="cb_li_138017_24">Click the Install button</label></li>
+	<li>Input an administrator username, email address and password &gt; Click Submit</li>
+	<li>Enter the database hostname, username, password and database name &gt; Click Submit</li>
+	<li>Click the Submit button on the&nbsp;Server configuration page</li>
+	<li>Click the Submit button on the E-mail configuration page</li>
+	<li>Enter a title and short description on the&nbsp;Bulletin board configuration page &gt; Click Submit</li>
+	<li>When the installation completes, open XAMPP/htdocs/phpBB and rename or delete the install directory</li>
+	<li>In a web browser, navigate to http://DNSorIP/phpBB</li>
+	<li>Welcome to your very own, self-hosted forum with phpBB</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
