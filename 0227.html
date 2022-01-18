@@ -1,0 +1,115 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Configure OpenFire XMPP Chat LDAP Authentication</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Configure OpenFire XMPP Chat LDAP Authentication</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Stop the OpenFire service</li>
+	<li>Open Windows explorer and navigate to the OpenFire installation directory /conf and edit openfire.xml with a text editor</li>
+	<li>Toward the bottom of the file, change the setup value from true to false</li>
+	<li>Save the file</li>
+	<li>Start the OpenFire service</li>
+	<li>Open a web browser and navigate to http://DNSorIP:9090</li>
+	<li>The OpenFire setup should initialize with previously configured values loaded</li>
+	<li>On the Profile Settings page, select the Directory Server (LDAP) option and click Continue</li>
+	<li>Complete the Connection Settings form as follows:
+	<p>Server Type: Active Directory<br />
+	Server Details: ldap://i12bretro.local<br />
+	Base DN:&nbsp;CN=Users,DC=i12bretro,DC=local<br />
+	Administration DN: CN=Read Only,CN=Users,DC=i12bretro,DC=local<br />
+	Password: Read0nly!!</p>
+	</li>
+	<li>Click the Test Settings button</li>
+	<li>Click the Save &amp; Continue button</li>
+	<li>Click the Test Settings button</li>
+	<li>A randomly selected user&#39;s information should be displayed</li>
+	<li>Click the Save &amp; Continue button</li>
+	<li>Click the Save &amp; Continue button</li>
+	<li>Enter a LDAP user name to use as an OpenFire administrator &gt; Click Add</li>
+	<li>Click Continue</li>
+	<li>Click the Login to the admin console button</li>
+	<li>Login with the LDAP username and password configured as an OpenFire admin</li>
+	<li>Click the Users/Groups tab in the top navigation</li>
+	<li>OpenFire should display all users matching the users found in the configured base DN</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
