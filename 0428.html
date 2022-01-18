@@ -1,0 +1,140 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install AdGuard Home Cross-Platform Pi-Hole Alternative on Windows</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install AdGuard Home Cross-Platform Pi-Hole Alternative on Windows</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Installing AdGuard Home</h2>
+
+<ol>
+	<li>Download AdGuard Home for Windows <a href="https://github.com/AdguardTeam/AdGuardHome/releases/" target="_blank">Download</a></li>
+	<li>Extract the downloaded .zip file</li>
+	<li>Copy the extracted AdGuardHome directory to a safe location to run from, C:\Program Files for example</li>
+	<li>Right click AdGuardHome.exe &gt; Properties</li>
+	<li>Check the Run this program as an administrator box &gt; Click Apply &gt; Click OK</li>
+	<li>Hold the SHIFT key and right click in the white space &gt; Open PowerShell windows here...</li>
+	<li>Type the following in the PowerShell window to test run AdGuard Home
+	<div class="codeBlock PS">.\AdGuardHome.exe</div>
+	</li>
+	<li>Click Allow access if you receive a Windows Defender Firewall popup</li>
+	<li>Back in the web browser, navigate to http://DNSorIP:3000</li>
+	<li>Click the Get Started button</li>
+	<li>Set the Admin Web Interface and DNS Server network interfaces and ports &gt; Click Next</li>
+	<li>Enter an admin username and password &gt; Click Next</li>
+	<li>Click Next on page 4</li>
+	<li>Click Open Dashboard on the Congratutations page</li>
+	<li>Log in using the admin username and password created during the install</li>
+	<li>Welcome to AdGuardHome</li>
+</ol>
+
+<h2>Install as a Windows Service</h2>
+
+<ol>
+	<li>Click the open Command Prompt and press CTRL+C to close it</li>
+	<li>Type the following command in the PowerShell window to run AdGuard Home as a Windows service
+	<div class="codeBlock PS">.\AdGuardHome.exe -s install</div>
+	</li>
+	<li>Close the PowerShell window</li>
+</ol>
+
+<h2>Testing AdGuard Home DNS</h2>
+
+<ol>
+	<li>Click the Start button &gt; Type control panel &gt; press Enter</li>
+	<li>Click View By &gt; Small Icons</li>
+	<li>Click Network and Sharing Center</li>
+	<li>Click Change adapter settings</li>
+	<li>Right click on the network connection &gt; Properties</li>
+	<li>Select Internet Protocol Version 4 (TCP/IPv4) &gt; Properties</li>
+	<li>Select the radio option next to Use the following DNS server addresses</li>
+	<li>Input the IP address of the AdGuard Home host</li>
+	<li>Click OK on both of the open dialog windows</li>
+	<li>Right click the Start button &gt; Command Prompt (Admin)</li>
+	<li>Type the following commands to flush your DNS cache and restart the network connections (note: your network connection will drop if running the commands on a remote machine)
+	<div class="codeBlock">ipconfig /flushdns<br />
+	ipconfig /release<br />
+	ipconfig /renew</div>
+	</li>
+</ol>
+
+<p>Source: <a href="https://github.com/AdguardTeam/AdGuardHome/wiki/Getting-Started" target="_blank">https://github.com/AdguardTeam/AdGuardHome/wiki/Getting-Started</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
