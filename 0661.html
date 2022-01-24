@@ -1,0 +1,141 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Running an ARM64 VM in ProxMox VE</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Running an ARM64 VM in ProxMox VE</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <p>DISCLAIMER: While running ARM64 architecture VMs on Proxmox works, the performance is not on par with what it would be on a baremetal ARM device. In this example I&#39;ll be installing Debian 11 AARCH64 in Proxmox running on Intel x64 based hardware.</p>
+
+<ol>
+	<li>Log into the ProxMox web UI</li>
+	<li>Select a storage from the left navigation pane to download the .iso to</li>
+	<li>Select ISO Images in the left sub-navigation pane</li>
+	<li>If running ProxMox 6, download the Debian ARM64 iso <a href="https://cdimage.debian.org/cdimage/release/current/arm64/iso-cd/debian-11.1.0-arm64-netinst.iso" target="_blank">Download</a> and upload it to the ProxMox ISO image library</li>
+	<li>If on ProxMox 7, click Download from URL and paste the download URL from above &gt; Click Query URL &gt; Click Download</li>
+	<li>Right click the ProxMox node name &gt; Create VM</li>
+	<li>Type DebianARM64 in the name field set the VM ID to 164 (unless 164 is in use) &gt; Next</li>
+	<li>Set the Type to Linux, Version to 5.x - 2.6 Kernel and select Do not use any media &gt; Next</li>
+	<li>On the System tab set the BIOS for OVMF (UEFI), Uncheck the Add EFI Disk checkbox &gt; Next</li>
+	<li>On the Hard Disk tab, set the Storage device and Disk size to 16 (adjust as needed) &gt; Next</li>
+	<li>On the CPU tab, set the number Cores to 2 (adjust as needed) &gt; Next</li>
+	<li>On the Memory tab, set the Memory to 2048 (adjust as needed) &gt; Next</li>
+	<li>Leave the defaults on the Network tab &gt; Next</li>
+	<li>Verify the summary and click Finish</li>
+	<li>Select the DebianARM64 VM in the left navigation pane</li>
+	<li>Select Hardware from the left navigation sub-menu</li>
+	<li>Click on the CD/DVD Drive to select it &gt; Click Remove at the top of the main content area &gt; Click Yes to confirm</li>
+	<li>Click Add &gt; Serial Port &gt; Leave the Port Number 0 &gt; Click Add</li>
+	<li>Click Add &gt; Select CD/DVD Drive &gt; Set the Bus/Device to SCSI &gt; Select the Storage device where the Debian ARM64 iso is uploaded &gt; Select the uploaded Debian ARM64 iso &gt; Click Create</li>
+	<li>Double click Display to edit it &gt; Set the Graphic card value to Serial terminal 0 &gt; Click OK</li>
+	<li>Select Options from the left navigation sub-menu</li>
+	<li>Double click Boot order to edit it &gt; Drag/drop the SCSI2 device (where the Debian iso is attached) to the top of the list &gt; Click OK</li>
+	<li>Right click the ProxMox node name &gt; Console</li>
+	<li>Run the following commands in the terminal
+	<div class="codeBlock CMD"># edit the VM conf file, change 164 to the VM ID for the DebianARM64 VM<br />
+	nano /etc/pve/qemu-server/164.conf</div>
+	</li>
+	<li>Add the following line to the bottom of the .conf file:
+	<p>arch: aarch64</p>
+	</li>
+	<li>Find the line starting with vmgenid: and comment it out by adding a # to the beginning of the line</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to the conf file</li>
+	<li>Back in the Proxmox web UI, select the DebianARM64 VM from the left navigation menu</li>
+	<li>Click console in the left sub-navigation menu</li>
+	<li>Click Start at the top right of the screen to start the VM</li>
+	<li>Wait a moment for the serial console to initialize</li>
+	<li>Follow the prompts to complete the OS installation<br />
+	<span style="font-size:12px;"><em>NOTE: This will feel slower than normal, allow it time to complete</em></span></li>
+	<li>After the installation completes, select the Shutdown dropdown at the top of the screen &gt; Stop</li>
+	<li>Select Hardware from the left sub-navigation menu</li>
+	<li>Double click the CD/DVD Drive to edit it &gt; Select Do not use any media &gt; Click OK</li>
+	<li>Go back to the VM console</li>
+	<li>Click Start at the top right of the screen to start the VM again</li>
+	<li>Enter the following commands to launch Debian from the EFI shell
+	<div class="codeBlock CMD">fs0:\EFI\debian\grubaa64.efi</div>
+	</li>
+	<li>The GRUB menu should boot and start loading Debian</li>
+	<li>Welcome to ARM64 based Debian running on Proxmox VE</li>
+</ol>
+
+<p>Sources: <a href="https://rotelok.com/installing-arm64-debian-10-buster-in-a-virtual-machine/" target="_blank">https://rotelok.com/installing-arm64-debian-10-buster-in-a-virtual-machine/</a>,<br />
+<a href="https://www.reddit.com/r/Proxmox/comments/ed2ldo/installing_and_launching_an_arm_vm_from_proxmox/" target="_blank">https://www.reddit.com/r/Proxmox/comments/ed2ldo/installing_and_launching_an_arm_vm_from_proxmox/</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
