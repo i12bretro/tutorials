@@ -12,9 +12,11 @@
             });
 
             $('li').each(function(i,e){
-              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
-              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
-              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
             });
 
             $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
@@ -112,6 +114,8 @@
 	sudo ethtool eno1</div>
 	</li>
 </ol>
+
+<p><em>NOTE: If the WOL flag doesn&#39;t stick with the configuration above, replace the &quot;ethernet-wol g&quot; value in /etc/network/interfaces with &quot;post-up /usr/sbin/ethtool -s eno1 wol g&quot;, replacing eno1 with the name of the interface.</em></p>
           </div>
         </div>
       </body>
