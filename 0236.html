@@ -12,9 +12,11 @@
             });
 
             $('li').each(function(i,e){
-              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
-              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
-              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
             });
 
             $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
@@ -23,7 +25,7 @@
               theElement.empty();
               for(l=0;l<lines.length;l++){
                 if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
-									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
 									                } else {
                   theElement.append(lines[l]);
                 }
@@ -37,6 +39,8 @@
               try {
                 if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
                   $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
                 } else {
                   $('#'+ theButton.attr('rel')).addClass('copy-animation');
                 }
@@ -61,8 +65,8 @@
             });
 
             if(window.self !== window.top){
-              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
-            }
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
           });
         </script>
         <link href="css/steps.css" rel="stylesheet" type="text/css" />
@@ -76,14 +80,14 @@
           <div></div>
           <div id="content">
           <ol>
-	<li>Download OPNSense&nbsp;<a href="https://opnsense.org/download/" target="_blank">Download</a></li>
+	<li>Download OPNSense <a href="https://opnsense.org/download/" target="_blank">Download</a></li>
 	<li>Extract the downloaded .bz2 file</li>
 	<li>Launch Virtualbox</li>
 	<li>Create a New VM by selecting Machine &gt; New
 	<p>Name: OPNSense<br />
 	Machine Folder: C:\VMs<br />
 	Type: BSD<br />
-	Version: FreeBSD&nbsp;(64-bit)<br />
+	Version: FreeBSD (64-bit)<br />
 	Memory Size: 1024 MB<br />
 	Hard disk: Create a virtual hard disk now</p>
 	</li>
@@ -111,7 +115,7 @@
 	<li>Make sure the OPNSense VM is selected and click Start &gt; Normal</li>
 	<li>Wait for the login prompt to display</li>
 	<li>Login with the username installer and password opnsense</li>
-	<li>Press Enter at the Weclome screen</li>
+	<li>Press Enter at the Welcome screen</li>
 	<li>If needed, change the keymap and/or video font then select Accept these Settings &gt; Press Enter</li>
 	<li>Select Guided installation &gt; Press Enter</li>
 	<li>Press Enter to use the ada0 hard disk</li>
@@ -128,13 +132,13 @@
 
 <ol>
 	<li>At the login prompt, login with username root and the root password set earlier</li>
-	<li>At the OPNSense menu, select Set interface&nbsp;IP address by typing 2 and pressing Enter</li>
-	<li>Enter the number that corresponds to the LAN&nbsp;interface &gt; Press Enter</li>
+	<li>At the OPNSense menu, select Set interface IP address by typing 2 and pressing Enter</li>
+	<li>Enter the number that corresponds to the LAN interface &gt; Press Enter</li>
 	<li>At the DHCP prompt type n &gt; Press Enter</li>
 	<li>Enter a LAN IP address on the same subnet as your LAN</li>
-	<li>At the bit count prompt type&nbsp;24 &gt; Press Enter</li>
+	<li>At the bit count prompt type 24 &gt; Press Enter</li>
 	<li>Leave the IPv4 upstream gateway blank press Enter</li>
-	<li>At&nbsp;the IPv6 WAN tracking type n &gt; Press Enter</li>
+	<li>At the IPv6 WAN tracking type n &gt; Press Enter</li>
 	<li>At the IPv6 DHCP prompt type n &gt; Press Enter</li>
 	<li>Leave the IPv6 address blank and press Enter</li>
 	<li>At the DHCP server prompt type n &gt; Press Enter</li>
