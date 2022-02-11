@@ -1,0 +1,107 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Can You Run VirtualBox Inside of a ProxMox VM?</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Can You Run VirtualBox Inside of a ProxMox VM?</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>A Little Background</h2>
+
+<p>First, let me give a little background since this seems like an unnecessary use case. I had the idea of converting a physical Windows PC into a ProxMox VM (P2V) to allow me to better separate the PC resources for different tasks. Currently one of the main uses for the PC is to quickly test different things using VirtualBox. This could be testing new Linux distro releases, working through steps for a new application install tutorial or walking through the steps of an existing tutorial when an issue is reported by a viewer. I have a workflow that I like to use and I didn&#39;t want to abandon VirtualBox and migrate the workflow to ProxMox. So, is it possible and if so, how well does it work?</p>
+
+<div style="height: 10px;"> </div>
+
+<ol>
+	<li>Log into the Proxmox Web UI</li>
+	<li>Expand the node and select the target VM</li>
+	<li>Select Hardware from the sub-navigation menu</li>
+	<li>Double click the Processors entry &gt; Set the Type value to host<br />
+	<span style="font-size:12px; line-height: 36px; vertical-align: text-top;"><em>Note: this will passthrough all the functionality of the Proxmox host processor to the VM</em></span></li>
+	<li>Start the Proxmox VM</li>
+	<li>Log into the VM</li>
+	<li>D<label for="cb_li_131081_2">ownload VirtualBox and the Virtualbox Extension Pack </label><label for="cb_li_131081_2"><a href="https://www.virtualbox.org/wiki/Downloads" target="_blank">Download</a></label></li>
+	<li>Install VirtualBox</li>
+	<li>Install the VirtualBox Extension Pack</li>
+	<li>Create or import a 64-bit VirtualBox VM</li>
+	<li>Start the new VirtualBox VM</li>
+	<li>Does is work?</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
