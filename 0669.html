@@ -1,0 +1,133 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>VMware ESXi - Create Datastore from Windows Network Share via NFS</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>VMware ESXi - Create Datastore from Windows Network Share via NFS</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Installing NFS Server Role</h2>
+
+<ol>
+	<li>Launch Server Manager if it does not automatically load
+	<ol>
+		<li>Click the Start button &gt; Server Manager</li>
+	</ol>
+	</li>
+	<li>Click Manage &gt; Add roles and features</li>
+	<li>Click Next on the Before you begin screen</li>
+	<li>Select Role-based or feature-based installation &gt; Next</li>
+	<li>Leave Select a server from the server pool selected and select the current server &gt; Next</li>
+	<li>Expand File and Storage Services &gt; Expand File and iSCSI Services &gt; Select Server for NFS</li>
+	<li>A popup will appear with additional required roles and features, click the Add Features button</li>
+	<li>Click Next</li>
+	<li>Click Next on the Select features screen</li>
+	<li>Click Install on the confirmation screen</li>
+	<li>Leave the installation progress screen open until the install completes</li>
+	<li>Once the installation has completed click Close</li>
+</ol>
+
+<h2>Creating the NFS Share</h2>
+
+<ol>
+	<li>In Server Manager, click File and Storage Services in the left navigation menu</li>
+	<li>Select Shares in the left sub-navigation menu</li>
+	<li>To the right of the Shares pane, click Tasks &gt; New Share...</li>
+	<li>Select NFS Share - Quick &gt; Click Next</li>
+	<li>Select Type a custom path... &gt; Click the Browse button</li>
+	<li>Navigate to the folder location to share &gt; Click Select Folder &gt; Click Next</li>
+	<li>Enter a Share name &gt; Click Next</li>
+	<li>Under No server authentication, Check Enable unmapped user access &gt; Select No server authentication (AUTH_SYS) &gt; Select Enable unmapped user access &gt; Click Next</li>
+	<li>On the Share Permissions page click Add...</li>
+	<li>Select Host &gt; Enter the IP address or DNS name of the ESXi server &gt; Set the Share permissions dropdown to Read / Write Click Add &gt; Check the Allow root access box &gt; Click Next</li>
+	<li>On the Permissions page click Next</li>
+	<li>Click Create &gt; Click Close</li>
+</ol>
+
+<h2>Adding the NFS Share to VMware ESXi</h2>
+
+<ol>
+	<li>Log into the VMware ESXi web UI</li>
+	<li>Select Storage from the left navigation menu &gt; Click New datastore</li>
+	<li>Select Mount NFS datastore &gt; Click Next</li>
+	<li>Enter the a name for the datastore &gt; Enter the NFS server IP or DNS name, share name and select NFS 4 &gt; Click Next</li>
+	<li>Review the summary page &gt; Click Finish</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
