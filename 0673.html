@@ -1,0 +1,135 @@
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install OpenWRT on Raspberry Pi</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript">
+          $(function(){
+            $('textarea').each(function(i,e){
+              theTextarea = $(this);
+              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
+            });
+
+            $('li').each(function(i,e){
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
+            });
+
+            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+              theElement = $(this);
+              var lines = theElement.html().split("\n");
+              theElement.empty();
+              for(l=0;l<lines.length;l++){
+                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                } else {
+                  theElement.append(lines[l]);
+                }
+              }
+            });
+
+            $(document).on('click','input.copy-text',function(){
+              theButton = $(this);
+														$('input.copy-text').attr('src','images/clipboard.png');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
+              try {
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
+                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
+																theButton.attr('src','images/clipboard_active.png');
+								              } catch(err) {
+              }
+              return false;
+            });
+
+            $(document).on('click','input.completeBox',function(){
+              theBox = $(this);
+              $('#'+ theBox.attr('rel')).addClass('strikethrough');
+              theBox.prop('disabled',true);
+              theBox.parent('li').prevAll().each(function(i,e){
+                theLI = $(this);
+                if(theLI.find('input[type=checkbox]').not(':checked')){
+                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
+                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
+                }
+              });
+            });
+
+            if(window.self !== window.top){
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
+          });
+        </script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install OpenWRT on Raspberry Pi</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Things You Will Need</h2>
+
+<ul>
+	<li>A microSD card at least 256 MB</li>
+</ul>
+
+<h2>Downloads and Flashing to MicroSD</h2>
+
+<ol>
+	<li>Download OpenWRT for Raspberry Pi <a href="https://firmware-selector.openwrt.org/?version=SNAPSHOT" target="_blank">Download</a>
+
+	<ol start="1" style="list-style-type: lower-alpha;">
+		<li>Search for the Raspberry Pi device</li>
+		<li>Select the Factory (ext4) download</li>
+	</ol>
+	</li>
+	<li>Download Balena Etcher <a href="https://www.balena.io/etcher/" target="_blank">Download</a></li>
+	<li>Run Balena Etcher</li>
+	<li>Burn the OpenWRT image to the microSD card</li>
+	<li>Safely remove the microSD</li>
+</ol>
+
+<h2>Booting OpenWRT</h2>
+
+<ol>
+	<li>Insert the microSD card into the Raspberry Pi and power it on</li>
+	<li>OpenWRT should begin booting</li>
+	<li>After the terminal has stopped scrolling press Enter to be logged in as root</li>
+	<li>Enter the following commands at the terminal prompt
+	<div class="codeBlock CMD"># set a root password<br />
+	passwd<br />
+	# enter and confirm a password<br />
+	# set the ip address<br />
+	uci set network.lan.ipaddr=&#39;192.168.0.137&#39;<br />
+	# set the gateway<br />
+	uci set network.lan.gateway=&#39;192.168.0.27&#39;<br />
+	# set dns server, usually the gateway or pi-hole<br />
+	uci set network.lan.dns=&#39;192.168.0.2&#39;<br />
+	# restart network service for changes to take effect<br />
+	service network restart<br />
+	# update openwrt packages<br />
+	opkg update<br />
+	# install the luci web ui<br />
+	opkg install luci</div>
+	</li>
+	<li>Open a web browser and navigate to http://IP, http://192.168.0.137 in the example</li>
+	<li>At the login screen, enter the username root and the password set above &gt; Click the Login button</li>
+	<li>Welcome to OpenWRT running on Raspberry Pi</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
