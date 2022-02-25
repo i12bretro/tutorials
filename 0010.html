@@ -12,9 +12,11 @@
             });
 
             $('li').each(function(i,e){
-              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
-              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
-              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
             });
 
             $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
@@ -23,7 +25,7 @@
               theElement.empty();
               for(l=0;l<lines.length;l++){
                 if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
-									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
 									                } else {
                   theElement.append(lines[l]);
                 }
@@ -33,9 +35,15 @@
             $(document).on('click','input.copy-text',function(){
               theButton = $(this);
 														$('input.copy-text').attr('src','images/clipboard.png');
-							              $('span.copy-animation').removeClass('copy-animation');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
               try {
-                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
                 navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
 																theButton.attr('src','images/clipboard_active.png');
 								              } catch(err) {
@@ -57,8 +65,8 @@
             });
 
             if(window.self !== window.top){
-              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
-            }
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
           });
         </script>
         <link href="css/steps.css" rel="stylesheet" type="text/css" />
@@ -71,71 +79,47 @@
           </div>
           <div></div>
           <div id="content">
-          <h2>
-	Exporting Certificates from XCA</h2>
+          <p>This is part three of a series of creating your own self-signed PKI and some ways to utilize the PKI to setup SSL for your web server or create your own OpenVPN server.</p>
+
+<p>Disclaimer: I am not a security expert. This is just the easiest way I have found to create and utilize SSL for my homelab services.</p>
+
+<h2>Exporting Certificates from XCA</h2>
+
 <ol>
-	<li>
-		Launch XCA</li>
-	<li>
-		Open the PKI database if it is not already (File &gt; Open DataBase), enter password</li>
-	<li>
-		Click on the Certificates tab</li>
-	<li>
-		Right click the Intermediate CA certificate &gt; Export &gt; File</li>
-	<li>
-		Set the file name with a .crt extension and verify the export format is PEM (*.crt)</li>
-	<li>
-		Click OK</li>
-	<li>
-		Right click the Root CA certificate &gt; Export &gt; File</li>
-	<li>
-		Set the file name with a .crt extension and verify the export format is PEM (*.crt)</li>
-	<li>
-		Click OK</li>
+	<li>Launch XCA</li>
+	<li>Open the PKI database if it is not already (File &gt; Open DataBase), enter password</li>
+	<li>Click on the Certificates tab</li>
+	<li>Right click the Intermediate CA certificate &gt; Export &gt; File</li>
+	<li>Set the file name with a .crt extension and verify the export format is PEM (*.crt)</li>
+	<li>Click OK</li>
+	<li>Right click the Root CA certificate &gt; Export &gt; File</li>
+	<li>Set the file name with a .crt extension and verify the export format is PEM (*.crt)</li>
+	<li>Click OK</li>
 </ol>
-<h2>
-	Push Certificates Into Windows Certificate Store Via GPO</h2>
+
+<h2>Push Certificates Into Windows Certificate Store Via GPO</h2>
+
 <ol>
-	<li>
-		Launch Group Policy Management (Control Panel &gt; Administrative Tools &gt; Group Policy Management)</li>
-	<li>
-		Right click Default Domain Policy &gt; Edit...</li>
-	<li>
-		Expand Computer Configuration &gt; Policies &gt; Windows Settings &gt; Security Settings &gt; Public Key Policies</li>
-	<li>
-		Right click Trusted Root Certification Authorities &gt; Import..</li>
-	<li>
-		Click Next</li>
-	<li>
-		Click Browse &gt; Select the exported Root CA .crt file &gt; Click Next</li>
-	<li>
-		Verify Include all extended properties is checked</li>
-	<li>
-		Click Next</li>
-	<li>
-		Click Next</li>
-	<li>
-		Click Finish</li>
-	<li>
-		Right click Intermediate Certification Authorities &gt; Import..</li>
-	<li>
-		Click Next</li>
-	<li>
-		Click Browse &gt; Select the exported Intermediate CA .crt file &gt; Click Next</li>
-	<li>
-		Verify Include all extended properties is checked</li>
-	<li>
-		Click Next</li>
-	<li>
-		Click Next</li>
-	<li>
-		Click Finish</li>
-	<li>
-		Close the Group Policy Management Editor window</li>
-	<li>
-		Force Group Policy update by Right clicking the start button &gt; Run &gt; cmd</li>
-	<li>
-		Type gpupdate /force</li>
+	<li>Launch Group Policy Management (Control Panel &gt; Administrative Tools &gt; Group Policy Management)</li>
+	<li>Right click Default Domain Policy &gt; Edit...</li>
+	<li>Expand Computer Configuration &gt; Policies &gt; Windows Settings &gt; Security Settings &gt; Public Key Policies</li>
+	<li>Right click Trusted Root Certification Authorities &gt; Import..</li>
+	<li>Click Next</li>
+	<li>Click Browse &gt; Select the exported Root CA .crt file &gt; Click Next</li>
+	<li>Verify Include all extended properties is checked</li>
+	<li>Click Next</li>
+	<li>Click Next</li>
+	<li>Click Finish</li>
+	<li>Right click Intermediate Certification Authorities &gt; Import..</li>
+	<li>Click Next</li>
+	<li>Click Browse &gt; Select the exported Intermediate CA .crt file &gt; Click Next</li>
+	<li>Verify Include all extended properties is checked</li>
+	<li>Click Next</li>
+	<li>Click Next</li>
+	<li>Click Finish</li>
+	<li>Close the Group Policy Management Editor window</li>
+	<li>Force Group Policy update by Right clicking the start button &gt; Run &gt; cmd</li>
+	<li>Type gpupdate /force</li>
 </ol>
           </div>
         </div>
