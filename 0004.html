@@ -12,9 +12,11 @@
             });
 
             $('li').each(function(i,e){
-              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
-              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
-              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
             });
 
             $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
@@ -23,7 +25,7 @@
               theElement.empty();
               for(l=0;l<lines.length;l++){
                 if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
-									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
 									                } else {
                   theElement.append(lines[l]);
                 }
@@ -33,9 +35,15 @@
             $(document).on('click','input.copy-text',function(){
               theButton = $(this);
 														$('input.copy-text').attr('src','images/clipboard.png');
-							              $('span.copy-animation').removeClass('copy-animation');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
               try {
-                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
                 navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
 																theButton.attr('src','images/clipboard_active.png');
 								              } catch(err) {
@@ -57,8 +65,8 @@
             });
 
             if(window.self !== window.top){
-              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
-            }
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
           });
         </script>
         <link href="css/steps.css" rel="stylesheet" type="text/css" />
@@ -71,107 +79,75 @@
           </div>
           <div></div>
           <div id="content">
-          <h2>
-	Getting Started</h2>
+          <p>This is part one of a series of creating your own self-signed PKI and some ways to utilize the PKI to setup SSL for your web server or create your own OpenVPN server.</p>
+
+<p>Disclaimer: I am not a security expert. This is just the easiest way I have found to create and utilize SSL for my homelab services.</p>
+
+<h2>Getting Started</h2>
+
 <ol>
-	<li>
-		Download X Certificate Key Manager<a href="https://hohnstaedt.de/xca/index.php/download" target="_blank"> Download</a></li>
-	<li>
-		Extract X Certificate Key Manager</li>
-	<li>
-		Launch xca.exe</li>
-	<li>
-		Select File &gt; Create Database</li>
-	<li>
-		Name your PKI database and click save</li>
-	<li>
-		Enter a password for you database</li>
-	<li>
-		Re-type to confirm and click OK</li>
+	<li>Download X Certificate Key Manager<a href="https://hohnstaedt.de/xca/index.php/download" target="_blank"> Download</a></li>
+	<li>Extract X Certificate Key Manager</li>
+	<li>Launch xca.exe</li>
+	<li>Select File &gt; Create Database</li>
+	<li>Name your PKI database and click save</li>
+	<li>Enter a password for you database</li>
+	<li>Re-type to confirm and click OK</li>
 </ol>
-<h2>
-	Creating the Root Certificate Authority</h2>
+
+<h2>Creating the Root Certificate Authority</h2>
+
 <ol>
-	<li>
-		Navigate to the Certificates tab</li>
-	<li>
-		Click the New Certificate button</li>
-	<li>
-		Click the Subject tab</li>
-	<li>
-		Complete the Distinguished Name section<br />
-		<p>
-			internalName: i12bretro Root CA<br />
-			countryName: US<br />
-			stateOrProvinceName: Virginia<br />
-			localityName: Northern<br />
-			organizationName: i12bretro<br />
-			organizationUnitName: i12bretro Certificate Authority<br />
-			commonName: i12bretro Root CA</p>
+	<li>Navigate to the Certificates tab</li>
+	<li>Click the New Certificate button</li>
+	<li>Click the Subject tab</li>
+	<li>Complete the Distinguished Name section
+	<p>internalName: i12bretro Root CA<br />
+	countryName: US<br />
+	stateOrProvinceName: Virginia<br />
+	localityName: Northern<br />
+	organizationName: i12bretro<br />
+	organizationUnitName: i12bretro Certificate Authority<br />
+	commonName: i12bretro Root CA</p>
 	</li>
-	<li>
-		Click the Generate a New Key button</li>
-	<li>
-		Enter a name and set the key size to at least 2048</li>
-	<li>
-		Click Create</li>
-	<li>
-		Click on the Extensions tab</li>
-	<li>
-		Select Certificate Authority from the type list</li>
-	<li>
-		Update the validity dates to fit your needs</li>
-	<li>
-		Click the Key Usage tab</li>
-	<li>
-		Under Key Usage select Digital Signature, Key Agreement and Certificate Sign</li>
-	<li>
-		Click OK to create the certificate</li>
+	<li>Click the Generate a New Key button</li>
+	<li>Enter a name and set the key size to at least 2048</li>
+	<li>Click Create</li>
+	<li>Click on the Extensions tab</li>
+	<li>Select Certificate Authority from the type list</li>
+	<li>Update the validity dates to fit your needs</li>
+	<li>Click the Key Usage tab</li>
+	<li>Under Key Usage select Digital Signature, Key Agreement and Certificate Sign</li>
+	<li>Click OK to create the certificate</li>
 </ol>
-<h2>
-	Creating the Intermediate Certificate Authority</h2>
+
+<h2>Creating the Intermediate Certificate Authority</h2>
+
 <ol>
-	<li>
-		From the Certificates tab, right click on your Root CA certificate</li>
-	<li>
-		Select New</li>
-	<li>
-		On the Source tab, make sure Use this Certificate for signing is selected</li>
-	<li>
-		Verify your Root CA certificate is selected from the drop down</li>
-	<li>
-		Click the Subject tab</li>
-	<li>
-		Complete the Distinguished Name section
-		<p>
-			internalName: i12bretro Intermediate CA<br />
-			countryName: US<br />
-			stateOrProvinceName: Virginia<br />
-			localityName: Northern<br />
-			organizationName: i12bretro<br />
-			organizationUnitName: i12bretro Certificate Authority<br />
-			commonName: i12bretro Intermediate CA</p>
+	<li>From the Certificates tab, right click on your Root CA certificate</li>
+	<li>Select New</li>
+	<li>On the Source tab, make sure Use this Certificate for signing is selected</li>
+	<li>Verify your Root CA certificate is selected from the drop down</li>
+	<li>Click the Subject tab</li>
+	<li>Complete the Distinguished Name section
+	<p>internalName: i12bretro Intermediate CA<br />
+	countryName: US<br />
+	stateOrProvinceName: Virginia<br />
+	localityName: Northern<br />
+	organizationName: i12bretro<br />
+	organizationUnitName: i12bretro Certificate Authority<br />
+	commonName: i12bretro Intermediate CA</p>
 	</li>
-	<li>
-		Click the Generate a New Key button</li>
-	<li>
-		Enter a name and set the key size to at least 2048</li>
-	<li>
-		Click Create</li>
-	<li>
-		Click on the Extensions tab</li>
-	<li>
-		Select Certificate Authority from the type list</li>
-	<li>
-		Update the validity dates to fit your needs</li>
-	<li>
-		Click the Key Usage tab</li>
-	<li>
-		Under Key Usage select Digital Signature, Key Agreement and Certificate Sign</li>
-	<li>
-		Click OK to create the certificate</li>
-	<li>
-		From this point forward, use the intermediate certificate to create end entity certificates</li>
+	<li>Click the Generate a New Key button</li>
+	<li>Enter a name and set the key size to at least 2048</li>
+	<li>Click Create</li>
+	<li>Click on the Extensions tab</li>
+	<li>Select Certificate Authority from the type list</li>
+	<li>Update the validity dates to fit your needs</li>
+	<li>Click the Key Usage tab</li>
+	<li>Under Key Usage select Digital Signature, Key Agreement and Certificate Sign</li>
+	<li>Click OK to create the certificate</li>
+	<li>From this point forward, use the intermediate certificate to create end entity certificates</li>
 </ol>
           </div>
         </div>
