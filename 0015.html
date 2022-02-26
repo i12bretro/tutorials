@@ -12,9 +12,11 @@
             });
 
             $('li').each(function(i,e){
-              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
-              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
-              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
             });
 
             $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
@@ -23,7 +25,7 @@
               theElement.empty();
               for(l=0;l<lines.length;l++){
                 if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
-									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
 									                } else {
                   theElement.append(lines[l]);
                 }
@@ -37,6 +39,8 @@
               try {
                 if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
                   $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
                 } else {
                   $('#'+ theButton.attr('rel')).addClass('copy-animation');
                 }
@@ -80,8 +84,8 @@
 <ol>
 	<li>Download Microsoft Visual C++<a href="https://aka.ms/vs/16/release/vc_redist.x64.exe" target="_blank">Download</a></li>
 	<li>Download TortoiseSVN <a href="https://tortoisesvn.net/downloads.html" target="_blank">Download</a></li>
-	<li>Install&nbsp;Microsoft Visual C++</li>
-	<li>Install&nbsp;TortoiseSVN, making sure to enable the command line client tools option</li>
+	<li>Install Microsoft Visual C++</li>
+	<li>Install TortoiseSVN, making sure to enable the command line client tools option</li>
 </ol>
 
 <h2>Installing and Configuring Apache HTTPD</h2>
@@ -98,59 +102,58 @@
 	<li>Add the Subversion /bin path</li>
 	<li>Click OK</li>
 	<li>Open a command prompt and run svn --version to confirm the Subversion executables are configured in the system path correctly</li>
-	<li>Copy the following files from the extracted Subversion&nbsp;directory to the Apache installation directory specified below:
+	<li>Copy the following files from the extracted Subversion directory to the Apache installation directory specified below:
 	<p><u>Apache /modules</u><br />
-	&nbsp; &nbsp; &nbsp; mod_dav_svn.so<br />
-	&nbsp; &nbsp; &nbsp; mod_authz_svn.so<br />
-	&nbsp; &nbsp; &nbsp; deps/brotlicommon.dll<br />
-	&nbsp; &nbsp; &nbsp; deps/brotlidec.dll<br />
-	&nbsp; &nbsp; &nbsp; deps/brotlienc.dll<br />
-	&nbsp; &nbsp; &nbsp; deps/libapr-1.dll<br />
-	&nbsp; &nbsp; &nbsp; deps/libapriconv-1.dll<br />
-	&nbsp; &nbsp; &nbsp; deps/libaprutil-1.dll<br />
-	&nbsp; &nbsp; &nbsp; deps/libcrypto-1_1-x64.dll<br />
-	&nbsp; &nbsp; &nbsp; deps/libexpat.dll<br />
-	&nbsp; &nbsp; &nbsp; deps/libhttpd.dll<br />
-	&nbsp; &nbsp; &nbsp; deps/libserf-2.dll<br />
-	&nbsp; &nbsp; &nbsp; deps/libssl-1_1-x64.dll<br />
-	&nbsp; &nbsp; &nbsp; deps/zlib1.dll<br />
+	      mod_dav_svn.so<br />
+	      mod_authz_svn.so<br />
+	      deps/brotlicommon.dll<br />
+	      deps/brotlidec.dll<br />
+	      deps/brotlienc.dll<br />
+	      deps/libapr-1.dll<br />
+	      deps/libapriconv-1.dll<br />
+	      deps/libaprutil-1.dll<br />
+	      deps/libcrypto-1_1-x64.dll<br />
+	      deps/libexpat.dll<br />
+	      deps/libhttpd.dll<br />
+	      deps/libserf-2.dll<br />
+	      deps/libssl-1_1-x64.dll<br />
+	      deps/zlib1.dll<br />
 	<u>Apache /bin</u><br />
-	&nbsp; &nbsp; &nbsp; libsvnjavahl-1.dll<br />
-	&nbsp; &nbsp; &nbsp; libsvn_client-1.dll<br />
-	&nbsp; &nbsp; &nbsp; libsvn_delta-1.dll<br />
-	&nbsp; &nbsp; &nbsp; libsvn_diff-1.dll<br />
-	&nbsp; &nbsp; &nbsp; libsvn_fs-1.dll<br />
-	&nbsp; &nbsp; &nbsp; libsvn_fs_fs-1.dll<br />
-	&nbsp; &nbsp; &nbsp; libsvn_fs_util-1.dll<br />
-	&nbsp; &nbsp; &nbsp; libsvn_fs_x-1.dll<br />
-	&nbsp; &nbsp; &nbsp; libsvn_ra-1.dll<br />
-	&nbsp; &nbsp; &nbsp; libsvn_repos-1.dll<br />
-	&nbsp; &nbsp; &nbsp; libsvn_subr-1.dll<br />
-	&nbsp; &nbsp; &nbsp; libsvn_wc-1.dll</p>
+	      libsvnjavahl-1.dll<br />
+	      libsvn_client-1.dll<br />
+	      libsvn_delta-1.dll<br />
+	      libsvn_diff-1.dll<br />
+	      libsvn_fs-1.dll<br />
+	      libsvn_fs_fs-1.dll<br />
+	      libsvn_fs_util-1.dll<br />
+	      libsvn_fs_x-1.dll<br />
+	      libsvn_ra-1.dll<br />
+	      libsvn_repos-1.dll<br />
+	      libsvn_subr-1.dll<br />
+	      libsvn_wc-1.dll</p>
 	</li>
 	<li>Inside the extracted Apache file structure, navigate to /conf/httpd.conf and edit it with a text editor</li>
-	<li>Find the following lines LoadModule dav_module modules/mod_dav.so and uncomment them by removing the # at the beginning<br />
-<p>
-LoadModule access_compat_module modules/mod_access_compat.so<br />
-LoadModule dav_module modules/mod_dav.so
-</p>
-</li>
+	<li>Find the following lines LoadModule dav_module modules/mod_dav.so and uncomment them by removing the # at the beginning
+	<p>LoadModule access_compat_module modules/mod_access_compat.so<br />
+	LoadModule dav_module modules/mod_dav.so</p>
+	</li>
 	<li>Add the following block to the file:
 	<p>LoadModule dav_svn_module modules/mod_dav_svn.so<br />
 	LoadModule authz_svn_module modules/mod_authz_svn.so</p>
+
 	<p>&lt;VirtualHost svn.i12bretro.local:80&gt;<br />
-	&nbsp;&nbsp; &nbsp;ServerName svn.i12bretro.local<br />
-	&nbsp;&nbsp; &nbsp;ServerAlias i12bretro.local<br />
-	&nbsp;&nbsp; &nbsp;DocumentRoot E:\SVN_Repos<br />
-	&nbsp;&nbsp; &nbsp;<br />
-	&nbsp;&nbsp; &nbsp;&lt;Location /&gt;<br />
-	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;DAV svn<br />
-	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;SVNListParentPath On<br />
-	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;SVNParentPath E:\SVN_Repos<br />
-	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;<br />
-	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Order allow,deny<br />
-	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Allow from all<br />
-	&nbsp;&nbsp; &nbsp;&lt;/Location&gt;<br />
+	    ServerName svn.i12bretro.local<br />
+	    ServerAlias i12bretro.local<br />
+	    DocumentRoot E:\SVN_Repos<br />
+	    <br />
+	    &lt;Location /&gt;<br />
+	        DAV svn<br />
+	        SVNListParentPath On<br />
+	        SVNParentPath E:\SVN_Repos<br />
+	        <br />
+	        Order allow,deny<br />
+	        Allow from all<br />
+	    &lt;/Location&gt;<br />
 	&lt;/VirtualHost&gt;</p>
 	</li>
 	<li>Save the changes</li>
@@ -168,30 +171,30 @@ LoadModule dav_module modules/mod_dav.so
 <ol>
 	<li>Navigate to the Apache install directory/conf in Explorer</li>
 	<li>Edit httpd.conf in a text editor</li>
-	<li>Find both the authnz_ldap_module and&nbsp;ldap_module and make sure it is enabled by removing the # at the start of the line
+	<li>Find both the authnz_ldap_module and ldap_module and make sure it is enabled by removing the # at the start of the line
 	<p>LoadModule authnz_ldap_module modules/mod_authnz_ldap.so<br />
 	LoadModule ldap_module modules/mod_ldap.so</p>
 	</li>
 	<li>Add the following to the Location block created earlier for svn.i12bretro.local to enable LDAP authentication
-	<p>&nbsp; &nbsp; Order deny,allow<br />
-	&nbsp; &nbsp; # Basic authentication with LDAP against MS AD<br />
-	&nbsp; &nbsp; AuthType Basic<br />
-	&nbsp; &nbsp; AuthBasicProvider ldap<br />
+	<p>    Order deny,allow<br />
+	    # Basic authentication with LDAP against MS AD<br />
+	    AuthType Basic<br />
+	    AuthBasicProvider ldap<br />
 	<br />
-	&nbsp; &nbsp; # AuthLDAPURL specifies the LDAP server IP, port, base DN, scope and filter<br />
-	&nbsp; &nbsp; # using this format: ldap://host:port/basedn?attribute?scope?filter<br />
-	&nbsp; &nbsp; AuthLDAPURL &quot;ldap://i12bretro.local:389/DC=i12bretro,DC=local?sAMAccountName?sub?(objectClass=user)&quot; NONE<br />
+	    # AuthLDAPURL specifies the LDAP server IP, port, base DN, scope and filter<br />
+	    # using this format: ldap://host:port/basedn?attribute?scope?filter<br />
+	    AuthLDAPURL &quot;ldap://i12bretro.local:389/DC=i12bretro,DC=local?sAMAccountName?sub?(objectClass=user)&quot; NONE<br />
 	<br />
-	&nbsp; &nbsp; # The LDAP bind username and password<br />
-	&nbsp; &nbsp; AuthLDAPBindDN &quot;readonly_svc@i12bretro.local&quot;<br />
-	&nbsp; &nbsp; AuthLDAPBindPassword &quot;Read0nly!!&quot;<br />
-	&nbsp; &nbsp; LDAPReferrals Off<br />
-	&nbsp; &nbsp; AuthUserFile /dev/null<br />
+	    # The LDAP bind username and password<br />
+	    AuthLDAPBindDN &quot;readonly_svc@i12bretro.local&quot;<br />
+	    AuthLDAPBindPassword &quot;Read0nly!!&quot;<br />
+	    LDAPReferrals Off<br />
+	    AuthUserFile /dev/null<br />
 	<br />
-	&nbsp; &nbsp; AuthName &quot;Restricted Area [i12bretro.local]&quot;<br />
-	&nbsp; &nbsp; # to authenticate a domain group, specify the full DN<br />
-	&nbsp; &nbsp; AuthLDAPGroupAttributeIsDN on<br />
-	&nbsp; &nbsp; require ldap-group CN=WebAuthAccess,CN=Users,DC=i12bretro,DC=local</p>
+	    AuthName &quot;Restricted Area [i12bretro.local]&quot;<br />
+	    # to authenticate a domain group, specify the full DN<br />
+	    AuthLDAPGroupAttributeIsDN on<br />
+	    require ldap-group CN=WebAuthAccess,CN=Users,DC=i12bretro,DC=local</p>
 	</li>
 	<li>Save httpd.conf</li>
 	<li>Restart the Apache service</li>
