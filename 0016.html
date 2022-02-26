@@ -12,9 +12,11 @@
             });
 
             $('li').each(function(i,e){
-              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
-              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
-              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
             });
 
             $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
@@ -23,7 +25,7 @@
               theElement.empty();
               for(l=0;l<lines.length;l++){
                 if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
-									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
 									                } else {
                   theElement.append(lines[l]);
                 }
@@ -33,9 +35,15 @@
             $(document).on('click','input.copy-text',function(){
               theButton = $(this);
 														$('input.copy-text').attr('src','images/clipboard.png');
-							              $('span.copy-animation').removeClass('copy-animation');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
               try {
-                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
                 navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
 																theButton.attr('src','images/clipboard_active.png');
 								              } catch(err) {
@@ -57,8 +65,8 @@
             });
 
             if(window.self !== window.top){
-              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
-            }
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
           });
         </script>
         <link href="css/steps.css" rel="stylesheet" type="text/css" />
@@ -118,13 +126,13 @@
 	<li>Open a text editor</li>
 	<li>Create a PHP file with the following code<br />
 	<textarea>&lt;?php
-	&nbsp;&nbsp; &nbsp;$to = &#39;i12bretro@i12bretro.local&#39;;
-	&nbsp;&nbsp; &nbsp;$subject = &#39;HTML E-Mail from PHP&#39;;
-	&nbsp;&nbsp; &nbsp;$body = &#39;&lt;cke:html&gt;&lt;cke:head&gt;&lt;cke:title&gt;HTML E-Mail&lt;/cke:title&gt;&lt;/cke:head&gt;&lt;cke:body&gt;&lt;h3&gt;Check out my other tutorials at &lt;a  data-cke-saved-href=&quot;https://youtube.com/channel/UCNmLR_9Ec8NydshHNPnC5Jw&quot; href=&quot;https://youtube.com/channel/UCNmLR_9Ec8NydshHNPnC5Jw&quot;&gt;https://youtube.com/channel/UCNmLR_9Ec8NydshHNPnC5Jw&lt;/a&gt;&lt;/h3&gt;&lt;/cke:body&gt;&lt;/cke:html&gt;&#39;;
-	&nbsp;&nbsp; &nbsp;$headers[] = &#39;Content-type: text/html; charset=iso-8859-1&#39;;
-	&nbsp;&nbsp; &nbsp;$headers[] = &#39;From: PHP Webserver &lt;system@i12bretro.local&gt;&#39;;
+$to = &#39;i12bretro@i12bretro.local&#39;;
+$subject = &#39;HTML E-Mail from PHP&#39;;
+$body = &#39;&lt;html&gt;&lt;head&gt;&lt;title&gt;HTML E-Mail&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;h3&gt;Check out my other tutorials at &lt;a href=&quot;https://youtube.com/channel/UCNmLR_9Ec8NydshHNPnC5Jw&quot;&gt;https://youtube.com/channel/UCNmLR_9Ec8NydshHNPnC5Jw&lt;/a&gt;&lt;/h3&gt;&lt;/body&gt;&lt;/html&gt;&#39;;
+$headers[] = &#39;Content-type: text/html; charset=iso-8859-1&#39;;
+$headers[] = &#39;From: PHP Webserver &lt;system@i12bretro.local&gt;&#39;;
 
-	    mail($to, $subject, $body, implode(&quot;\r\n&quot;, $headers));
+mail($to, $subject, $body, implode(&quot;\r\n&quot;, $headers));
 ?&gt;</textarea></li>
 </ol>
           </div>
