@@ -12,9 +12,11 @@
             });
 
             $('li').each(function(i,e){
-              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
-              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
-              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
             });
 
             $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
@@ -23,7 +25,7 @@
               theElement.empty();
               for(l=0;l<lines.length;l++){
                 if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
-									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
 									                } else {
                   theElement.append(lines[l]);
                 }
@@ -37,6 +39,8 @@
               try {
                 if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
                   $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
                 } else {
                   $('#'+ theButton.attr('rel')).addClass('copy-animation');
                 }
@@ -91,11 +95,11 @@
 <h2>Adding Individual LDAP Users</h2>
 
 <ol>
-	<li>Back in&nbsp;Server Administration click Edit &gt; Users</li>
+	<li>Back in Server Administration click Edit &gt; Users</li>
 	<li>Click the Add button under Users</li>
 	<li>Enter the username exactly as it is in LDAP</li>
 	<li>Leave the Password checkbox unchecked</li>
-	<li>Under the Check password in section&nbsp;uncheck LOCAL and check the LDAP option</li>
+	<li>Under the Check password in section uncheck LOCAL and check the LDAP option</li>
 	<li>Click Shared folders under the Page section</li>
 	<li>Click the Add button and browse to folder(s) to share with the new user</li>
 	<li>Set the users permissions to the right of the directories box</li>
@@ -106,26 +110,27 @@
 
 <ol>
 	<li>From the Start menu launch FzLDAP Import</li>
-	<li>Fill out the LDAP server information<br />
-	Server: i12bretro.local<br />
+	<li>Fill out the LDAP server information
+	<p>Server: i12bretro.local<br />
 	Port: 389<br />
 	Domain: i12bretro.local<br />
-	User:&nbsp;readonly_svc<br />
-	Password:&nbsp;Read0nly!!<br />
-	Base DN:&nbsp;DC=i12bretro,DC=local<br />
-	Search DN:&nbsp;CN=Users,DC=nostalgicrecords,DC=com<br />
-	Search: cn=*</li>
+	User: readonly_svc<br />
+	Password: Read0nly!!<br />
+	Base DN: DC=i12bretro,DC=local<br />
+	Search DN: CN=Users,DC=i12bretro,DC=local<br />
+	Search: cn=*</p>
+	</li>
 	<li>A list of users found with the LDAP search will display &gt; Click Next</li>
 	<li>Set the FTP root directory path</li>
 	<li>Click the Generate button</li>
 	<li>A summary will be displayed &gt; Click OK</li>
 	<li>Click the ed button next to users.txt to view the generated users file</li>
-	<li>Open File Explorer and navigate to&nbsp;C:\Program Files (x86)\FileZilla Server</li>
+	<li>Open File Explorer and navigate to C:\Program Files (x86)\FileZilla Server</li>
 	<li>Edit FileZilla Server.xml in a text editor</li>
-	<li>Copy the user(s) generated in users.txt to the Users node of&nbsp;FileZilla Server.xml</li>
-	<li>Save the changes to&nbsp;FileZilla Server.xml</li>
+	<li>Copy the user(s) generated in users.txt to the Users node of FileZilla Server.xml</li>
+	<li>Save the changes to FileZilla Server.xml</li>
 	<li>Right click on the Start button &gt; Run &gt; type services.msc &gt; Press Enter</li>
-	<li>Find the&nbsp;FileZilla Server FTP server and restart the service</li>
+	<li>Find the FileZilla Server FTP server and restart the service</li>
 	<li>Load FileZilla Server Administration</li>
 	<li>Click Edit &gt; Users from the top navigation</li>
 	<li>The imported user(s) should be listed and editable</li>
@@ -134,7 +139,7 @@
 <h2>Testing LDAP Authentication</h2>
 
 <ol>
-	<li><label for="cb_li_445432_0">Download FileZilla FTP client&nbsp;</label><label for="cb_li_445432_0"><a href="https://filezilla-project.org/download.php?show_all=1" target="_blank">Download</a></label></li>
+	<li><label for="cb_li_445432_0">Download FileZilla FTP client </label><label for="cb_li_445432_0"><a href="https://filezilla-project.org/download.php?show_all=1" target="_blank">Download</a></label></li>
 	<li><label for="cb_li_743670_1">Extract the downloaded FileZilla .zip file</label></li>
 	<li><label for="cb_li_743670_1">Launch FileZilla.exe</label></li>
 	<li>Enter the FileZilla server DNS name or IP address in the host field</li>
