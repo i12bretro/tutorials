@@ -12,9 +12,11 @@
             });
 
             $('li').each(function(i,e){
-              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
-              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
-              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
             });
 
             $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
@@ -23,7 +25,7 @@
               theElement.empty();
               for(l=0;l<lines.length;l++){
                 if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
-									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
 									                } else {
                   theElement.append(lines[l]);
                 }
@@ -37,6 +39,8 @@
               try {
                 if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
                   $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
                 } else {
                   $('#'+ theButton.attr('rel')).addClass('copy-animation');
                 }
@@ -75,7 +79,9 @@
           </div>
           <div></div>
           <div id="content">
-          <h2>Active Directory Setup</h2>
+          <p>In this quick video learn how to setup LDAP/Active Directory authentication on an Apache webserver to secure web based applications.</p>
+
+<h2>Active Directory Setup</h2>
 
 <ol>
 	<li>Open Active Directory Users and Computers</li>
@@ -113,24 +119,24 @@
 	</li>
 	<li>Create a Location block to enable LDAP authentication for the specified directory
 	<p>&lt;location /ldaptest&gt;<br />
-	    # Basic authentication with LDAP against MS AD<br />
-	    AuthType Basic<br />
-	    AuthBasicProvider ldap<br />
+	# Basic authentication with LDAP against MS AD<br />
+	AuthType Basic<br />
+	AuthBasicProvider ldap<br />
 	<br />
-	    # AuthLDAPURL specifies the LDAP server IP, port, base DN, scope and filter<br />
-	    # using this format: ldap://host:port/basedn?attribute?scope?filter<br />
-	    AuthLDAPURL &quot;ldap://i12bretro.local:389/DC=i12bretro,DC=local?sAMAccountName?sub?(objectClass=user)&quot; NONE<br />
+	# AuthLDAPURL specifies the LDAP server IP, port, base DN, scope and filter<br />
+	# using this format: ldap://host:port/basedn?attribute?scope?filter<br />
+	AuthLDAPURL &quot;ldap://i12bretro.local:389/DC=i12bretro,DC=local?sAMAccountName?sub?(objectClass=user)&quot; NONE<br />
 	<br />
-	    # The LDAP bind username and password<br />
-	    AuthLDAPBindDN &quot;readonly_svc@i12bretro.local&quot;<br />
-	    AuthLDAPBindPassword &quot;Read0nly!!&quot;<br />
-	    LDAPReferrals Off<br />
-	    AuthUserFile /dev/null<br />
+	# The LDAP bind username and password<br />
+	AuthLDAPBindDN &quot;readonly_svc@i12bretro.local&quot;<br />
+	AuthLDAPBindPassword &quot;Read0nly!!&quot;<br />
+	LDAPReferrals Off<br />
+	AuthUserFile /dev/null<br />
 	<br />
-	    AuthName &quot;Restricted Area [i12bretro.local]&quot;<br />
-	    # to authenticate a domain group, specify the full DN<br />
-	    AuthLDAPGroupAttributeIsDN on<br />
-	    require ldap-group CN=WebAuthAccess,CN=Users,DC=i12bretro,DC=local<br />
+	AuthName &quot;Restricted Area [i12bretro.local]&quot;<br />
+	# to authenticate a domain group, specify the full DN<br />
+	AuthLDAPGroupAttributeIsDN on<br />
+	require ldap-group CN=WebAuthAccess,CN=Users,DC=i12bretro,DC=local<br />
 	&lt;/location&gt;</p>
 	</li>
 	<li>Save httpd.conf</li>
