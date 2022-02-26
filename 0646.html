@@ -12,9 +12,11 @@
             });
 
             $('li').each(function(i,e){
-              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
-              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
-              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
             });
 
             $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
@@ -85,7 +87,7 @@
 
 <h2>The Benchmarks</h2>
 
-<p><strong>7-Zip</strong> - The 7-zip benchmark tests compression and decompession using the LZMA method. Results are shown as a rating in MIPS (million instructions per second). The rating value is calculated from the measured CPU speed and it is normalized with Intel Core 2 Duo E6600 (2.4 GHz, 4 MB L2) CPU in 64-bit Windows with multi-threading option switched off. The charted value is the total compression MIPS score.</p>
+<p><strong>7-Zip</strong> - The 7-zip benchmark tests compression and decompression using the LZMA method. Results are shown as a rating in MIPS (million instructions per second). The rating value is calculated from the measured CPU speed and it is normalized with Intel Core 2 Duo E6600 (2.4 GHz, 4 MB L2) CPU in 64-bit Windows with multi-threading option switched off. The charted value is the total compression MIPS score.</p>
 
 <p><strong>Sysbench</strong> - The sysbench CPU benchmark verifies prime numbers by doing standard division of the number by all numbers between 2 and the square root of the number. Once a number gives a remainder of 0, the next number is calculated.</p>
 
