@@ -79,9 +79,9 @@
           </div>
           <div></div>
           <div id="content">
-          <h2>Cluster VM Network Diagram</h2>
+          <h2 class="hidden">Cluster VM Network Diagram</h2>
 
-<p><img alt="Kubernetes Cluster Diagram" src="attachments/0421/diagram.jpg" title="Kubernetes Cluster Diagram" /></p>
+<p class="hidden"><img alt="Kubernetes Cluster Diagram" src="attachments/0421/diagram.jpg" title="Kubernetes Cluster Diagram" /></p>
 
 <h2>Preparing the VMs</h2>
 
@@ -104,13 +104,12 @@
 	sudo sed -i &#39;/ swap / s/^\(.*\)$/#\1/g&#39; /etc/fstab<br />
 	sudo echo &quot;vm.swappiness=0&quot; | sudo tee --append /etc/sysctl.conf<br />
 	# update sysctl networking<br />
-	cat &lt;&lt;EOF | sudo tee /etc/sysctl.d/kubernetes.conf<br />
-	net.bridge.bridge-nf-call-ip6tables = 1<br />
+	cat &lt;<eof> net.bridge.bridge-nf-call-ip6tables = 1<br />
 	net.bridge.bridge-nf-call-iptables = 1<br />
 	EOF<eof><eof><br />
 	sudo sysctl --system<br />
 	# apply the changes<br />
-	sudo sysctl -p</eof></eof></div>
+	sudo sysctl -p</eof></eof></eof></div>
 	</li>
 </ol>
 
