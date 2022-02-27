@@ -12,9 +12,11 @@
             });
 
             $('li').each(function(i,e){
-              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
-              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
-              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
             });
 
             $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
@@ -23,7 +25,7 @@
               theElement.empty();
               for(l=0;l<lines.length;l++){
                 if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
-									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
 									                } else {
                   theElement.append(lines[l]);
                 }
@@ -33,9 +35,15 @@
             $(document).on('click','input.copy-text',function(){
               theButton = $(this);
 														$('input.copy-text').attr('src','images/clipboard.png');
-							              $('span.copy-animation').removeClass('copy-animation');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
               try {
-                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
                 navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
 																theButton.attr('src','images/clipboard_active.png');
 								              } catch(err) {
@@ -57,8 +65,8 @@
             });
 
             if(window.self !== window.top){
-              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
-            }
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
           });
         </script>
         <link href="css/steps.css" rel="stylesheet" type="text/css" />
@@ -140,19 +148,19 @@
 	sudo nano /var/lib/tomcat9/conf/server.xml</div>
 	</li>
 	<li>Edit the server.xml file adding the following connector block
-	<p><connector<br> &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;port=&quot;8443&quot;<br />
-	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;protocol=&quot;org.apache.coyote.http11.Http11NioProtocol&quot;<br />
-	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;maxThreads=&quot;150&quot;<br />
-	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;SSLEnabled=&quot;true&quot;<br />
-	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;SSLProtocol=&quot;TLS&quot;<br />
-	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;clientAuth=&quot;false&quot;<br />
-	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;secure=&quot;true&quot;<br />
-	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;scheme=&quot;https&quot;<br />
-	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;SSLCertificateFile=&quot;/var/lib/tomcat9/remote.i12bretro.local.crt&quot;<br />
-	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;SSLCertificateKeyFile=&quot;/var/lib/tomcat9/remote.key&quot;<br />
-	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;SSLCertificateChainFile=&quot;/var/lib/tomcat9/CA-Chain.pem&quot;<br />
-	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;keyAlias=&quot;remote.i12bretro.local&quot;<br />
-	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;sslEnabledProtocols=&quot;TLSv1.1+TLSv1.2&quot;&gt;</connector<br></p>
+	<p>&lt;connector port=&quot;8443&quot;<br />
+	protocol=&quot;org.apache.coyote.http11.Http11NioProtocol&quot;<br />
+	maxThreads=&quot;150&quot;<br />
+	SSLEnabled=&quot;true&quot;<br />
+	SSLProtocol=&quot;TLS&quot;<br />
+	clientAuth=&quot;false&quot;<br />
+	secure=&quot;true&quot;<br />
+	scheme=&quot;https&quot;<br />
+	SSLCertificateFile=&quot;/var/lib/tomcat9/remote.i12bretro.local.crt&quot;<br />
+	SSLCertificateKeyFile=&quot;/var/lib/tomcat9/remote.key&quot;<br />
+	SSLCertificateChainFile=&quot;/var/lib/tomcat9/CA-Chain.pem&quot;<br />
+	keyAlias=&quot;remote.i12bretro.local&quot;<br />
+	sslEnabledProtocols=&quot;TLSv1.1+TLSv1.2&quot;&gt;&lt;/connector&gt;</p>
 	</li>
 	<li>Press CTRL+O, Enter, CTRL+X</li>
 	<li>Run the following command in terminal to restart the Gaucamole Tomcat server
@@ -167,16 +175,17 @@
 	<li>To redirect all http traffic to communicate securely with https, run the following in a terminal
 	<div class="codeBlock">sudo nano /var/lib/tomcat9/conf/web.xml</div>
 	</li>
-	<li>At the bottom of the file above the closing tag for web-app paste the following<textarea>&lt;security-constraint&gt;
-  &lt;web-resource-collection&gt;
-    &lt;web-resource-name&gt;Protected Context&lt;/web-resource-name&gt;
-    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
-  &lt;/web-resource-collection&gt;
-
-  &lt;user-data-constraint&gt;
-    &lt;transport-guarantee&gt;CONFIDENTIAL&lt;/transport-guarantee&gt;
-  &lt;/user-data-constraint&gt;
-&lt;/security-constraint&gt;</textarea></li>
+	<li>At the bottom of the file above the closing tag for web-app paste the following
+	<p>&lt;security-constraint&gt;<br />
+	&lt;web-resource-collection&gt;<br />
+	&lt;web-resource-name&gt;Protected Context&lt;/web-resource-name&gt;<br />
+	&lt;url-pattern&gt;/*&lt;/url-pattern&gt;<br />
+	&lt;/web-resource-collection&gt;<br />
+	&lt;user-data-constraint&gt;<br />
+	&lt;transport-guarantee&gt;CONFIDENTIAL&lt;/transport-guarantee&gt;<br />
+	&lt;/user-data-constraint&gt;<br />
+	&lt;/security-constraint&gt;</p>
+	</li>
 </ol>
           </div>
         </div>
