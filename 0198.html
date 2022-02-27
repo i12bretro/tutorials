@@ -12,9 +12,11 @@
             });
 
             $('li').each(function(i,e){
-              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
-              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
-              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
             });
 
             $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
@@ -23,7 +25,7 @@
               theElement.empty();
               for(l=0;l<lines.length;l++){
                 if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
-									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
 									                } else {
                   theElement.append(lines[l]);
                 }
@@ -33,9 +35,15 @@
             $(document).on('click','input.copy-text',function(){
               theButton = $(this);
 														$('input.copy-text').attr('src','images/clipboard.png');
-							              $('span.copy-animation').removeClass('copy-animation');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
               try {
-                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
                 navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
 																theButton.attr('src','images/clipboard_active.png');
 								              } catch(err) {
@@ -57,8 +65,8 @@
             });
 
             if(window.self !== window.top){
-              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
-            }
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
           });
         </script>
         <link href="css/steps.css" rel="stylesheet" type="text/css" />
@@ -79,13 +87,13 @@ https://www.gearbest.com/refurbished-product/pp_009840550154.html?wid=1433363</p
 <h2>Things You Will Need</h2>
 
 <ul>
-	<li>&nbsp;&nbsp;&nbsp; A&nbsp; microSD card at least 8 GB</li>
+	<li>microSD card at least 8 GB</li>
 </ul>
 
 <h2>Downloads and Flashing to MicroSD</h2>
 
 <ol>
-	<li>Download Manjaro ARM&nbsp;<a href="https://manjaro.org/downloads/arm/khadas-vim-2/arm8-vim2-kde-plasma/" target="_blank">Download</a></li>
+	<li>Download Manjaro ARM <a href="https://manjaro.org/downloads/arm/khadas-vim-2/arm8-vim2-kde-plasma/" target="_blank">Download</a></li>
 	<li>Download Balena Etcher <a href="https://www.balena.io/etcher/" target="_blank">Download</a></li>
 	<li>Run Balena Etcher</li>
 	<li>Burn Manjaro image to microSD card</li>
@@ -97,7 +105,7 @@ https://www.gearbest.com/refurbished-product/pp_009840550154.html?wid=1433363</p
 
 <ol>
 	<li>Open the readable partition of the microSD card in Explorer</li>
-	<li>Edit uEnv.ini&nbsp;in a text editor
+	<li>Edit uEnv.ini in a text editor
 	<ol start="1" style="list-style-type: lower-alpha;">
 		<li>Update the FDT line to point to a working .dtb file for your device
 		<div class="codeBlock"># For AML<br />
@@ -126,7 +134,7 @@ https://www.gearbest.com/refurbished-product/pp_009840550154.html?wid=1433363</p
 	<li>When prompted, input a username and password</li>
 	<li>Then when prompted, set a root password</li>
 	<li>Confirm the root password</li>
-	<li>Follow any additional the prompts to setup&nbsp;</li>
+	<li>Follow any additional the prompts to setup </li>
 	<li>Manjaro will boot into the desktop environment</li>
 </ol>
           </div>
