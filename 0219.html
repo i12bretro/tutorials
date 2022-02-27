@@ -12,9 +12,11 @@
             });
 
             $('li').each(function(i,e){
-              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
-              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
-              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
             });
 
             $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
@@ -23,7 +25,7 @@
               theElement.empty();
               for(l=0;l<lines.length;l++){
                 if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
-									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
 									                } else {
                   theElement.append(lines[l]);
                 }
@@ -37,6 +39,8 @@
               try {
                 if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
                   $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
                 } else {
                   $('#'+ theButton.attr('rel')).addClass('copy-animation');
                 }
@@ -61,8 +65,8 @@
             });
 
             if(window.self !== window.top){
-              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
-            }
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
           });
         </script>
         <link href="css/steps.css" rel="stylesheet" type="text/css" />
@@ -78,7 +82,7 @@
           <h2>Things You Will Need</h2>
 
 <ul>
-	<li>&nbsp;&nbsp;&nbsp; A&nbsp; microSD card at least 4 GB</li>
+	<li>microSD card at least 4 GB</li>
 </ul>
 
 <h2>Downloads and Flashing to MicroSD</h2>
