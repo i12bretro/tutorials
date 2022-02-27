@@ -12,9 +12,11 @@
             });
 
             $('li').each(function(i,e){
-              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
-              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
-              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
             });
 
             $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
@@ -106,7 +108,7 @@
 	<li>Click Choose</li>
 	<li>Click OK</li>
 	<li>Right Click the Start Button &gt; Command Prompt (Admin) &gt; Paste in the following commands
-	<div class="codeBlock">cd &quot;%programfiles%\Oracle\VirtualBox\&quot;<br />
+	<div class="codeBlock masked">cd &quot;%programfiles%\Oracle\VirtualBox\&quot;<br />
 	VBoxManage.exe modifyvm &quot;Mac OS 12&quot; &ndash;-cpuidset 00000001 000106e5 00100800 0098e3fd bfebfbff<br />
 	VBoxManage setextradata &quot;Mac OS 12&quot; &quot;VBoxInternal/Devices/efi/0/Config/DmiSystemProduct&quot; &quot;MacBookPro15,1&quot;<br />
 	VBoxManage setextradata &quot;Mac OS 12&quot; &quot;VBoxInternal/Devices/efi/0/Config/DmiSystemVersion&quot; &quot;1.0&quot;<br />
