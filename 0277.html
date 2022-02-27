@@ -12,9 +12,11 @@
             });
 
             $('li').each(function(i,e){
-              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
-              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
-              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
             });
 
             $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
@@ -23,7 +25,7 @@
               theElement.empty();
               for(l=0;l<lines.length;l++){
                 if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
-									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
 									                } else {
                   theElement.append(lines[l]);
                 }
@@ -37,6 +39,8 @@
               try {
                 if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
                   $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
                 } else {
                   $('#'+ theButton.attr('rel')).addClass('copy-animation');
                 }
@@ -159,11 +163,11 @@
 	sudo nano /etc/loolwsd/loolwsd.xml</div>
 	</li>
 	<li>Edit the loolwsd.xml file, find the SSL block and update the cert_file_path, key_file_path and ca_file_path values
-	<p><cert_file_path desc="Path to the cert file" relative="false">/etc/ssl/certs/nettools.i12bretro.local.crt</cert_file_path><br />
-	<key_file_path desc="Path to the key file" relative="false">/etc/ssl/certs/nettools.i12bretro.local.key</key_file_path><br />
-	<ca_file_path desc="Path to the ca file" relative="false">/etc/ssl/certs/CA.pem</ca_file_path></p>
+	<p>&lt;cert_file_path desc=&quot;Path to the cert file&quot; relative=&quot;false&quot;&gt;/etc/ssl/certs/nettools.i12bretro.local.crt&lt;/cert_file_path&gt;<br />
+	&lt;key_file_path desc=&quot;Path to the key file&quot; relative=&quot;false&quot;&gt;/etc/ssl/certs/nettools.i12bretro.local.key&lt;/key_file_path&gt;<br />
+	&lt;ca_file_path desc=&quot;Path to the ca file&quot; relative=&quot;false&quot;&gt;/etc/ssl/certs/CA.pem&lt;/ca_file_path&gt;</p>
 	</li>
-	<li>Press CTRL+W and search for &lt;wopi</li>
+	<li>Press CTRL+W and search for wopi</li>
 	<li>Add a new host for the DNS name of the NextCloud server<br />
 	<host allow="true">nettools.i12bretro.local</host></li>
 	<li>Press CTRL+O, Enter, CTRL+X</li>
@@ -172,42 +176,42 @@
 	sudo nano /etc/apache2/conf-available/code.conf</div>
 	</li>
 	<li>Paste the following into code.conf
-	<p> Options -Indexes</p>
+	<p>Options -Indexes</p>
 
-	<p>  #Encoded slashes need to be allowed<br />
-	  AllowEncodedSlashes NoDecode</p>
+	<p>#Encoded slashes need to be allowed<br />
+	AllowEncodedSlashes NoDecode</p>
 
-	<p>  # Container uses a unique non-signed certificate<br />
-	  SSLProxyEngine On<br />
-	  SSLProxyVerify None<br />
-	  SSLProxyCheckPeerCN Off<br />
-	  SSLProxyCheckPeerName Off</p>
+	<p># Container uses a unique non-signed certificate<br />
+	SSLProxyEngine On<br />
+	SSLProxyVerify None<br />
+	SSLProxyCheckPeerCN Off<br />
+	SSLProxyCheckPeerName Off</p>
 
-	<p>  # keep the host<br />
-	  ProxyPreserveHost On</p>
+	<p># keep the host<br />
+	ProxyPreserveHost On</p>
 
-	<p>  # static html, js, images, etc. served from loolwsd<br />
-	  # loleaflet is the client part of Collabora Online<br />
-	  ProxyPass           /loleaflet https://127.0.0.1:9980/loleaflet retry=0<br />
-	  ProxyPassReverse    /loleaflet https://127.0.0.1:9980/loleaflet</p>
+	<p># static html, js, images, etc. served from loolwsd<br />
+	# loleaflet is the client part of Collabora Online<br />
+	ProxyPass /loleaflet https://127.0.0.1:9980/loleaflet retry=0<br />
+	ProxyPassReverse /loleaflet https://127.0.0.1:9980/loleaflet</p>
 
-	<p>  # WOPI discovery URL<br />
-	  ProxyPass           /hosting/discovery https://127.0.0.1:9980/hosting/discovery retry=0<br />
-	  ProxyPassReverse    /hosting/discovery https://127.0.0.1:9980/hosting/discovery</p>
+	<p># WOPI discovery URL<br />
+	ProxyPass /hosting/discovery https://127.0.0.1:9980/hosting/discovery retry=0<br />
+	ProxyPassReverse /hosting/discovery https://127.0.0.1:9980/hosting/discovery</p>
 
-	<p>  # Capabilities<br />
-	  ProxyPass           /hosting/capabilities https://127.0.0.1:9980/hosting/capabilities retry=0<br />
-	  ProxyPassReverse    /hosting/capabilities https://127.0.0.1:9980/hosting/capabilities</p>
+	<p># Capabilities<br />
+	ProxyPass /hosting/capabilities https://127.0.0.1:9980/hosting/capabilities retry=0<br />
+	ProxyPassReverse /hosting/capabilities https://127.0.0.1:9980/hosting/capabilities</p>
 
-	<p>  # Main websocket<br />
-	  ProxyPassMatch &quot;/lool/(.*)/ws$&quot; wss://127.0.0.1:9980/lool/$1/ws nocanon</p>
+	<p># Main websocket<br />
+	ProxyPassMatch &quot;/lool/(.*)/ws$&quot; wss://127.0.0.1:9980/lool/$1/ws nocanon</p>
 
-	<p>  # Admin Console websocket<br />
-	  ProxyPass   /lool/adminws wss://127.0.0.1:9980/lool/adminws</p>
+	<p># Admin Console websocket<br />
+	ProxyPass /lool/adminws wss://127.0.0.1:9980/lool/adminws</p>
 
-	<p>  # Download as, Fullscreen presentation and Image upload operations<br />
-	  ProxyPass           /lool https://127.0.0.1:9980/lool<br />
-	  ProxyPassReverse    /lool https://127.0.0.1:9980/lool</p>
+	<p># Download as, Fullscreen presentation and Image upload operations<br />
+	ProxyPass /lool https://127.0.0.1:9980/lool<br />
+	ProxyPassReverse /lool https://127.0.0.1:9980/lool</p>
 	</li>
 	<li>Press CTRL+O, Enter, CTRL+X</li>
 	<li>Continue the configuration by running the following commands in terminal:
