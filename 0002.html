@@ -12,9 +12,11 @@
             });
 
             $('li').each(function(i,e){
-              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
-              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
-              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
             });
 
             $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
@@ -23,7 +25,7 @@
               theElement.empty();
               for(l=0;l<lines.length;l++){
                 if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
-									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ lines[l].replace(/"/g, '&quot;') +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
+									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
 									                } else {
                   theElement.append(lines[l]);
                 }
@@ -33,9 +35,15 @@
             $(document).on('click','input.copy-text',function(){
               theButton = $(this);
 														$('input.copy-text').attr('src','images/clipboard.png');
-							              $('span.copy-animation').removeClass('copy-animation');
+							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
               try {
-                $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
+								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
+									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
+                } else {
+                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
+                }
                 navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
 																theButton.attr('src','images/clipboard_active.png');
 								              } catch(err) {
@@ -57,8 +65,8 @@
             });
 
             if(window.self !== window.top){
-              window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
-            }
+															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
+							            }
           });
         </script>
         <link href="css/steps.css" rel="stylesheet" type="text/css" />
@@ -71,26 +79,28 @@
           </div>
           <div></div>
           <div id="content">
-          <ol>
-        <li>Download HTTrack<a href="https://www.httrack.com/" target="_blank"> Download</a></li>
-        <li>Extract the download hhtrack-noinst zip archive</li>
-        <li>Create a directory to store your DD-WRT backup</li>
-        <li>Launch WinHTTrack.exe</li>
-        <li>Click Next</li>
-        <li>Set Project name: DD-WRT</li>
-        <li>Set Base path to the directory created in step 3</li>
-        <li>Click Next</li>
-        <li>Click Add URL...
-            <p>Set URL: to your DD-WRT IP Address<br />
-                Login: your DD-WRT user name<br />
-                Password: your DD-WRT password
-            </p>
-        </li>
-        <li>Click OK</li>
-        <li>Click Next</li>
-        <li>Wait for the process to complete</li>
-        <li>Browse the site created by HTTrack</li>
-      </ol>          </div>
+          <p>Disclaimer: This does not backup 100% of the settings in DD-WRT, but it is a great way to capture the settings prior to upgrading so values can be copied/pasted back into place</p>
+
+<ol>
+	<li>Download HTTrack<a href="https://www.httrack.com/" target="_blank"> Download</a></li>
+	<li>Extract the download hhtrack-noinst zip archive</li>
+	<li>Create a directory to store your DD-WRT backup</li>
+	<li>Launch WinHTTrack.exe</li>
+	<li>Click Next</li>
+	<li>Set Project name: DD-WRT</li>
+	<li>Set Base path to the directory created in step 3</li>
+	<li>Click Next</li>
+	<li>Click Add URL...
+	<p>Set URL: to your DD-WRT IP Address<br />
+	Login: your DD-WRT user name<br />
+	Password: your DD-WRT password</p>
+	</li>
+	<li>Click OK</li>
+	<li>Click Next</li>
+	<li>Wait for the process to complete</li>
+	<li>Browse the site created by HTTrack</li>
+</ol>
+          </div>
         </div>
       </body>
     </html>
