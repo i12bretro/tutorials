@@ -1,9 +1,14 @@
-    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <!DOCTYPE html>
     <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
       <head>
         <title>Host Your Own draw.io, Visio style diagram maker</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Apache,Tomcat,Java,Self-Hosted,Web Based Tools,Web Based Utilities,FOSS,i12bretro,Tutorial,How To,Draw,Diagram,Visio,Visio Alternative">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Host Your Own draw.io, Visio style diagram maker">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+								  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript">
           $(function(){
             $('textarea').each(function(i,e){
@@ -12,9 +17,11 @@
             });
 
             $('li').each(function(i,e){
-              var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
-              $(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
-              $(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							if(!$(this).hasClass('noCheckbox')){
+								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
+								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
+								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
+							}
             });
 
             $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
