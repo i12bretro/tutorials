@@ -1,0 +1,48 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Shell In A Box on Debian/Ubuntu - Browser Based Terminal Emulator</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="How To Install Shell In A Box,Shell In A Box Install Guide,Web Based Terminal Emulator,Secure Shell,SSH,Free Open-Source Software,Browser Based,FOSS,Free Software,Home Lab,Install Guide,Linux,Open-Source,Self-Hosted,Shell In A Box,Terminal Emulator,Web Based,Web Based Tools,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Shell In A Box on Debian/Ubuntu - Browser Based Terminal Emulator">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Shell In A Box on Debian/Ubuntu - Browser Based Terminal Emulator</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Shell In A Box?</h2>
+
+<p><em>Shell In A Box implements a web server that can export arbitrary command line tools to a web based terminal emulator. This emulator is accessible to any JavaScript and CSS enabled web browser and does not require any additional browser plugins.</em> -<a href="https://code.google.com/archive/p/shellinabox/" target="_blank">https://code.google.com/archive/p/shellinabox/</a></p>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal window
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	#  install shellinabox<br />
+	sudo apt install openssl shellinabox -y<br />
+	# start and enable shellinabox service<br />
+	sudo systemctl enable shellinabox --now</div>
+	</li>
+	<li>Open a web browser and navigate to https://DNSorIP:4200</li>
+	<li>Welcome to Shell In A Box</li>
+	<li>Login and do terminal things</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
