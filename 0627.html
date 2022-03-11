@@ -43,8 +43,8 @@
 <ol>
 	<li>Open the readable partition of the microSD card in Explorer</li>
 	<li>Rename the appropriate file from below to u-boot.ext on the root of the SD card
-	<p>u-boot-s905              (for s905)<br />
-	u-boot-s905x-s912   (for s905x and s912)<br />
+	<p>u-boot-s905 (for s905)<br />
+	u-boot-s905x-s912 (for s905x and s912)<br />
 	u-boot-s905x2-s922 (for s905x2 and s922)</p>
 	</li>
 	<li>Edit /extlinux/extlinux.conf in a text editor
@@ -93,24 +93,13 @@
 	# install gnupg and curl<br />
 	apt install gnupg curl -y<br />
 	# download the pimox installation script<br />
-	curl https://raw.githubusercontent.com/pimox/pimox7/master/RPiOS64autoinstall.sh &gt; RPiOS64autoinstall.sh<br />
+	curl https://raw.githubusercontent.com/pimox/pimox7/master/RPiOS64-IA-Install.sh &gt; RPiOS64-IA-Install.sh<br />
 	# make the file executable<br />
-	chmod +x RPiOS64autoinstall.sh<br />
-	# edit the file<br />
-	nano RPiOS64autoinstall.sh</div>
+	chmod +x RPiOS64-IA-Install.sh<br />
+	# run the install script<br />
+	./RPiOS64-IA-Install.sh</div>
 	</li>
-	<li>Scroll down and set the following variables for your environment
-	<p>HOSTNAME=&#39;armmox&#39;<br />
-	RPI_IP=&#39;192.168.0.225&#39;<br />
-	GATEWAY=&#39;192.168.0.27&#39;<br />
-	NETMASK=&#39;/24&#39;</p>
-	</li>
-	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
-	<li>Continue with the following command
-	<div class="codeBlock"># run the install script<br />
-	sh RPiOS64autoinstall.sh</div>
-	</li>
-	<li>Enter and confirm a root password</li>
+	<li>Answer the prompts to set a hostname, configure the network and set the root password</li>
 	<li>Wait while the script installs dependencies</li>
 	<li>The Armbian device will reboot once the install script completes</li>
 	<li>Once Armbian boots back up, continue with the following command to finish incomplete installs and reboot once more
