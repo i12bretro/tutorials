@@ -1,0 +1,89 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Renaming a Proxmox VE Node</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="How To Rename A Proxmox VE Host,How To Rename A Proxmox VE Node,Rename Proxmox Host,Rename Proxmox Node,Change Proxmox Host Name,Change Proxmox Node Name,Debian,Host,Hypervisor,Linux,Node,Proxmox,Proxmox Tutorial,Proxmox VE,Rename,VM,Home Lab,Virtual Machine,Proxmox Node,Proxmox Host,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Renaming a Proxmox VE Node">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Renaming a Proxmox VE Node</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <p>I recently upgraded my homelab Proxmox host server and wanted to repurpose my existing server to use as a testing environment. Below are the steps I used to rename the old Proxmox instance. These steps worked for me. Please let me know in the comments if you try these steps and any issues arise that I didn&#39;t have in my environment.</p>
+
+<p><em>NOTE: Renaming a node that is part of a cluster is not recommended. These steps are intended for standalone nodes. Always make backups of important VMs before attempting to modify the Proxmox host. </em></p>
+
+<ol>
+	<li>Log into ProxMox VE, either at the console, via SSH or the web UI and launch the web shell</li>
+	<li>Run the following commands, alternatively you can manually edit each file mentioned with nano or vi and replace the old hostname with the new one
+	<div class="codeBlock"># set the old hostname and write to ini<br />
+	echo &quot;OLD_HOSTNAME=$(hostname)&quot; &gt; ~/pmrename.ini<br />
+	# set the new hostname in ini, update as needed<br />
+	echo &quot;NEW_HOSTNAME=vm-dev&quot; &gt;&gt; ~/pmrename.ini<br />
+	# read variables from ini<br />
+	source &lt;(grep = ~/pmrename.ini)<br />
+	# edit hostname file<br />
+	sed -i.bak &quot;s/$OLD_HOSTNAME/$NEW_HOSTNAME/gi&quot; /etc/hostname<br />
+	# edit hosts file<br />
+	sed -i.bak &quot;s/$OLD_HOSTNAME/$NEW_HOSTNAME/gi&quot; /etc/hosts<br />
+	# edit mailname if it exists<br />
+	[ -e &quot;/etc/mailname&quot; ] &amp;&amp; sed -i.bak &quot;s/$OLD_HOSTNAME/$NEW_HOSTNAME/gi&quot; /etc/mailname<br />
+	# edit main.cf if it exists<br />
+	[ -e &quot;/etc/postfix/main.cf&quot; ] &amp;&amp; sed -i.bak &quot;s/$OLD_HOSTNAME/$NEW_HOSTNAME/gi&quot; /etc/postfix/main.cf<br />
+	# copy config files to new node name<br />
+	cp &quot;/var/lib/rrdcached/db/pve2-node/$OLD_HOSTNAME&quot; &quot;/var/lib/rrdcached/db/pve2-node/$NEW_HOSTNAME&quot; -r<br />
+	cp &quot;/var/lib/rrdcached/db/pve2-storage/$OLD_HOSTNAME&quot; &quot;/var/lib/rrdcached/db/pve2-storage/$NEW_HOSTNAME&quot; -r<br />
+	cp &quot;/var/lib/rrdcached/db/pve2-$OLD_HOSTNAME&quot; &quot;/var/lib/rrdcached/db/pve2-$NEW_HOSTNAME&quot; -r<br />
+	# reboot<br />
+	reboot now</div>
+	</li>
+	<li>Wait for the Proxmox host to come back up</li>
+	<li>Log back in and continue with the following commands
+	<div class="codeBlock"># read variables from ini<br />
+	source &lt;(grep = ~/pmrename.ini)<br />
+	# update storage config<br />
+	sed -i.bak &quot;s/nodes $OLD_HOSTNAME/nodes $NEW_HOSTNAME/gi&quot; /etc/pve/storage.cfg<br />
+	# mv vm configs<br />
+	mv /etc/pve/nodes/$OLD_HOSTNAME/qemu-server/*.conf /etc/pve/nodes/$NEW_HOSTNAME/qemu-server/<br />
+	# mv ct configs<br />
+	mv /etc/pve/nodes/$OLD_HOSTNAME/lxc/*.conf /etc/pve/nodes/$NEW_HOSTNAME/lxc/</div>
+	</li>
+	<li>Test that Proxmox web UI and all VMs are working as intended</li>
+</ol>
+
+<h2>Cleaning Up</h2>
+
+<ol>
+	<li>After fully testing everything is working, run the following commands to clean up backup files
+	<div class="codeBlock"># read variables from ini<br />
+	source &lt;(grep = ~/pmrename.ini)<br />
+	rm /etc/hostname.bak &amp;&amp; rm /etc/hosts.bak<br />
+	[ -e &quot;/etc/mailname.bak&quot; ] &amp;&amp; rm /etc/mailname.bak<br />
+	[ -e &quot;/etc/postfix/main.cf.bak&quot; ] &amp;&amp; rm /etc/postfix/main.cf.bak<br />
+	rm /var/lib/rrdcached/db/pve2-node/$OLD_HOSTNAME -r<br />
+	rm /var/lib/rrdcached/db/pve2-storage/$OLD_HOSTNAME -r<br />
+	rm /var/lib/rrdcached/db/pve2-$OLD_HOSTNAME -r<br />
+	rm /etc/pve/nodes/$OLD_HOSTNAME -r<br />
+	rm /etc/pve/storage.cfg.bak<br />
+	rm ~/pmrename.ini</div>
+	</li>
+</ol>
+
+<p>Source: <a href="https://pve.proxmox.com/wiki/Renaming_a_PVE_node" target="_blank">https://pve.proxmox.com/wiki/Renaming_a_PVE_node</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
