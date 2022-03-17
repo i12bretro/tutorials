@@ -1,0 +1,47 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Manually Create VMWare vSphere ESXi Datastore Partition</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Datastore,ESXi,ESXi 7,How To,Partition,Tutorial,VMFS,VMware,VMware ESXi,VSphere,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Manually Create VMWare vSphere ESXi Datastore Partition">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="11/07/2021 01:35:16 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Manually Create VMWare vSphere ESXi Datastore Partition</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Log into the ESXi web UI</li>
+	<li>Enable the SSH service if it is not already enabled by selecting Actions &gt; Services &gt; Enable Secure Shell (SSH)</li>
+	<li>Connect to the ESXi host via SSH</li>
+	<li>Run the following commands
+	<div class="codeBlock"># list connected disks<br />
+	ls /dev/disks/<br />
+	# using one of the partition ids from the above output<br />
+	# list the partition table<br />
+	partedUtil getptbl /dev/disks/&lt;%partition id%&gt;<br />
+	# add the new partition to the partition table<br />
+	partedUtil add /dev/disks/&lt;%partition id%&gt; gpt &quot;&lt;%partition number%&gt; &lt;%starting sector%&gt; &lt;%ending sector%&gt; AA31E02A400F11DB9590000C2911D1B8 0&quot;<br />
+	# create vmfs volume<br />
+	vmkfstools -C vmfs6 -S &lt;%custom label%&gt; /dev/disks/&lt;%partition id%&gt;:&lt;%partition number%&gt;</div>
+	</li>
+	<li>Back in the ESXi web UI, select Storage from the left navigation menu</li>
+	<li>The new Datastore should be listed and available for use</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
