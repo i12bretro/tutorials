@@ -1,0 +1,64 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Installing Ubuntu Touch (Nexus 7 2013)</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="2013,Android Alternative,Asus,Gen 2,Generation 2,How To,Linux,Nexus,Nexus 7,Touch,Tutorial,Ubuntu,Ubuntu Touch,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Installing Ubuntu Touch (Nexus 7 2013)">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="08/27/2021 09:48:07 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Installing Ubuntu Touch (Nexus 7 2013)</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Ubuntu Touch?</h2>
+
+<p><em>Ubuntu Touch is a mobile version of the Ubuntu operating system for mobile devices. However, unlike other &#39;flavors&#39; of Ubuntu, it is more accurately an extract of parts of Ubuntu. It is adapted to run naturally in a mobile, touch-screen environment but is also capable of functioning as a desktop computer while in &quot;desktop mode&quot;. This aforementioned converging of environments from device to device is where the term &quot;Convergence&quot; originates.</em> -<a href="https://ubuntu-touch.io/" target="_blank">https://ubuntu-touch.io/</a></p>
+
+<p><em>DISCLAIMER: This process will overwrite the current stock operating system on your device. I have tested these steps on my own devices, but I am not responsible if you damage or brick your device. Verify Ubuntu Touch is supported on your device before starting and make sure to backup any data you do not want to lose before proceeding.</em></p>
+
+<p><em>NOTE: Ubuntu Touch is only supported a select number of devices. Check if you have a supported device at <a href="https://devices.ubuntu-touch.io/device/flo/" target="_blank">https://devices.ubuntu-touch.io/device/flo/</a></em></p>
+
+<ol>
+	<li>Open a web browser and navigate to <a href="https://devices.ubuntu-touch.io/device/flo/" target="_blank">https://devices.ubuntu-touch.io/device/flo/</a></li>
+	<li>Search for and select the device on the left side of the screen</li>
+	<li>Download the appropriate UBports Installer for your operating system</li>
+	<li>Run the downloaded UBports Installer application</li>
+	<li>On the target device, enable developer mode
+	<ol start="1" style="list-style-type: lower-roman;">
+		<li>On Android, go to Settings &gt; About</li>
+		<li>Scroll to the bottom and press Build Number 7 times</li>
+		<li>A message will countdown and then say You&#39;re now a developer</li>
+		<li>Go back to the main Settings menu &gt; Developer Options</li>
+		<li>Enable USB debugging or ADB</li>
+		<li>If an option exists to Allow OEM Unlock, enable it as well</li>
+	</ol>
+	</li>
+	<li>Connect the target device to the PC via a USB cable</li>
+	<li>UBports Installer should auto-detect the device that has been connected
+	<p><em>NOTE: If the device is not auto-detected, confirm USB debugging is enabled and that the USB cable is capable of transmitting data. Once confirmed, click the Select device manually button and select the device from the dropdown</em></p>
+	</li>
+	<li>Verify the device chosen is the actual device being installed to &gt; Click OK</li>
+	<li>Click the Install button</li>
+	<li>Check the Wipe Userdata, Bootstrap and Format system partition boxes &gt; Click Next</li>
+	<li>The UBports Installer will download the required files and prompt you to boot the target device into bootloader mode. For the Nexus 7, press and hold the volume down rocker while powering on the device. Continue holding volume down until the bootloader appears</li>
+	<li>Click Continue in UBports Installer</li>
+	<li>UBports will flash Ubuntu Touch to the device over ADB</li>
+	<li>Enjoy Ubuntu Touch!!</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
