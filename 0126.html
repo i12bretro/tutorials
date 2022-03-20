@@ -4,10 +4,11 @@
         <title>Portable Web Server Using lighttpd</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta charset="UTF-8">
-        <meta name="keywords" content="lighttpd,Windows,Portable,Flash Drive,USB,Coding,On the Go,PHP,HTTP,Web">
+        <meta name="keywords" content="Lighttpd,Windows,Portable,Flash Drive,USB,Coding,On The Go,PHP,HTTP,Web">
         <meta name="author" content="i12bretro">
         <meta name="description" content="Portable Web Server Using lighttpd">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="03/20/2022 10:05:35 AM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -21,10 +22,16 @@
           </div>
           <div></div>
           <div id="content">
-          <ol>
+          <h2>Things You Will Need</h2>
+
+<ul>
+	<li>A USB flash drive, at least 8 GB <a href="https://amzn.to/3wkR5ju" target="_blank">https://amzn.to/3wkR5ju</a> | <a href="https://amzn.to/3qkrJ1p" target="_blank">https://amzn.to/3qkrJ1p</a> | <a href="https://amzn.to/3Nhu9b9" target="_blank">https://amzn.to/3Nhu9b9</a></li>
+</ul>
+
+<ol>
 	<li>Download lighttpd for Windows <a href="http://lighttpd.dtech.hu/" target="_blank">Download</a></li>
-	<li>Download Microsoft Visual C++&nbsp;<a href="https://aka.ms/vs/16/release/vc_redist.x86.exe" target="_blank">Download</a></li>
-	<li>Install&nbsp;Microsoft Visual C++</li>
+	<li>Download Microsoft Visual C++ <a href="https://aka.ms/vs/16/release/vc_redist.x86.exe" target="_blank">Download</a></li>
+	<li>Install Microsoft Visual C++</li>
 	<li>Extract the lighttpd .zip file</li>
 	<li>Copy the extracted lighttpd folder to the root of a USB flash drive</li>
 	<li>Navigate to /lighttpd and double click lighttpd.exe to start the portable web server with the default configuration</li>
@@ -39,8 +46,8 @@
 	<li>Navigate to /lighttpd/conf and edit lighttpd.conf in a text editor</li>
 	<li>Add the following lines to lighttpd.conf<br />
 	cgi.assign = ( &quot;.php&quot; =&gt; server_root + &quot;/PHP/php-cgi.exe&quot;)</li>
-	<li>Find&nbsp;static-file.exclude-extensions and add &quot;.php&quot; to the listing</li>
-	<li>Find&nbsp;index-file.names and add &quot;index.php&quot; to the listing</li>
+	<li>Find static-file.exclude-extensions and add &quot;.php&quot; to the listing</li>
+	<li>Find index-file.names and add &quot;index.php&quot; to the listing</li>
 	<li>Find mod_cgi and remove the # to uncomment it</li>
 	<li>Save the changes to lighttpd.conf</li>
 	<li>Navigate to /lighttpd and double click lighttpd.exe to start the portable web server with PHP support</li>
