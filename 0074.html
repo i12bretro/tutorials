@@ -4,10 +4,11 @@
         <title>Run Ubuntu 12.04 on Ouya</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta charset="UTF-8">
-        <meta name="keywords" content="Ouya,Recovery,ADB,Micro Console,Tutorial,How To,CyanogenMod,i12bretro,Linux,Ubuntu">
+        <meta name="keywords" content="Ouya,Recovery,ADB,Micro Console,CyanogenMod,Linux,Ubuntu,How To,Tutorial,i12bretro">
         <meta name="author" content="i12bretro">
         <meta name="description" content="Run Ubuntu 12.04 on Ouya">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="03/20/2022 09:49:02 AM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -26,9 +27,9 @@
 <h2>Things You Will Need</h2>
 
 <ul>
-	<li>A USB flash drive, at least 4 GB (data will be lost)</li>
-	<li>A USB hub, preferably with external power</li>
-	<li>A USB keyboard and mouse</li>
+	<li>A USB flash drive, at least 4 GB of free space <a href="https://amzn.to/3wkR5ju" target="_blank">https://amzn.to/3wkR5ju</a></li>
+	<li>A USB hub, preferably with external power <a href="https://amzn.to/3KTviDw" target="_blank">https://amzn.to/3KTviDw</a></li>
+	<li>A USB keyboard <a href="https://amzn.to/3qgUQTe" target="_blank">https://amzn.to/3qgUQTe</a> | <a href="https://amzn.to/3uchJsj" target="_blank">https://amzn.to/3uchJs</a></li>
 </ul>
 
 <h2>Prerequisites and Downloads</h2>
@@ -43,9 +44,7 @@
 	<li>Launch win32diskimager</li>
 	<li>Navigate to the extracted Ubuntu files and select the .img file</li>
 	<li>Select and then double and triple check the correct device is selected from the dropdown
-	<ol start="1" style="list-style-type: lower-alpha;">
-		<li><strong>All data will be lost, check the selected device one more time</strong></li>
-	</ol>
+	<p><strong>All data will be lost, check the selected device one more time</strong></p>
 	</li>
 	<li>Click the Write button</li>
 	<li>Ignore prompts to format the drive</li>
@@ -81,7 +80,7 @@
 	<li>Navigate to the i12bretro_OUYA_Ubuntu_commands in windows explorer</li>
 	<li>Right click i12bretro_OUYA_Ubuntu_commands.bat &gt; Run as administrator</li>
 	<li>The script uses the Android Debug Bridge (ADB) to boot the Ouya into recovery</li>
-	<li>When the command prompts to &quot;--  Setup the fastboot driver&quot;, go back to Device Manager expand Android Device</li>
+	<li>When the command prompts to &quot;-- Setup the fastboot driver&quot;, go back to Device Manager expand Android Device</li>
 	<li>Right click Android Bootloader Device &gt; Update Driver</li>
 	<li>Select Browse my computer for driver software</li>
 	<li>Click the Browse... button</li>
