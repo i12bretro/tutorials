@@ -4,10 +4,11 @@
         <title>BlueBomb Wii Homebrew Method from Linux Virtualbox VM</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta charset="UTF-8">
-        <meta name="keywords" content="Wii,Linux,Virtualbox,BlueBomb,HowTo,Tutorial,i12bretro,VM,Virtual Machine,Bluetooth">
+        <meta name="keywords" content="Wii,Linux,Virtualbox,BlueBomb,HowTo,VM,Virtual Machine,Bluetooth,Tutorial,i12bretro">
         <meta name="author" content="i12bretro">
         <meta name="description" content="BlueBomb Wii Homebrew Method from Linux Virtualbox VM">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="03/20/2022 10:00:35 AM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -24,14 +25,14 @@
           <h2>Setting up the Virtual Machine</h2>
 
 <ul>
-	<li>A USB flash drive (any size, the file is about 2 MB)</li>
-	<li>A USB Bluetooth adapter compatible with Linux</li>
+	<li>A USB flash drive (any size, the file is about 2 MB) <a href="https://amzn.to/3wkR5ju" target="_blank">https://amzn.to/3wkR5ju</a></li>
+	<li>A USB Bluetooth adapter compatible with Linux <a href="https://amzn.to/3CUf6iN" target="_blank">https://amzn.to/3CUf6iN</a></li>
 </ul>
 
 <h2>Setting up the Virtual Machine</h2>
 
 <ol>
-	<li>Download Virtualbox and&nbsp;Virtualbox Extension Pack <a href="https://www.virtualbox.org/wiki/Downloads" target="_blank">Download</a></li>
+	<li>Download VirtualBox and VirtualBox Extension Pack <a href="https://www.virtualbox.org/wiki/Downloads" target="_blank">Download</a></li>
 	<li>Download a Linux Distro (I&#39;m using Lubuntu x86) <a href="https://lubuntu.net/downloads/" target="_blank">Download</a></li>
 	<li>Download the BootMii installer <a href="https://bootmii.org/download/" target="_blank">Download</a></li>
 	<li>Format the USB flash drive to the FAT32 filesystem
@@ -41,9 +42,9 @@
 	</li>
 	<li>Copy boot.elf from the downloaded hackmii_installer_v1.2.zip and paste it on the root of the USB flash drive</li>
 	<li>Safely remove the flash drive and insert it into the Wii using the USB port closest to the edge of the console</li>
-	<li>Install Virtualbox</li>
-	<li>Install the Virtualbox Extension Pack</li>
-	<li>Launch Virtualbox</li>
+	<li>Install VirtualBox</li>
+	<li>Install the VirtualBox Extension Pack</li>
+	<li>Launch VirtualBox</li>
 	<li>Create a New VM by selecting Machine &gt; New
 	<p>Name: BlueBomb<br />
 	Machine Folder: C:\VMs<br />
@@ -77,12 +78,12 @@
 	sudo apt-get upgrade<br />
 	sudo apt-get clean</div>
 	</li>
-	<li>Install the required packages to run Virtualbox Guest Additions by running the following commands:
+	<li>Install the required packages to run VirtualBox Guest Additions by running the following commands:
 	<div class="codeBlock">sudo apt-get install build-essential dkms linux-headers-$(uname -r)</div>
 	</li>
 	<li>Select Devices &gt; Insert Guest Additions CD image...</li>
 	<li>Right click on the disc on the desktop &gt; Open in Terminal</li>
-	<li>Run the following command to install Virtualbox Guest Additions:
+	<li>Run the following command to install VirtualBox Guest Additions:
 	<div class="codeBlock">sudo sh ./VBoxLinuxAdditions.run</div>
 	</li>
 	<li>Once the Guest Additions have installed reboot the VM from the GUI or by running the reboot command in terminal</li>
