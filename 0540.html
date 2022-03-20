@@ -4,10 +4,11 @@
         <title>Portable MySQL USB Flash Install Guide</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta charset="UTF-8">
-        <meta name="keywords" content="How To,Tutorial,i12bretro,MySQL,Database,Relational Database,Community Edition,USB,Flash Drive,Portable,Portable Software">
+        <meta name="keywords" content="MySQL,Database,Relational Database,Community Edition,USB,Flash Drive,Portable,Portable Software,How To,Tutorial,i12bretro">
         <meta name="author" content="i12bretro">
         <meta name="description" content="Portable MySQL USB Flash Install Guide">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="03/20/2022 12:21:09 PM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -21,14 +22,20 @@
           </div>
           <div></div>
           <div id="content">
-          <ol>
+          <h2>Things You Will Need</h2>
+
+<ul>
+	<li>A USB flash drive, at least 8 GB <a href="https://amzn.to/3wkR5ju" target="_blank">https://amzn.to/3wkR5ju</a> | <a href="https://amzn.to/3qkrJ1p" target="_blank">https://amzn.to/3qkrJ1p</a> | <a href="https://amzn.to/3Nhu9b9" target="_blank">https://amzn.to/3Nhu9b9</a></li>
+</ul>
+
+<ol>
 	<li>Download MySQL Workbench <a href="https://dev.mysql.com/downloads/workbench/" target="_blank">Download</a></li>
 	<li>Download the latest MySQL binary .zip <a href="https://dev.mysql.com/downloads/mysql/" target="_blank">Download</a></li>
 	<li>Extract the downloaded .zip file</li>
 	<li>Rename the extracted folder MySQL</li>
 	<li>Cut the MySQL folder to the USB flash drive</li>
 	<li>Navigate back to the folder with the MySQL Workbench .msi</li>
-	<li>While holding Shift, right click in the whitespace &gt; Open PowerShell window here </li>
+	<li>While holding Shift, right click in the whitespace &gt; Open PowerShell window here</li>
 	<li>Run the following command in PowerShell to extract the .msi to the USB flash drive, update the drive letter as needed
 	<div class="codeBlock PS">msiexec /a mysql-workbench-community-8.0.25-winx64.msi /qb TARGETDIR=H:\<br />
 	exit</div>
