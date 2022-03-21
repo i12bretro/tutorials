@@ -1,0 +1,104 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Proxmox Email Notification Configuration</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="How To Configure Email Notifications In Proxmox VE,How To Setup Proxmox Email Notifications,Setup Email Notifications In Proxmox,Proxmox Email Setup,Proxmox Email Configuration,Home Lab,Hypervisor,Proxmox,Proxmox VE,Email,Notifications,GMail,SASL,Postfix,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Proxmox Email Notification Configuration">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="03/13/2022 09:13:02 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Proxmox Email Notification Configuration</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Configuring User E-mail Address</h2>
+
+<ol>
+	<li>In a web browser, navigate to the Proxmox web UI and login</li>
+	<li>Select Datacenter &gt; Permissions &gt; Users from the left navigation menus</li>
+	<li>Double click the user to configure</li>
+	<li>Complete the E-mail field on the Edit User form &gt; Click OK</li>
+</ol>
+
+<h2>Simple Configuration via Web UI</h2>
+
+<p>By default, Proxmox will try to use the domain portion of the &quot;Email from address&quot; as the e-mail relay server.</p>
+
+<ol>
+	<li>Select Datacenter &gt; Options from the left navigation menus</li>
+	<li>Double click the Email from address field</li>
+	<li>Enter the e-mail address that Proxmox will send outgoing e-mails from &gt; Click OK</li>
+	<li>Expand Datacenter &gt; Select the node name &gt; Click Shell in the left navigation menus</li>
+	<li>Run the following commands in the terminal
+	<div class="codeBlock CMD"># send a basic test email<br />
+	echo &quot;Test email from Proxmox: $(hostname)&quot; | /usr/bin/pvemailforward<br />
+	# output the mail log<br />
+	cat /var/log/mail.log</div>
+	</li>
+	<li>Notice the relay is the domain (i12bretro.local) from the Email from address setting</li>
+</ol>
+
+<h2>Advanced Configuration via CLI</h2>
+
+<p>To make more advanced configuration changes, like using a gmail account, you need to edit the postfix settings via command line </p>
+
+<ol>
+	<li>Back in the Proxmox web shell, run the following commands in the terminal
+	<div class="codeBlock CMD"># install libsasl<br />
+	apt install libsasl2-modules -y<br />
+	# edit the postfix config<br />
+	nano /etc/postfix/main.cf</div>
+	</li>
+	<li>Press CTRL+W and search for mydestination</li>
+	<li>Comment out mydestination by adding a # to the beginning of the line</li>
+	<li>Press CTRL+W and search for relayhost</li>
+	<li>Comment out relayhost by adding a # to the beginning of the line</li>
+	<li>Update or add the following configuration
+	<p>relayhost = smtp.gmail.com:587<br />
+	smtp_use_tls = yes<br />
+	smtp_sasl_auth_enable = yes<br />
+	smtp_sasl_security_options =<br />
+	smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd<br />
+	smtp_tls_CAfile = /etc/ssl/certs/Entrust_Root_Certification_Authority.pem</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following commands in the terminal
+	<div class="codeBlock CMD"># create /etc/postfix/sasl_passwd<br />
+	nano /etc/postfix/sasl_passwd</div>
+	</li>
+	<li>Add a line to configure gmail authentication
+	<p>smtp.gmail.com:587    &lt;%youraccount%&gt;@gmail.com:&lt;%yourpassword%&gt;</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following commands in the terminal
+	<div class="codeBlock CMD"># update postfix lookup tables<br />
+	postmap hash:/etc/postfix/sasl_passwd<br />
+	# limit access to sasl_passwd to only root<br />
+	chmod 600 /etc/postfix/sasl_passwd<br />
+	# restart postfix service<br />
+	systemctl restart postfix<br />
+	# test from postfix directly<br />
+	echo &quot;Test email from Proxmox: $(hostname)&quot; | mail -s &quot;Proxmox Testing&quot; &lt;%youraccount%&gt;@gmail.com<br />
+	# send a test from proxmox<br />
+	echo &quot;Test email from Proxmox: $(hostname)&quot; | /usr/bin/pvemailforward</div>
+	</li>
+</ol>
+
+<p>Sources: <a href="https://forum.proxmox.com/threads/get-postfix-to-send-notifications-email-externally.59940/" target="_blank">https://forum.proxmox.com/threads/get-postfix-to-send-notifications-email-externally.59940/</a>,<br />
+<a href="https://www.reddit.com/r/homelab/comments/5nzmm3/setting_up_the_proxmox_email_alerts/" target="_blank">https://www.reddit.com/r/homelab/comments/5nzmm3/setting_up_the_proxmox_email_alerts/</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
