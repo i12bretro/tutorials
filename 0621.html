@@ -1,0 +1,57 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Installing Plex Media Server on Windows</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="How To Install Plex On Windows,Plex Media Server Windows Install,How To Setup Plex,How To Install Plex,Getting Started With Plex Media Server,Starting A Plex Media Server,Install Guide,Media Server,Microsoft,Home Lab,Plex,Plex Media Server,Self-Hosted,Plex Server,Windows,PowerShell,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Installing Plex Media Server on Windows">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="03/23/2022 07:55:39 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Installing Plex Media Server on Windows</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Install Plex Media Server</h2>
+
+<ol>
+	<li>Log into the Windows device</li>
+	<li>Run the following commands in a PowerShell window
+	<div class="codeBlock PS"># change directory to user downloads<br />
+	cd $ENV:UserProfile\Downloads<br />
+	# download latest plex media server installer<br />
+	$ProgressPreference = &#39;SilentlyContinue&#39;; $t = Invoke-WebRequest &#39;https://plex.tv/api/downloads/5.json&#39;; $null = ($t -Match &#39;&quot;distro&quot;:&quot;windows&quot;,&quot;url&quot;:&quot;(https:\/\/downloads\.plex\.tv\/plex-media-server-new\/[^/]*\/windows\/[^/]*\.exe)&quot;,&#39;); Invoke-WebRequest $Matches[1] -OutFile .\plexmediaserver.exe; $ProgressPreference = &#39;Continue&#39;<br />
+	# run the installer<br />
+	.\plexmediaserver.exe</div>
+	</li>
+	<li>Click Install on the Plex Media Server Setup dialog</li>
+	<li>After the installation completes click Launch</li>
+</ol>
+
+<h2>Configuring Plex Account</h2>
+
+<ol>
+	<li>Open a web browser and navigate to http://DNSorIP:32400/web</li>
+	<li>Log in with one of the available options or click sign up with email</li>
+	<li>Give the Plex server a name &gt; Click Next</li>
+	<li>Click the Add Library button &gt; Select the media type</li>
+	<li>Select Add folders from the left navigation &gt; Click Browse for media folder &gt; Select the folder to add to the media &gt; Click Add Library</li>
+	<li>Click Next</li>
+	<li>Click Done to complete the server setup</li>
+	<li>Welcome to Plex Media Server</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
