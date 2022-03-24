@@ -4,10 +4,11 @@
         <title>Install Docker On Debian/Ubuntu</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta charset="UTF-8">
-        <meta name="keywords" content="i12bretro,How To,Tutorial,Docker,Installation,Containerization,Container,Debian,Ubuntu,Linux,Install Guide">
+        <meta name="keywords" content="How To Install Docker On Debian,How To Setup Docker On Debian,Getting Started With Docker,Docker,Installation,Docker Made Easy,Docker Host,Docker Tutorial,Install Docker Host,Home Lab,Self-Hosted,Command Line,Containerization,CLI,Container,Debian,Ubuntu,Linux,Install Guide,Docker Simplified,Docker Install Script,Docker How To,Docker Setup Tutorial,Docker Installation Tutorial,How To,Tutorial,i12bretro">
         <meta name="author" content="i12bretro">
         <meta name="description" content="Install Docker On Debian/Ubuntu">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="03/24/2022 10:34:38 AM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -27,36 +28,36 @@
 	<code class="codeBlock"># update software repositories<br />
 	sudo apt update<br />
 	# install necessary packages for https apt calls<br />
-	sudo apt install apt-transport-https ca-certificates curl&nbsp;gnupg-agent&nbsp;software-properties-common<br />
+	sudo apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common<br />
 	# add docker GPG key<br />
 	curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -<br />
 	# add docker software repository<br />
 	sudo add-apt-repository &quot;deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable&quot;<br />
 	# install docker<br />
-	sudo apt&nbsp;update<br />
-	sudo apt&nbsp;install docker-ce docker-ce-cli containerd.io<br />
+	sudo apt update<br />
+	sudo apt install docker-ce docker-ce-cli containerd.io<br />
 	# create a docker group<br />
 	sudo groupadd docker<br />
 	# add the current user to the docker group<br />
 	sudo usermod -aG docker $USER</code></li>
-	<li>To run a basic Docker container,&nbsp;run the following command in a terminal:<br />
+	<li>To run a basic Docker container, run the following command in a terminal:<br />
 	<code class="codeBlock">sudo docker run hello-world</code></li>
 	<li>Docker will download the hello-world container and execute it, displaying following output:
 	<p>Hello from Docker!<br />
 	This message shows that your installation appears to be working correctly.</p>
 
 	<p>To generate this message, Docker took the following steps:<br />
-	&nbsp;1. The Docker client contacted the Docker daemon.<br />
-	&nbsp;2. The Docker daemon pulled the &quot;hello-world&quot; image from the Docker Hub.<br />
-	&nbsp; &nbsp; (amd64)<br />
-	&nbsp;3. The Docker daemon created a new container from that image which runs the<br />
-	&nbsp; &nbsp; executable that produces the output you are currently reading.<br />
-	&nbsp;4. The Docker daemon streamed that output to the Docker client, which sent it<br />
-	&nbsp; &nbsp; to your terminal.</p>
+	 1. The Docker client contacted the Docker daemon.<br />
+	 2. The Docker daemon pulled the &quot;hello-world&quot; image from the Docker Hub.<br />
+	    (amd64)<br />
+	 3. The Docker daemon created a new container from that image which runs the<br />
+	    executable that produces the output you are currently reading.<br />
+	 4. The Docker daemon streamed that output to the Docker client, which sent it<br />
+	    to your terminal.</p>
 	</li>
 </ol>
 
-<p>Source:&nbsp;<a href="https://docs.docker.com/engine/install/debian/" target="_blank">https://docs.docker.com/engine/install/debian/</a></p>
+<p>Source: <a href="https://docs.docker.com/engine/install/debian/" target="_blank">https://docs.docker.com/engine/install/debian/</a></p>
           </div>
         </div>
       </body>
