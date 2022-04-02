@@ -1,0 +1,107 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Roll Your Own Twitter Alternative with GNU Social</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Alternative,Debian,GNU Social,Homelab,How To,Linux,Micro Blogging,Microblogging,PHP,Self-Hosted,Social Media,Social Network,Tutorial,Twitter,Twitter Alternative,Web Based,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Roll Your Own Twitter Alternative with GNU Social">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="07/10/2021 12:38:36 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Roll Your Own Twitter Alternative with GNU Social</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Log into the Debian device</li>
+	<li>Run the following commands in a terminal:
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install software updates<br />
+	sudo apt upgrade -y<br />
+	# install Apache and MySQL<br />
+	sudo apt install apache2 mariadb-server mariadb-client -y<br />
+	# install PHP components<br />
+	sudo apt install php7.3 libapache2-mod-php7.3 php7.3-curl php7.3-mbstring php7.3-xml php7.3-fpm php7.3-gd php7.3-gmp php7.3-intl php7.3-mysql php7.3-json -y<br />
+	# download gnu social<br />
+	wget -O ~/Downloads/gnu-social-master.tar.gz https://git.gnu.io/gnu/gnu-social/-/archive/master/gnu-social-master.tar.gz<br />
+	# extract the tar.gz<br />
+	tar zxf ~/Downloads/gnu-social-*.tar.gz --directory ~/Downloads<br />
+	# move the folder to web root<br />
+	sudo mv ~/Downloads/gnu-social-*/ /var/www/html/gnusocial<br />
+	# set permissions<br />
+	sudo chown -R www-data:www-data /var/www/html/gnusocial/<br />
+	sudo chmod g+w /var/www/html/gnusocial/<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the GNU Social database and database user
+	<div class="codeBlock">CREATE DATABASE gnusocial CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;<br />
+	CREATE USER &#39;gnusocial_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;gnu$ocia1!!&#39;;<br />
+	GRANT ALL PRIVILEGES ON gnusocial.* TO &#39;gnusocial_rw&#39;@&#39;localhost&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># edit default apache conf<br />
+	sudo nano /etc/apache2/sites-available/000-default.conf</div>
+	</li>
+	<li>Paste the following at the bottom of the .conf file<br />
+	&lt;Directory /var/www/html/gnusocial/&gt;<br />
+	AllowOverride all<br />
+	&lt;/Directory&gt;</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># enable .htaccess in ./gnusocial<br />
+	sudo cp /var/www/html/gnusocial/htaccess.sample /var/www/html/gnusocial/.htaccess<br />
+	# set the relative path in .htaccess<br />
+	sudo sed -i &quot;s/RewriteBase \//RewriteBase \/gnusocial\//g&quot; /var/www/html/gnusocial/.htaccess<br />
+	# enable apache2 modules<br />
+	sudo a2enmod rewrite<br />
+	# restart apache2<br />
+	sudo systemctl restart apache2</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP/gnusocial/install.php</li>
+	<li>The GNU Social installation screen should be displayed</li>
+	<li>Enter a site name and fill out the database connection information as follows
+	<p>Hostname: localhost<br />
+	Name: gnusocial<br />
+	DB username: gnusocial_rw<br />
+	DB password: gnu$ocia1!!</p>
+	</li>
+	<li>Enter an administrator username, password and email</li>
+	<li>Click the Submit button</li>
+	<li>After the installation completes, click the visit your new GNU social site link toward the bottom of the page</li>
+	<li>Click Login at the top right of the page</li>
+	<li>Login with the administrator user created during initialization</li>
+	<li>Welcome to GNU Social</li>
+</ol>
+
+<p>Source: <a href="https://git.gnu.io/gnu/gnu-social/blob/master/INSTALL" target="_blank">https://git.gnu.io/gnu/gnu-social/blob/master/INSTALL</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
