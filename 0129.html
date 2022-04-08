@@ -4,10 +4,11 @@
         <title>Run RainLoop for Free Web Based E-mail</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta charset="UTF-8">
-        <meta name="keywords" content="Self-Hosted,Web Based Mail Client,Free Software,PHP,PHP Software,Web Server,Apache,Tutorial,How To,i12bretro,hMailServer">
+        <meta name="keywords" content="Self-Hosted,Web Based Mail Client,Free Software,PHP,PHP Software,Web Server,Apache,HMailServer,Install Guide,Home Lab,Local E-Mail,Mail Server,RainLoop,Self-Host,Self-hosted,System Administrator,Web Server Administration,Browser Based,Web Based,Web Based Tools,E-Mail Server,Web Based Email Client,Free Email Web Client,PHP Based Email Client,How To,Tutorial,i12bretro">
         <meta name="author" content="i12bretro">
         <meta name="description" content="Run RainLoop for Free Web Based E-mail">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="04/07/2022 08:51:30 PM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -21,9 +22,20 @@
           </div>
           <div></div>
           <div id="content">
-          <ol>
+          <h2>What is RainLoop?</h2>
+
+<blockquote><em>Simple, modern &amp; fast web-based email client -<a href="https://github.com/RainLoop/rainloop-webmail" target="_blank">https://github.com/RainLoop/rainloop-webmail</a></em></blockquote>
+
+<h2>Prerequisites</h2>
+
+<ul>
+	<li>An e-mail server <a href="https://youtu.be/QfAmSYKUdFs" target="_blank">https://youtu.be/QfAmSYKUdFs</a> | <a href="https://youtu.be/qGrAXAFrUro" target="_blank">https://youtu.be/qGrAXAFrUro</a> | <a href="https://youtu.be/qnnf3LWcUXA" target="_blank">https://youtu.be/qnnf3LWcUXA</a></li>
+	<li>A web server <a href="https://youtu.be/Ww0f5NVY30Q" target="_blank">https://youtu.be/Ww0f5NVY30Q</a> | <a href="https://youtu.be/lp9RtsyabvQ" target="_blank">https://youtu.be/lp9RtsyabvQ</a></li>
+</ul>
+
+<ol>
 	<li>Download RainLoop <a href="http://www.rainloop.net/downloads/" target="_blank">Download</a></li>
-	<li>Extract RainLoop</li>
+	<li>Extract the downloaded .zip file</li>
 	<li>Copy RainLoop to a folder on a web server</li>
 	<li>Open a browser and navigate to the location on the web server<br />
 	https://webdev.i12bretro.local/webmail/?admin</li>
@@ -31,10 +43,11 @@
 	<li>Click Security in the side navigation</li>
 	<li>Enter 12345 in the current password field and type a new secure password twice, click Update Password</li>
 	<li>Click Domains in the side navigation &gt; Add Domain</li>
-	<li>Fill out the fields as shown below:<br />
-	IMAP Server: imap.i12bretro.local&nbsp;&nbsp;&nbsp;&nbsp; port: 993<br />
-	SMTP Server: smtp.i12bretro.local&nbsp;&nbsp;&nbsp; port: 465<br />
-	Secure: SSL/TLS</li>
+	<li>Fill out the fields as shown below:
+	<p>IMAP Server: imap.i12bretro.local     port: 993<br />
+	SMTP Server: smtp.i12bretro.local    port: 465<br />
+	Secure: SSL/TLS</p>
+	</li>
 	<li>Click Test, if the IMAP and SMTP headers both turn green the test was successful</li>
 	<li>Click Add</li>
 	<li>In a browser, navigate to https://i12bretro.local/webmail</li>
