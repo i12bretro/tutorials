@@ -1,0 +1,107 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Run a Windows VM In MacOS with VirtualBox</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Hypervisor,Install Guide,Apple,Big Sur,VM,Virtual Machine,Virtualization,MacOS,MacOS Big Sur,Mac OS 11,VirtualBox VM,VirtualBox,Microsoft,Windows,Windows 10,Windows 11,Run Windows On MacOS,Run Windows On Big Sur,Run Microsoft Windows VM On MacOS,Windows VM On Mac,Windows VM On Big Sur,Windows VM In VirtualBox,Install VirtualBox On Mac,Install VirtualBox On MacOS,Install VirtualBox On Big Sur,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Run a Windows VM In MacOS with VirtualBox">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="03/27/2022 09:34:02 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Run a Windows VM In MacOS with VirtualBox</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Installing VirtualBox</h2>
+
+<ol>
+	<li>Log into MacOS</li>
+	<li>Download VirtualBox and VirtualBox Extension Pack <a href="https://www.virtualbox.org/wiki/Downloads" target="_blank">Download</a></li>
+	<li>Open Downloads in a Finder window</li>
+	<li>Double click the downloaded VirtualBox .dmg file</li>
+	<li>Double click VirtualBox.pkg to install the application</li>
+	<li>Click Allow when prompted to allow the installer to run</li>
+	<li>Click Continue and then Install</li>
+	<li>Reopen Downloads in a Finder window</li>
+	<li>Double click the downloaded Extension Pack installer</li>
+	<li>Step through installing the Extension Pack</li>
+</ol>
+
+<h2>Creating the VM</h2>
+
+<ol>
+	<li>Download a Windows 10 .iso <a href="https://archive.org/search.php?query=Windows%2010&amp;and[]=mediatype%3A%22software%22" target="_blank">Download</a></li>
+	<li>Launch Virtualbox</li>
+	<li>Create a New VM by selecting Machine &gt; New
+	<p>Name: Windows 10<br />
+	Type: Microsoft Windows<br />
+	Version: Windows 10 (64-bit)<br />
+	Memory Size: 4096 MB<br />
+	Hard disk: Create a virtual hard disk now</p>
+	</li>
+	<li>Click Create</li>
+	<li>On the Create Virtual Hard Disk dialog
+	<p>Name the virtual disk image Windows 10.vdi<br />
+	File size: 50.00 GB<br />
+	Hard disk file type: VDI<br />
+	Storage on physical hard disk: Dynamically Allocated</p>
+	</li>
+	<li>Click Create</li>
+	<li>Select the VM and Click Settings</li>
+	<li>Select System &gt; Processor</li>
+	<li>Give the VM at least 2 processors</li>
+	<li>Select Display</li>
+	<li>Slide the Video Memory to 128 MB</li>
+	<li>Select Storage</li>
+	<li>Click on the CD-ROM drive</li>
+	<li>Select the disc dropdown to the right &gt; Choose a virtual optical disc file...</li>
+	<li>Browse to and select the Windows 10 .iso file</li>
+	<li>Click OK</li>
+	<li>Make sure the Windows 10 VM is selected and click Start &gt; Normal</li>
+	<li>Click Next</li>
+	<li>Click Install Now</li>
+	<li>Click I don&#39;t have a product key</li>
+	<li>Select the edition you&#39;d like to install</li>
+	<li>Check the I accept box &gt; Click Next</li>
+	<li>Click Custom (advanced) &gt; Click Next</li>
+	<li>Wait for Windows to copy files, the VM will reboot</li>
+	<li>Select a Region &gt; Click Yes</li>
+	<li>Select a Keyboard layout &gt; Click Yes</li>
+	<li>Click Skip</li>
+	<li>Select Setup for personal use &gt; Click Next</li>
+	<li>Click Offline account</li>
+	<li>Click Limited experience</li>
+	<li>Enter a username &gt; Click Next</li>
+	<li>Enter a password &gt; Click Next</li>
+	<li>Re-type the password &gt; Click Next</li>
+	<li>Select and answer 3 security questions</li>
+	<li>Click No</li>
+	<li>Click Decline</li>
+	<li>Uncheck everything &gt; Click Accept</li>
+	<li>Welcome to Windows 10</li>
+</ol>
+
+<h2>Optional Steps</h2>
+
+<ol>
+	<li>Select Devices &gt; Insert Guest Additions CD image...</li>
+	<li>If VirtualBox Guest Additions doesn&#39;t autorun, open My Computer &gt; CD Drive &gt; Double click VBoxWindowsAdditions.exe</li>
+	<li>Install Guest Additions accepting the defaults</li>
+	<li>Accept any driver popups from the Guest Additions installer by clicking the Install button</li>
+	<li>After the installation completes select Reboot now &gt; Click Finish</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
