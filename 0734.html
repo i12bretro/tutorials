@@ -1,0 +1,82 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install and Configure PHP On An OpenWRT Router [with TinyFileManager]</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="PHP Web Server On OpenWRT,Install PHP OpenWRT,Add PHP To OpenWRT,Browser Based,Install Guide,Web Based,Web Based Tools,PHP,PHP Web Based File Browser,Tiny File Manager,TinyFileManager,Router,OpenWRT,OpenWRT Tutorial,GitHub,File Manager,Web Server Administration,Web Server,Web Developer,Linux,PHP Developer,PHP Application,Fun With Code,Free Software,Developer,Development,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install and Configure PHP On An OpenWRT Router [with TinyFileManager]">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="04/01/2022 09:47:49 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install and Configure PHP On An OpenWRT Router [with TinyFileManager]</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is OpenWRT?</h2>
+
+<blockquote>OpenWRT is an open-source project for embedded operating systems based on Linux, primarily used on embedded devices to route network traffic. The main components are Linux, util-linux, musl, and BusyBox. All components have been optimized to be small enough to fit into the limited storage and memory available in home routers.<em> -<a href="https://en.wikipedia.org/wiki/OpenWrt" target="_blank">https://en.wikipedia.org/wiki/OpenWrt</a></em></blockquote>
+
+<h2>Installing and Configuring PHP</h2>
+
+<ol>
+	<li>Log into the OpenWRT web interface</li>
+	<li>Select System &gt; Software from the top navigation menu</li>
+	<li>Click the Updates lists... button</li>
+	<li>Using the filter, install the following packages<br />
+	<span style="font-size:0.6em;">alternatively, run <em>opkg install luci-app-uhttpd php7 php7-cgi tar</em> from the command line</span>
+	<ul>
+		<li>luci-app-uhttpd</li>
+		<li>php7</li>
+		<li>php7-cgi</li>
+		<li>tar</li>
+	</ul>
+	</li>
+	<li>Filter the software list to zoneinfo &gt; Install required timezone files from the listing</li>
+	<li>Refresh the OpenWRT page then select Services &gt; uHTTPd from the top navigation menu</li>
+	<li>Select the Full Web Server Settings tab</li>
+	<li>On the Index page(s) field, add an entry for index.php</li>
+	<li>On the CGI filetype handler field, add an entry for .php=/usr/bin/php-cgi</li>
+	<li>Scroll to the bottom of the page &gt; Click Save &amp; Apply</li>
+	<li>SSH into the OpenWRT device</li>
+	<li>Run the following command to create a test php file
+	<div class="codeBlock"># create a phpinfo test file<br />
+	echo &quot;&lt;?php phpinfo(); ?&gt;&quot; &gt; /www/phpinfo.php</div>
+	</li>
+	<li>Open a new tab in the web browser and navigate to http://DNSorIP/phpinfo.php</li>
+</ol>
+
+<h2>Installing TinyFileManager</h2>
+
+<ol>
+	<li>Back in the SSH session, run the following commands
+	<div class="codeBlock"># install required php modules<br />
+	opkg install php7-mod-ctype php7-mod-fileinfo php7-mod-iconv php7-mod-json php7-mod-mbstring php7-mod-session php7-mod-zip<br />
+	# download tinyfilemanager<br />
+	wget -O tinyfilemanager.tar.gz https://api.github.com/repos/prasathmani/tinyfilemanager/tarball/2.4.7 --no-check-certificate<br />
+	# create tinyfilemanager directory<br />
+	mkdir tinyfilemanager<br />
+	# extract the .tar.gz<br />
+	tar xvzf ./tinyfilemanager.tar.gz -C ./tinyfilemanager --strip-components=1<br />
+	# move tinyfilemanager.php to the webroot<br />
+	cp ./tinyfilemanager/tinyfilemanager.php /www</div>
+	</li>
+	<li>Back in the web browser, navigate to http://DNSorIP/tinyfilemanager.php</li>
+	<li>Login with username admin password admin@123
+	<p>NOTE: Authentication can be edited or disabled completely by editing tinyfilemanager.php and searching for $auth_users</p>
+	</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
