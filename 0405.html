@@ -1,0 +1,106 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Run an OpenWRT VM on Proxmox VE</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Hypervisor,Install Guide,Self-Hosted,Web Based,Web Based Tools,Proxmox Host,OpenWRT Tutorial,OpenWRT,Networking,Linux,Virtualization,Virtual Router,Virtual Machine,VM,Router,Proxmox,Proxmox VE,How To Run OpenWRT Virtual Machine,How To Virtualize OpenWRT,OpenWRT VM,OpenWRT Virtual Machine,OpenWRT Proxmox VM,Proxmox Step By Step,Virtualize OpenWRT,X64,VM Router,Homelab,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Run an OpenWRT VM on Proxmox VE">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="03/27/2022 12:39:42 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Run an OpenWRT VM on Proxmox VE</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is OpenWRT?</h2>
+
+<blockquote>OpenWrt is an open-source project for embedded operating systems based on Linux, primarily used on embedded devices to route network traffic. The main components are Linux, util-linux, musl, and BusyBox. All components have been optimized to be small enough to fit into the limited storage and memory available in home routers.<em> -<a href="https://en.wikipedia.org/wiki/OpenWrt" target="_blank">https://en.wikipedia.org/wiki/OpenWrt</a></em></blockquote>
+
+<h2>Creating the VM</h2>
+
+<ol>
+	<li>Open a web browser and navigate to the ProxMox web UI https://ProxMoxDNSorIP:8006/</li>
+	<li>Click the Create VM button at the top right</li>
+	<li>On the General tab, name the VM OpenWRT and set a VM ID (123 in this example) &gt; click Next</li>
+	<li>On the OS tab select Do not use any media and set the Guest OS Type to Linux and Version to 5.x - 2.6 Kernel &gt; click Next</li>
+	<li>On the System tab click Next</li>
+	<li>On the Hard Disk tab set the Disk size to 0.001 &gt; click Next</li>
+	<li>On the CPU tab set the number of CPU cores and the Type to host &gt; click Next</li>
+	<li>On the Memory tab set the amount of memory to 256 MiB &gt; click Next</li>
+	<li>On the Network tab set the Model field to VirtIO (paravirtualized), Uncheck the Firewall box &gt; click Next</li>
+	<li>On the Confirm tab review the settings and click Finish</li>
+	<li>Select the newly created OpenWRT VM from the left navigation panel</li>
+	<li>Select Hardware from the left sub-navigation menu</li>
+	<li>Click the Hard Disk to select it</li>
+	<li>Click the Detach button at the top of the main content window to detach the hard disk from the VM</li>
+	<li>Click the Unused disk to select it</li>
+	<li>Click the Remove button at the top of the main content window to permanently delete it</li>
+	<li>Click the Add button &gt; Network Device</li>
+	<li>Set the Model field to VirtIO (paravirtualized), Uncheck the Firewall box &gt; Click Add</li>
+</ol>
+
+<h2>Setting Up the OpenWRT Disk</h2>
+
+<ol>
+	<li>Select the Proxmox node name in the left navigation menu</li>
+	<li>Click Shell in the left sub-navigation</li>
+	<li>Run the following commands in the terminal
+	<div class="codeBlock CMD"># lookup the latest stable version number<br />
+	regex=&#39;&lt;strong&gt;Current Stable Release - OpenWrt ([^/]*)&lt;\/strong&gt;&#39; &amp;&amp; response=$(curl -s https://openwrt.org) &amp;&amp; [[ $response =~ $regex ]] &amp;&amp; stableVersion=&quot;${BASH_REMATCH[1]}&quot;<br />
+	# download openwrt image<br />
+	wget -O openwrt.img.gz https://downloads.openwrt.org/releases/$stableVersion/targets/x86/64/openwrt-$stableVersion-x86-64-generic-ext4-combined.img.gz<br />
+	# extract the openwrt img<br />
+	gunzip ./openwrt.img.gz<br />
+	# rename the extracted img<br />
+	mv ./openwrt*.img ./openwrt.raw<br />
+	# increase the raw disk to 512 MB<br />
+	qemu-img resize -f raw ./openwrt.raw 512M<br />
+	# import the disk to the openwrt vm<br />
+	# update the vm id and storage device as needed<br />
+	# usage: qm importdisk <vmid> <source /> <storage><br />
+	qm importdisk 123 openwrt.raw HDD_500GB</storage></vmid></div>
+	<strong> </strong></li>
+	<li><strong>Once the disk import completes, select the OpenWRT VM from the left navigation menu &gt; Hardware</strong></li>
+	<li><strong>Double click the Unused Disk &gt; Click the Add button</strong></li>
+	<li><strong>Select Options from the left sub-navigation menu</strong></li>
+	<li><strong>Double click Boot Order</strong></li>
+	<li><strong>Check the Enabled box next to the hard disk</strong></li>
+	<li><strong>Drag the Hard disk up in the boot order as needed, typically below the CD-ROM device</strong></li>
+	<li><strong>Click OK</strong></li>
+	<li><strong>Double click Use tablet pointer &gt; Uncheck the Enabled box &gt; Click OK</strong></li>
+	<li><strong>Click the Start button in the top right of the screen</strong></li>
+	<li><strong>Click the Console link to watch the boot process</strong></li>
+	<li><strong>Wait for the text to stop scrolling and press Enter</strong></li>
+	<li><strong>Run the following command to change/set the root password </strong>
+	<div class="codeBlock CMD"><strong>passwd</strong></div>
+	<strong> </strong></li>
+	<li><strong>Type a new root password twice to set it</strong></li>
+	<li><strong>Continue the configuration by running the following commands </strong>
+	<div class="codeBlock CMD"><strong># set the lan ip address, use something in the same subnet as your LAN<br />
+	uci set network.lan.ipaddr=&#39;10.10.27.151&#39;<br />
+	# restart network services<br />
+	service network restart<br />
+	# update openwrt packages<br />
+	opkg update<br />
+	# install the luci web ui<br />
+	opkg install luci</strong></div>
+	<strong> </strong></li>
+	<li><strong>Open a new browser tab and navigate to http://IPofVM, http://10.10.27.151 in the example</strong></li>
+	<li><strong>At the login screen, enter the username root and the password set above &gt; Click the Login button</strong></li>
+	<li><strong>Enjoy OpenWRT running in Proxmox</strong></li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
