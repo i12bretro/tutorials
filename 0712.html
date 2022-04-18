@@ -1,0 +1,90 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Installing and Running a VM on Pimox [Proxmox for ARM]</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="AARCH64,ARM,ARM Architecture,ARM CPU,ARM Processor,ARM64,ARMv8,Install Guide,Home Lab,Hypervisor,Single Board Computer,SBC,Debian,How To Install Proxmox,Proxmox Host,Proxmox On Raspberry Pi,Proxmox Step By Step,Proxmox Tutorial,Proxmox VE,Raspberry Pi,Raspberry Pi 4,RPi,Virtualization,Virtual Machine,VM,Ubuntu,SOC,System On A Chip,Proxmox,Pimox,Node,Linux,How To Install Proxmox On A Raspberry Pi,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Installing and Running a VM on Pimox [Proxmox for ARM]">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="03/28/2022 11:32:50 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Installing and Running a VM on Pimox [Proxmox for ARM]</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Creating the VM</h2>
+
+<ol>
+	<li>Plug a USB 3 drive into the Raspberry Pi to use for VM storage
+	<p>DISCLAIMER: The drive will be formatted, backup any important data</p>
+	</li>
+	<li>Open a web browser &gt; Navigate to the Pimox web UI and login</li>
+	<li>Select the Pimox node &gt; Expand Disks &gt; Click ZFS</li>
+	<li>Click the Create: ZFS button</li>
+	<li>Give the new ZFS storage a Name and select the USB 3 drive from the devices displayed &gt; Click Create</li>
+	<li>Select the local storage from the left navigation pane &gt; ISO Images &gt; Download from URL</li>
+	<li>Paste the download URL for Ubuntu Server <a href="https://cdimage.ubuntu.com/releases/20.04/release/ubuntu-20.04.4-live-server-arm64.iso" target="_blank">Download</a> &gt; Click Query URL &gt; Click Download</li>
+	<li>Right click the Pimox node name &gt; Create VM</li>
+	<li>Give the VM a unique VMID and Name&gt; Click Next</li>
+	<li>On the OS tab select Do not use any media and set the Guest OS Type to Linux and Version to 5.x - 2.6 Kernel &gt; Click Next</li>
+	<li>On the System tab set the BIOS for OVMF (UEFI) and the EFI Storage &gt; Click Next</li>
+	<li>On the Hard Disk tab set the Storage device to USB3 and set the Disk size to 16 (adjust as needed) &gt; Click Next</li>
+	<li>On the CPU tab, set the Type to host and Cores to 2 (adjust as needed) &gt; Click Next</li>
+	<li>On the Memory tab, set the Memory to 1024 (adjust as needed) &gt; Click Next</li>
+	<li>Leave the defaults on the Network tab &gt; Next</li>
+	<li>Review the summary and click Finish</li>
+	<li>Select the new VM from the left navigation menu &gt; Hardware</li>
+	<li>Click on the CD/DVD Drive to select it &gt; Click Remove at the top of the main content area &gt; Click Yes to confirm</li>
+	<li>Click Add &gt; Select CD/DVD Drive &gt; Set the Bus/Device to SCSI &gt; Select the local storage device &gt; Select the uploaded Ubuntu .iso &gt; Click Create</li>
+	<li>Click Add &gt; Serial Port &gt; Leave the Port Number 0 &gt; Click Add</li>
+	<li>Double click Display to edit it &gt; Set the Graphic card value to Serial terminal 0 &gt; Click OK</li>
+	<li>Select Options from the left navigation sub-menu</li>
+	<li>Double click Boot order to edit it &gt; Drag/drop the scsi2 device (where the Ubuntu iso is attached) to the top of the list &gt; Click OK</li>
+	<li>Click the Start button in the top right of the screen</li>
+	<li>Click the Console dropdown at the top right of the screen &gt; Select xterm.js</li>
+	<li>Wait a moment for the serial console to initialize</li>
+	<li>Follow the prompts to complete the OS installation</li>
+	<li>After the installation completes, select the Shutdown dropdown at the top of the screen &gt; Stop</li>
+	<li>Select Hardware from the left sub-navigation menu</li>
+	<li>Double click the CD/DVD Drive to edit it &gt; Select Do not use any media &gt; Click OK</li>
+	<li>Click Start at the top right of the screen to start the VM again</li>
+	<li>Reconnect to the xterm.js console</li>
+	<li>The GRUB menu should boot and start loading Ubuntu Server</li>
+</ol>
+
+<h2>Adding a Desktop Environment</h2>
+
+<ol>
+	<li>Login once Ubuntu Server has booted</li>
+	<li>Run the following commands to install lxce
+	<div class="codeBlock CMD"># update software repositories<br />
+	sudo apt update<br />
+	# install xfce4<br />
+	# When prompted, press Enter to configure a display manager &gt; Select lightdm &gt; Press Enter<br />
+	sudo apt install xfce4 -y<br />
+	# shutdown the VM<br />
+	sudo shutdown now</div>
+	</li>
+	<li>Back in the Pimox UI, navigate back to the VM Hardware settings</li>
+	<li>Double click Display to edit it &gt; Set the Graphic card value to Default &gt; Click OK</li>
+	<li>Click the Serial Port (serial0) to select it &gt; Click Remove &gt; Yes</li>
+	<li>Click the Start button in the top right of the screen</li>
+	<li>Click the normal Console display</li>
+	<li>Log back in at the xfce login screen</li>
+	<li>Welcome to ARM64 based Ubuntu Server running on Proxmox on your Raspberry Pi</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
