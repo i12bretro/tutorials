@@ -1,0 +1,95 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Run a DD-WRT VM on Proxmox VE</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="DD-WRT Proxmox Tutorial,DD-WRT Proxmox VM,How To Virtualize DD-WRT,Virtualize DD-WRT Router,Can You Virtualize DD-WRT,DD-WRT,Virtualization,Virtual,VM,Virtual DD-WRT,Virtualize DD-WRT,Server,Router,Home Server,Home Lab,Install Guide,Hypervisor,Self-Hosted,DD-WRT VM,DD-WRT Setup,DD-WRT Installation,Homelab,Security,IT Security,Proxmox 7,Homelab Ideas,Open Source,Proxmox VE,Linux,Debian,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Run a DD-WRT VM on Proxmox VE">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="03/21/2022 08:47:01 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Run a DD-WRT VM on Proxmox VE</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is DD-WRT?</h2>
+
+<blockquote>DD-WRT is a Linux based alternative OpenSource firmware suitable for a great variety of WLAN routers and embedded systems. The main emphasis lies on providing the easiest possible handling while at the same time supporting a great number of functionalities within the framework of the respective hardware platform used.<em> -<a href="https://dd-wrt.com/" target="_blank">https://dd-wrt.com/</a></em></blockquote>
+
+<h2>Creating the VM</h2>
+
+<ol>
+	<li>Open a web browser and navigate to the ProxMox web UI https://ProxMoxDNSorIP:8006/</li>
+	<li>Click the Create VM button at the top right</li>
+	<li>On the General tab, name the VM DD-WRT and set a VM ID (144 in this example) &gt; click Next</li>
+	<li>On the OS tab select Do not use any media and set the Guest OS Type to Linux and Version to 5.x - 2.6 Kernel &gt; click Next</li>
+	<li>On the System tab click Next</li>
+	<li>On the Hard Disk tab set the Disk size to 0.001 &gt; click Next</li>
+	<li>On the CPU tab set the number of CPU cores and the Type to host &gt; click Next</li>
+	<li>On the Memory tab set the amount of memory to 256 MiB and uncheck Ballooning Device &gt; click Next</li>
+	<li>On the Network tab set the Model field to Intel E1000, Uncheck the Firewall box &gt; click Next</li>
+	<li>On the Confirm tab review the settings and click Finish</li>
+	<li>Select the newly created DD-WRT VM from the left navigation panel</li>
+	<li>Select Hardware from the left sub-navigation menu</li>
+	<li>Click the Hard Disk to select it</li>
+	<li>Click the Detach button at the top of the main content window to detach the hard disk from the VM</li>
+	<li>Click the Unused disk to select it</li>
+	<li>Click the Remove button at the top of the main content window to permanently delete it</li>
+	<li>Click the CD/DVD Drive to select it</li>
+	<li>Click the Remove button at the top of the main content window to permanently delete it</li>
+</ol>
+
+<h2>Setting Up the DD-WRT Disk</h2>
+
+<ol>
+	<li>Select the Proxmox node name in the left navigation menu</li>
+	<li>Click Shell in the left sub-navigation</li>
+	<li>Run the following commands in the terminal
+	<div class="codeBlock CMD"># lookup the latest stable version number<br />
+	# download dd-wrt image<br />
+	wget https://download1.dd-wrt.com/dd-wrtv2/downloads/betas/2020/11-03-2020-r44715/x86_64/dd-wrt_x64_public_vga.image<br />
+	# rename the extracted img<br />
+	mv ./dd-wrt_x64_public_vga.image ./dd-wrt.raw<br />
+	# increase the raw disk to 512 MB<br />
+	qemu-img resize -f raw ./dd-wrt.raw 512M<br />
+	# import the disk to the dd-wrt vm<br />
+	# update the vm id and storage device as needed<br />
+	# usage: qm importdisk #vm id# #source file# #target storage#<vmid><storage><br />
+	qm importdisk 144 dd-wrt.raw HDD_500GB</storage></vmid></div>
+	</li>
+	<li>Once the disk import completes, select the DD-WRT VM from the left navigation menu &gt; Hardware</li>
+	<li>Double click the Unused Disk &gt; Set the Bus/Device to SATA  &gt; Click the Add button</li>
+	<li>Select Options from the left sub-navigation menu</li>
+	<li>Double click Boot Order</li>
+	<li>Check the Enabled box next to the hard disk</li>
+	<li>Drag the Hard disk up to the top of the boot order &gt; Click OK</li>
+	<li>Double click Use tablet pointer &gt; Uncheck the Enabled box &gt; Click OK</li>
+	<li>Click the Start button in the top right of the screen</li>
+	<li>Click the Console link to watch the boot process</li>
+	<li>Wait for the text to stop scrolling and press Enter</li>
+	<li>Login with username root and password admin</li>
+	<li>Run the following commands to set the local IP address, network mask and gateway (update with IPs in your local subnet)
+	<div class="codeBlock CMD"># set the bridge IP and netmask<br />
+	ifconfig br0 10.10.27.155 netmask 255.255.255.0<br />
+	# set the default gateway<br />
+	add route default gw 10.10.27.27</div>
+	</li>
+	<li>Open a new browser tab and navigate to http://IPofVM, http://10.10.27.155 in the example</li>
+	<li>At the login screen, enter the username root and the password set above &gt; Click the Login button</li>
+	<li>Enjoy DD-WRT running in Proxmox</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
