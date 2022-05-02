@@ -1,0 +1,51 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Proxmox SSL Certificates with Let's Encrypt</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="How To Setup Proxmox SSL,How To Secure Proxmox With Let's Encrypt,Home Lab,Hypervisor,Self-Hosted,Let's Encrypt,Linux,Proxmox,Proxmox VE,Proxmox Tutorial,Web Based Tools,VM,Virtual Machine,Virtualization,SSL,SSL Certificates,Replace Proxmox SSL Certificates,Proxmox Host,Proxmox Node,PKI,Network,Home Networking,HTTPS,Generating SSL Certificates,Debian,Encryption,Certificates,Certificate Authority,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Proxmox SSL Certificates with Let's Encrypt">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="03/28/2022 02:52:26 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Proxmox SSL Certificates with Let's Encrypt</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Let&#39;s Encrypt?</h2>
+
+<blockquote><em>Let&rsquo;s Encrypt is a free, automated, and open certificate authority (CA), run for the public&rsquo;s benefit. It is a service provided by the Internet Security Research Group (ISRG).<br />
+<br />
+We give people the digital certificates they need in order to enable HTTPS (SSL/TLS) for websites, for free, in the most user-friendly way we can. We do this because we want to create a more secure and privacy-respecting Web. -<a href="https://letsencrypt.org/about/" target="_blank">https://letsencrypt.org/about/</a></em></blockquote>
+
+<h2>Enabling SSL Using Let&#39;s Encrypt</h2>
+
+<p><em>NOTE: In order for Let&#39;s Encrypt to verify ownership of the DNS name, the host certbot is running from must be accessible via port 80 (http) or port 443 (https). For homelab users, this will normally involve port forwarding from the router to the certbot host, which is beyond the scope of this tutorial. Just note, I have forwarded port 80 on my router to the host running certbot for this handshake to complete successfully.</em></p>
+
+<ol>
+	<li>Log into the Proxmox VE web UI</li>
+	<li>Expand the Proxmox node &gt; Click Certificates</li>
+	<li>Under the ACME heading click the Add ACME Account button</li>
+	<li>Enter an E-mail address and check the Accept TOS box &gt; Click Register</li>
+	<li>Click the Add button</li>
+	<li>Enter the Domain to be used for the certificate &gt; Click Create</li>
+	<li>Click the Domain in the list to select it &gt; Click Order Certificates Now </li>
+	<li>If DNS and port forwarding are setup correctly, ACME will order the new certificates, apply them and restart the pveproxy service</li>
+	<li>Close out of the Proxmox web UI and relaunch it</li>
+	<li>Verify the Let&#39;s Encrypt SSL certificates are being used</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
