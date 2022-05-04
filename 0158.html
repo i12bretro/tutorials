@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Add Debian/Ubuntu Linux Device to Windows Active Directory">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="03/26/2022 12:58:00 PM" />
+        <meta name="revised" content="05/04/2022 10:09:24 AM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -26,7 +26,7 @@
 
 <ol>
 	<li>Log into the Debian device and run the following commands in terminal:
-	<div class="codeBlock">sudo apt-get update<br />
+	<div class="codeBlock">sudo apt update<br />
 	# set the fully qualified host name<br />
 	sudo hostnamectl set-hostname nettools.i12bretro.local<br />
 	# confirm or add domain controller to DNS entries<br />
@@ -39,14 +39,14 @@
 	sudo realm discover i12bretro.local</div>
 	</li>
 	<li>Paste the following text into /etc/krb5.conf
-	<div class="codeBlock">[libdefaults]<br />
-	 dns_lookup_realm = false<br />
-	 ticket_lifetime = 24h<br />
-	 renew_lifetime = 7d<br />
-	 forwardable = true<br />
-	 rdns = false<br />
-	 default_realm = I12BRETRO.LOCAL<br />
-	 default_ccache_name = KEYRING:persistent:%{uid}</div>
+	<p>[libdefaults]<br />
+	dns_lookup_realm = false<br />
+	ticket_lifetime = 24h<br />
+	renew_lifetime = 7d<br />
+	forwardable = true<br />
+	rdns = false<br />
+	default_realm = I12BRETRO.LOCAL<br />
+	default_ccache_name = KEYRING:persistent:%{uid}</p>
 	</li>
 	<li>Press CTRL+O, Enter, CTRL+X to write the changes to /etc/krb5.conf</li>
 	<li>Continue with the following commands in terminal:
@@ -55,14 +55,13 @@
 	sudo realm list</div>
 	</li>
 	<li>Paste the following lines into terminal together to enable automatically creating user home directories:
-	<div class="codeBlock">sudo bash -c &quot;cat &gt; /usr/share/pam-configs/mkhomedir&quot; &lt;&lt;EOF<br />
-	Name: activate mkhomedir<br />
+	<p>sudo bash -c &quot;cat &gt; /usr/share/pam-configs/mkhomedir&quot; &lt;&lt;EOF Name: activate mkhomedir<br />
 	Default: yes<br />
 	Priority: 900<br />
 	Session-Type: Additional<br />
 	Session:<br />
 	required pam_mkhomedir.so umask=0022 skel=/etc/skel<br />
-	EOF</div>
+	EOF</p>
 	</li>
 	<li>Continue with the following commands in terminal:
 	<div class="codeBlock">sudo pam-auth-update</div>
@@ -76,16 +75,16 @@
 	# add everyone<br />
 	sudo realm permit --all<br />
 	# deny everyone<br />
-	sudo realm  deny --all</div>
+	sudo realm deny --all</div>
 	</li>
 	<li>Similarly, run the following command to edit /etc/sudoers.d/domain_admins to add specific users or groups to the sudoers file:
 	<div class="codeBlock">sudo nano /etc/sudoers.d/domain_admins<br />
 	# add specific user(s )<br />
-	user1@i12bretro.local     ALL=(ALL)   ALL<br />
-	user2@i12bretro.local     ALL=(ALL)   ALL<br />
+	user1@i12bretro.local ALL=(ALL) ALL<br />
+	user2@i12bretro.local ALL=(ALL) ALL<br />
 	# add specific group(s)<br />
-	%LinuxUsers@i12bretro.local       ALL=(ALL)   ALL<br />
-	%Linux\ Admins@i12bretro.local     ALL=(ALL)   ALL</div>
+	%LinuxUsers@i12bretro.local ALL=(ALL) ALL<br />
+	%Linux\ Admins@i12bretro.local ALL=(ALL) ALL</div>
 	</li>
 	<li>Press CTRL+O, Enter, CTRL+X to write the changes to /etc/sudoers.d/domain_admins</li>
 </ol>
