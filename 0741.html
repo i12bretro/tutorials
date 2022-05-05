@@ -1,0 +1,59 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Transform Armbian Into A Raspberry Pi Imposter [Install PIXEL Desktop]</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Install Guide,Raspberry Pi Alternative,Single Board Computer,SBC,AARCH64,ARM,ARM Architecture,ARM CPU,ARM Processor,ARM64,ARMv8,Amlogic,Android TV Box,Armbian,Debian,Desktop,Desktop Environment,System On A Chip,Single Board Computer AARCH64,SOC,Raspbian Theme,Raspberry Pi OS Theme,Linux,Raspberry Pi,LXDE,Raspbian,PIXEL Desktop,Raspberry Pi Imposter,Raspberry Pi Lookaliike,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Transform Armbian Into A Raspberry Pi Imposter [Install PIXEL Desktop]">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="05/01/2022 05:38:34 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Transform Armbian Into A Raspberry Pi Imposter [Install PIXEL Desktop]</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is PIXEL?</h2>
+
+<blockquote>PIXEL is the default desktop environment and theme used by Raspberry Pi OS. It officially stands for &quot;<strong>P</strong>i <strong>I</strong>mproved <strong>X</strong>windows <strong>E</strong>nvironment, <strong>L</strong>ightweight&quot; and is based on LXDE<em>. -<a href="https://www.raspberrypi.com/news/introducing-pixel/" target="_blank">https://www.raspberrypi.com/news/introducing-pixel/</a></em></blockquote>
+
+<ol>
+	<li>Log into the Armbian device</li>
+	<li>Run the following commands in a terminal
+	<div class="codeBlock"># update repositories<br />
+	sudo apt update<br />
+	# add the raspberry pi os gpg key<br />
+	wget -O - http://archive.raspberrypi.org/debian/raspberrypi.gpg.key | sudo apt-key add -<br />
+	# add the raspberry pi os apt repository<br />
+	echo deb http://archive.raspberrypi.org/debian/ $(lsb_release -cs) main | sudo tee /etc/apt/sources.list.d/raspios.list<br />
+	# update repositories<br />
+	sudo apt update<br />
+	# install pixel<br />
+	sudo apt install lxpanel pcmanfm openbox xserver-xorg x11-xserver-utils policykit-1 lightdm raspberrypi-sys-mods zenity libglib2.0-bin desktop-file-utils lxsession adduser mutter xdg-user-dirs raspi-config xserver-xorg-video-fbturbo fonts-piboto pipanel lxinput pi-greeter rpd-plym-splash rpd-wallpaper pishutdown scrot gtk2-engines-pixbuf gtk2-engines-clearlookspix gnome-icon-theme pixflat-icons lxplug-volumepulse lxplug-network lxplug-bluetooth lxplug-ejecter lxplug-ptbatt rc-gui gtk2-engines-pixflat lxplug-cputemp lxplug-magnifier rp-bookshelf agnostics gui-pkinst cups system-config-printer pi-printer-support lxplug-updater raspberrypi-ui-mods -y</div>
+	</li>
+	<li>After the installation completes, reboot the system</li>
+	<li>Upon boot, the familiar Raspberry Pi login screen should be display</li>
+	<li>Log back in</li>
+	<li>Run the following commands in a terminal
+	<div class="codeBlock"># uninstall xfce<br />
+	sudo apt remove xfce* --purge -y<br />
+	# reboot<br />
+	sudo reboot now</div>
+	</li>
+	<li>Log back in</li>
+	<li>Welcome to the PIXEL desktop experience on Armbian</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
