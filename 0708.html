@@ -1,0 +1,126 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install UVdesk on Linux [Opensource Helpdesk Ticketing System]</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Open Source Helpdesk,Free Helpdesk,Ticketing System,FOSS,UVdesk Open Source Helpdesk,Enterprise Helpdesk,Open Source,Linux,Debian,Open Source Software,UVdesk,UV Desk,Help Desk,Helpdesk,Support,Ticket,IT Ticketing System,PHP Based Ticketing System,Open Source Helpdesk System,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install UVdesk on Linux [Opensource Helpdesk Ticketing System]">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="05/03/2022 01:10:40 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install UVdesk on Linux [Opensource Helpdesk Ticketing System]</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is UVdesk?</h2>
+
+<blockquote><em>Build on top of symfony and backbone.js, uvdesk community is a service oriented, event driven extensible opensource helpdesk system that can be used by your organization to provide efficient support to your clients effortlessly whichever way you imagine. -<a href="https://github.com/uvdesk/community-skeleton#about" target="_blank">https://github.com/uvdesk/community-skeleton#about</a></em></blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal window:
+	<div class="codeBlock"># update software respositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install prerequisites<br />
+	sudo apt install curl wget zip composer -y<br />
+	# install Apache HTTPD and MySQL<br />
+	sudo apt install apache2 mariadb-server mariadb-client -y<br />
+	# install PHP components<br />
+	sudo apt install php7.4 php7.4-curl php7.4-intl php7.4-gd php7.4-dom php7.4-iconv php7.4-xsl php7.4-mbstring php7.4-ctype php7.4-zip php7.4-pdo php7.4-xml php7.4-bz2 php7.4-calendar php7.4-exif php7.4-fileinfo php7.4-json php7.4-mysqli php7.4-mysql php7.4-posix php7.4-tokenizer php7.4-xmlwriter php7.4-xmlreader php7.4-phar php7.4-soap php7.4-mysql php7.4-fpm libapache2-mod-php7.4 php7.4-gmp php7.4-bcmath php7.4-apcu php7.4-redis php7.4-imagick php7.4-imap php7.4-xdebug php7.4-mailparse -y<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type N and press Enter to not switch to unix socket authentication</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the UVdesk database and database user
+	<div class="codeBlock">CREATE DATABASE uvdesk;<br />
+	GRANT ALL ON uvdesk.* to &#39;uvdesk_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;uvD3$k!!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># download latest uvdesk release<br />
+	wget -O uvdesk.zip https://cdn.uvdesk.com/uvdesk/downloads/opensource/uvdesk-community-current-stable.zip<br />
+	# extract the downloaded zip to /var/www<br />
+	sudo unzip ./uvdesk.zip -d /var/www/<br />
+	# rename the extracted folder<br />
+	sudo mv /var/www/uvdesk* /var/www/uvdesk<br />
+	# set the owner of the uvdesk directory<br />
+	sudo chown -R www-data:www-data /var/www/uvdesk<br />
+	# create uvdesk apache configuration<br />
+	sudo nano /etc/apache2/sites-available/uvdesk.conf</div>
+	</li>
+	<li>Paste the following configuration into uvdesk.conf
+	<p>Alias /uvdesk &quot;/var/www/uvdesk/public&quot;<br />
+	&lt;Directory /var/www/uvdesk/public&gt;<br />
+	Require all granted<br />
+	Options Indexes FollowSymLinks<br />
+	AllowOverride All<br />
+	Order allow,deny<br />
+	Allow from all<br />
+	&lt;/Directory&gt;</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Run the following command to enable the UVdesk site
+	<div class="codeBlock"># enable rewrite module<br />
+	sudo a2enmod rewrite<br />
+	# enable the uvdesk site<br />
+	sudo a2ensite uvdesk<br />
+	# restart the apache2 service<br />
+	sudo systemctl restart apache2</div>
+	</li>
+</ol>
+
+<h2>UVdesk Web Installer</h2>
+
+<ol>
+	<li>Open a web browser and navigate to http://DNSorIP/uvdesk</li>
+	<li>The UVdesk web installer should be load</li>
+	<li>Click the Let&#39;s Begin button</li>
+	<li>Click the Proceed button</li>
+	<li>Complete the Database Configuration form as follows:
+	<p>Server: 127.0.0.1<br />
+	Port: 3306<br />
+	Username: uvdesk_rw<br />
+	Password: uvD3$k!!<br />
+	Database: uvdesk</p>
+	</li>
+	<li>Click the Proceed button</li>
+	<li>Complete the Super Admin Account form by entering a Name, Email, and Password</li>
+	<li>Click the Proceed button</li>
+	<li>Click the Proceed button at the Website Configuration screen</li>
+	<li>Click Install Now</li>
+	<li>After the installation completes, click the Admin Panel button</li>
+	<li>Login with the admin email address and password created earlier</li>
+	<li>Welcome to UVdesk</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
