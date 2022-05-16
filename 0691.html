@@ -1,0 +1,67 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Scheduling VM Backups with Proxmox</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Hypervisor,Home Lab,Debian,Virtualization,Virtual Machine,VM,Self-Hosted,Linux,Proxmox,Proxmox Host,Proxmox Node,Proxmox Step By Step,Proxmox Tutorial,Proxmox VE,Scheduling Backups In Proxmox,VM Backups,Backing Up VMs In Proxmox,Backups,Scheduled Backups,Backup Job,Proxmox Backup Job,Proxmox VM Backups,Backing Up Proxmox Virtual Machines,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Scheduling VM Backups with Proxmox">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="03/28/2022 04:22:18 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Scheduling VM Backups with Proxmox</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <p>For reference, I currently run a weekly stop backup on Sundays at 3 AM with a retention of 1. These backups are then copied to network attached storage. I only backup the OS, TPM and EFI disks and have disabled backing up of physical disks that I passed to the VMs. The data on these physical disks is backed up via other means and removing them from the backup reduces the amount of downtime required. </p>
+
+<ol>
+	<li>Log into the Proxmox web UI</li>
+	<li>Select Datacenter from the left navigation menu</li>
+	<li>Select Backup from the left sub-navigation menu</li>
+	<li>Click the Add button</li>
+	<li>Complete the form to configure the backup schedule<br />
+	<span style="font-size:14px;">NOTES: The Schedule field can be input manually, for example fri 03:00<br />
+	A quick overview of the different backup modes from the Proxmox documentation</span><span style="display: none;"> </span>
+	<p><span style="font-size:20px;"><u>stop mode</u></span><br />
+	This mode provides the highest consistency of the backup, at the cost of a short downtime in the VM operation. It works by executing an orderly shutdown of the VM, and then runs a background Qemu process to backup the VM data. After the backup is started, the VM goes to full operation mode if it was previously running. Consistency is guaranteed by using the live backup feature.</p>
+
+	<p><u><span style="font-size:20px;">suspend mode</span></u><br />
+	This mode is provided for compatibility reason, and suspends the VM before calling the snapshot mode. Since suspending the VM results in a longer downtime and does not necessarily improve the data consistency, the use of the snapshot mode is recommended instead.</p>
+
+	<p><u><span style="font-size:20px;">snapshot mode</span></u><br />
+	This mode provides the lowest operation downtime, at the cost of a small inconsistency risk. It works by performing a Proxmox VE live backup, in which data blocks are copied while the VM is running. If the guest agent is enabled (agent: 1) and running, it calls guest-fsfreeze-freeze and guest-fsfreeze-thaw to improve consistency.</p>
+	</li>
+	<li>After completing the form, click Retention option at the top of the form</li>
+	<li>Setup how backup retention should be configured</li>
+	<li>Click Create</li>
+</ol>
+
+<h2>Removing Disks From the Backup (As needed)</h2>
+
+<p>To remove disks from the scheduled backup, for instance, to not include physical hard disks that have been passed through to a VM, do the following</p>
+
+<ol>
+	<li>Expand the Node in the left navigation menu &gt; Select the VM </li>
+	<li>Select Hardware from the left sub-navigation menu</li>
+	<li>Double click the hard disk to remove from the backup &gt; Uncheck the Backup option &gt; Click OK</li>
+	<li>Go back to Datacenter &gt; Backup</li>
+	<li>Click the previously set up backup job to select it &gt; Click Job Detail above the backup job listing</li>
+	<li>The Job Detail listing should now show that the requested disk(s) will no longer be included in the backup</li>
+</ol>
+
+<p>Documentation: <a href="https://pve.proxmox.com/wiki/Backup_and_Restore" target="_blank">https://pve.proxmox.com/wiki/Backup_and_Restore</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
