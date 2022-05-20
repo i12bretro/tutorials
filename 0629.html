@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Running a Mac OS 12 Monterey VM in Virtualbox">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="05/18/2022 09:50:59 AM" />
+        <meta name="revised" content="05/20/2022 12:51:33 PM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -52,12 +52,13 @@
 	<li>Click OK</li>
 	<li>Right Click the Start Button &gt; Command Prompt (Admin) &gt; Paste in the following commands
 	<div class="codeBlock masked">cd &quot;%programfiles%\Oracle\VirtualBox\&quot;<br />
-	VBoxManage.exe modifyvm &quot;Mac OS 12&quot; &ndash;-cpuidset 00000001 000106e5 00100800 0098e3fd bfebfbff<br />
+	VBoxManage.exe modifyvm &quot;Mac OS 12&quot; --cpuid-set 00000001 000106e5 00100800 0098e3fd bfebfbff<br />
 	VBoxManage setextradata &quot;Mac OS 12&quot; &quot;VBoxInternal/Devices/efi/0/Config/DmiSystemProduct&quot; &quot;MacBookPro15,1&quot;<br />
 	VBoxManage setextradata &quot;Mac OS 12&quot; &quot;VBoxInternal/Devices/efi/0/Config/DmiSystemVersion&quot; &quot;1.0&quot;<br />
 	VBoxManage setextradata &quot;Mac OS 12&quot; &quot;VBoxInternal/Devices/efi/0/Config/DmiBoardProduct&quot; &quot;Mac-551B86E5744E2388&quot;<br />
 	VBoxManage setextradata &quot;Mac OS 12&quot; &quot;VBoxInternal/Devices/smc/0/Config/DeviceKey&quot; &quot;ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc&quot;<br />
-	VBoxManage setextradata &quot;Mac OS 12&quot; &quot;VBoxInternal/Devices/smc/0/Config/GetKeyFromRealSMC&quot; 1</div>
+	VBoxManage setextradata &quot;Mac OS 12&quot; &quot;VBoxInternal/Devices/smc/0/Config/GetKeyFromRealSMC&quot; 1<br />
+	VBoxManage setextradata &quot;Mac OS 12&quot; &quot;VBoxInternal/TM/TSCMode&quot; &quot;RealTSCOffset&quot;</div>
 	</li>
 	<li>If you are running an AMD processor also run the following command:
 	<div class="codeBlock">VBoxManage modifyvm &quot;Mac OS 12&quot; --cpu-profile &quot;Intel Core i7-6700K&quot;</div>
