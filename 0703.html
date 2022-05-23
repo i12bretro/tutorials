@@ -1,0 +1,98 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Running OPNSense Firewall and Router in a Proxmox VM</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="OPNSense Proxmox Tutorial,OPNSense Proxmox VM,How To Virtualize OPNSense,Virtualize OPNSense Router,Can You Virtualize OPNSense,OPNSense,Virtualization,Virtual,VM,Virtual OPNSense,Virtualize OPNSense,Firewall,Server,Router,Home Server,Home Lab,Install Guide,Hypervisor,Self-Hosted,OPNSense VM,OPNSense Setup,OPNSense Installation,Homelab,Security,IT Security,Proxmox 7,Homelab Ideas,Open Source,Proxmox VE,Linux,Debian,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Running OPNSense Firewall and Router in a Proxmox VM">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="03/21/2022 08:40:03 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Running OPNSense Firewall and Router in a Proxmox VM</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is OPNSense?</h2>
+
+<blockquote><em>OPNsense is an open source, easy-to-use and easy-to-build FreeBSD based firewall and routing platform. OPNsense includes most of the features available in expensive commercial firewalls, and more in many cases. It brings the rich feature set of commercial offerings with the benefits of open and verifiable sources. -<a href="https://opnsense.org/about/about-opnsense/" target="_blank">https://opnsense.org/about/about-opnsense/</a></em></blockquote>
+
+<h2>Creating the OPNSense VM</h2>
+
+<ol>
+	<li>Download the OPNSense AMD64 DVD .iso <a href="https://opnsense.org/download/" target="_blank">Download</a></li>
+	<li>Extract the downloaded OPNSense .bz2</li>
+	<li>Log into the ProxMox web UI</li>
+	<li>Select a storage from the left navigation pane to upload the .iso to</li>
+	<li>Select ISO Images in the left sub-navigation pane</li>
+	<li>Upload the OPNSense .iso file to the ProxMox ISO image library</li>
+	<li>Right click the ProxMox node name &gt; Create VM</li>
+	<li>Type OPNSense in the name field and set a unique VM ID &gt; Next</li>
+	<li>On the OS tab, set the Type field to Linux, Version to 5.x - 2.6 Kernel and select the OPNSense .iso in the ISO Image field &gt; Next</li>
+	<li>On the System tab, leave the defaults &gt; Next</li>
+	<li>On the Hard Disk tab, set the Disk size field to 8 &gt; Next</li>
+	<li>On the CPU tab, set Cores field to 2, Type field to Host &gt; Next</li>
+	<li>On the Memory tab, set the Memory to 2048 and Uncheck Ballooning Device &gt; Next</li>
+	<li>On the Network tab, set the Model field to VirtIO (paravirtualized), Uncheck the Firewall box &gt; Next</li>
+	<li>Verify the summary and click Finish</li>
+	<li>Click the OPNSense VM in the left navigation menu &gt; Select Hardware from the left sub-navigation menu</li>
+	<li>Click Add &gt; Network Device</li>
+	<li>Set the Model field to VirtIO (paravirtualized), Uncheck the Firewall box &gt; Click Add</li>
+	<li>Select Options from the left sub-navigation menu &gt; Double click Use tablet for pointer &gt; Uncheck the Enabled box &gt; Click OK</li>
+	<li>Right click the OPNSense VM in the left navigation pane &gt; Start</li>
+	<li>Click console in the left sub-navigation menu</li>
+	<li>Press Enter at the Welcome screen</li>
+	<li>Wait for the login prompt to display</li>
+	<li>Login with the username installer and password opnsense</li>
+	<li>Select a keymap &gt; Press Enter</li>
+	<li>Select Install (UFS) &gt; Press Enter</li>
+	<li>Select the QEMU HARDDISK option &gt; Press Enter</li>
+	<li>Select Yes to confirm destroying the contents of the disk &gt; Press Enter</li>
+	<li>Wait for OPNSense to copy files and install</li>
+	<li>Press Enter to Change Root Password</li>
+	<li>Type and re-type a new root password &gt; Press Enter</li>
+	<li>Select Complete Install &gt; Press Enter</li>
+	<li>Select Shutdown &gt; Stop to power off the VM</li>
+	<li>Navigate back to the Hardware options</li>
+	<li>Double click the CD/DVD Drive &gt; Select Do not use any media &gt; Click OK</li>
+	<li>Right click the OPNSense VM in the left navigation pane &gt; Start</li>
+	<li>Click console in the left sub-navigation menu</li>
+	<li>Welcome to the OPNSense terminal</li>
+</ol>
+
+<h2>Configuring Network Interfaces and Web UI</h2>
+
+<ol>
+	<li>At the login prompt, login with username root and the root password set earlier</li>
+	<li>At the OPNSense menu, select Set interface IP address by typing 2 and pressing Enter</li>
+	<li>Enter the number that corresponds to the LAN interface &gt; Press Enter</li>
+	<li>At the DHCP prompt type n &gt; Press Enter</li>
+	<li>Enter a LAN IP address on the same subnet as your LAN</li>
+	<li>At the bit count prompt type 24 &gt; Press Enter</li>
+	<li>Leave the IPv4 upstream gateway blank press Enter</li>
+	<li>At the IPv6 WAN tracking type n &gt; Press Enter</li>
+	<li>At the IPv6 DHCP prompt type n &gt; Press Enter</li>
+	<li>Leave the IPv6 address blank and press Enter</li>
+	<li>At the DHCP server prompt type n &gt; Press Enter</li>
+	<li>At the revert to HTTP prompt type y &gt; Press Enter</li>
+	<li>At the Restore web GUI access defaults type y &gt; Press Enter</li>
+	<li>The http address of the OPNSense Web UI will be displayed</li>
+	<li>Minimize the OPNSense VM and open a web browser</li>
+	<li>Navigate to the web UI http address</li>
+	<li>Log into the web UI with the username root and the root password set earlier</li>
+	<li>Enjoy exploring OPNSense</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
