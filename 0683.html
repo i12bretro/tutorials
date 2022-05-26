@@ -1,0 +1,68 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Persistently Mount a SAMBA/CIFS Share in Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Linux,Debian,Samba,SMB,CIFS,Persistent,Mount Samba Share,FSTab,Network Share,Linux Tips,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Persistently Mount a SAMBA/CIFS Share in Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="05/01/2022 08:10:38 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Persistently Mount a SAMBA/CIFS Share in Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in terminal:
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install cifs utilities<br />
+	sudo apt install cifs-utils -y<br />
+	# create a hidden smb credentials file<br />
+	nano ~/.myshare.smb</div>
+	</li>
+	<li>Paste the following into the .smb, updating the credentials as needed to authenticate to the share
+	<p>user=LinuxShare<br />
+	password=SomethingSecure!!<br />
+	domain=i12bretro.local</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following commands in the terminal
+	<div class="codeBlock"># create a folder in /media to mount the share<br />
+	sudo mkdir /media/myshare -p<br />
+	# edit the fstab file<br />
+	sudo nano /etc/fstab</div>
+	</li>
+	<li>Add a line to the bottom of fstab with the following, updating the server, share and host file location as needed<br />
+	NOTE: fstab entries are formatted as //&lt;%server%&gt;/&lt;%share%&gt; &lt;%mount location%&gt; &lt;%filesystem type%&gt; &lt;%mount options%&gt;
+	<p># windows share on i12bretrodc<br />
+	//i12bretrodc/myshare /media/myshare cifs uid=0,credentials=/home/i12bretro/.myshare.smb,iocharset=utf8,vers=3.0,noperm 0 0</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following commands in the terminal
+	<div class="codeBlock"># remount filesystems listed in fstab<br />
+	sudo mount -a<br />
+	# change directory to the share mount point<br />
+	cd /media/myshare<br />
+	# reboot to test the share is mounted on started<br />
+	sudo reboot now</div>
+	</li>
+</ol>
+
+<p>Documentation: <a href="https://man7.org/linux/man-pages/man8/mount.8.html" target="_blank">https://man7.org/linux/man-pages/man8/mount.8.html</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
