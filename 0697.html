@@ -1,0 +1,55 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install PowerShell on MacOS</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Install Guide,PowerShell,Scripting,Apple MacOS,MacOS,How To Install PowerShell On MacOS,PowerShell Scripting,PowerShell On MacOS,Microsoft,System Administration,Terminal,Command Line,CLI,Microsoft PowerShell,Catalina,Big Sur,Monterey,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install PowerShell on MacOS">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="05/15/2022 08:59:40 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install PowerShell on MacOS</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is PowerShell?</h2>
+
+<blockquote><em>PowerShell is a cross-platform task automation solution made up of a command-line shell, a scripting language, and a configuration management framework. PowerShell runs on Windows, Linux, and macOS. -<a href="https://docs.microsoft.com/en-us/powershell/scripting/overview" target="_blank">https://docs.microsoft.com/en-us/powershell/scripting/overview</a></em></blockquote>
+
+<ol>
+	<li>Start LaunchPad from the dock</li>
+	<li>Search terminal &gt; Click Terminal to launch it</li>
+	<li>Run the following commands in the terminal window
+	<div class="codeBlock CMD"># install command line tools<br />
+	xcode-select --install<br />
+	# if prompted, click install and agree to install command line tools<br />
+	# install homebrew<br />
+	/bin/bash -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&quot;<br />
+	# enter your password<br />
+	# press Enter to continue<br />
+	# install openssl<br />
+	brew install openssl<br />
+	# install powershell<br />
+	brew install --cask powershell<br />
+	# enter your password when prompted<br />
+	# launch powershell<br />
+	pwsh</div>
+	</li>
+</ol>
+
+<p>Source: <a href="https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-macos" target="_blank">https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-macos</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
