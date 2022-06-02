@@ -1,0 +1,125 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Roll Your Own LAN Instant Messaging Platform with OpenFire on Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Install Guide,Self-Hosted,Web Based,Web Based Tools,Chat,Chat Server,Host Your Own IM Server,How To Host Instant Messenger Server,How To Install OpenFire XMPP Server On Linux,IM,Install OpenFire On Linux,Install XMPP Server On Linux,Instant Messaging,Java,LAN,Linux,Office Instant Messenger,OpenFire,OpenFire Server,Pidgin,Secure Communication,XMPP,Home Lab Ideas,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Roll Your Own LAN Instant Messaging Platform with OpenFire on Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="04/03/2022 05:59:48 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Roll Your Own LAN Instant Messaging Platform with OpenFire on Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is OpenFire?</h2>
+
+<blockquote><em>Openfire is a real time collaboration (RTC) server licensed under the Open Source Apache License. It uses the only widely adopted open protocol for instant messaging, XMPP Openfire is incredibly easy to setup and administer, but offers rock-solid security and performance. -<a href="https://igniterealtime.org/projects/openfire/" target="_blank">https://igniterealtime.org/projects/openfire/</a></em></blockquote>
+
+<h2>OpenFire Download and Installation</h2>
+
+<ol>
+	<li>Log into the Linux based device</li>
+	<li>Run the following commands in the terminal
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install openjdk<br />
+	sudo apt install default-jdk -y<br />
+	# install MySQL<br />
+	sudo apt install mariadb-server mariadb-client -y<br />
+	# lookup the latest .deb download URL<br />
+	regex=&#39;&quot;&gt;(openfire_[^/]*_all\.deb)&lt;\/a&gt;&#39; &amp;&amp; response=$(curl -s https://www.igniterealtime.org/downloads/) &amp;&amp; [[ $response =~ $regex ]] &amp;&amp; downloadURL=&quot;https://www.igniterealtime.org/downloadServlet?filename=openfire/${BASH_REMATCH[1]}&quot;<br />
+	# download openfire<br />
+	wget -O OpenFire.deb $downloadURL<br />
+	# install openfire<br />
+	sudo dpkg -i ./OpenFire.deb<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type N and press Enter to switch to unix_socket authentication</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the OpenFire database and database user
+	<div class="codeBlock">CREATE DATABASE openfire;<br />
+	GRANT ALL ON openfire.* TO &#39;openfire_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;Op3nF1re&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	use openfire;<br />
+	source /usr/share/openfire/resources/database/openfire_mysql.sql;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP:9090/setup/index.jsp</li>
+	<li>Select a language &gt; Click Continue</li>
+	<li>Set the XMPP domain name and input the server fully qualified domain name &gt; Click Continue</li>
+	<li>Select Standard Database Connection &gt; Click Continue</li>
+	<li>Complete the Database Settings form as follows
+	<p>Database Driver Presets: MySQL<br />
+	JDBC Driver Class: com.mysql.jdbc.Driver<br />
+	Database URL: jdbc:mysql://127.0.0.1/openfire?useUnicode=true&amp;characterEncoding=UTF-8&amp;characterSetResults=UTF-8<br />
+	Username: openfire_rw<br />
+	Password: Op3nF1re</p>
+	</li>
+	<li>Click Continue</li>
+	<li>Select Default on the Profile Settings page &gt; Click Continue</li>
+	<li>Input an admin email address and password &gt; Click Continue</li>
+	<li>Click the Login to the admin console button</li>
+	<li>Login with username admin and the password created previously</li>
+	<li>Click the Users/Groups tab</li>
+	<li>Click Create New User in the left navigation menu</li>
+	<li>Create a username and password for the new user</li>
+	<li>Follow the steps to create as many users as needed, at least 2 are needed for testing</li>
+</ol>
+
+<h2>Setting Up A XMPP Client</h2>
+
+<ol>
+	<li>Run the following commands in the open terminal window
+	<div class="codeBlock"># install pidgin<br />
+	sudo apt install pidgin -y</div>
+	</li>
+	<li>Launch Pidgin</li>
+	<li>Click Add...</li>
+	<li>Select XMPP from the protocol dropdown</li>
+	<li>Input the first username created above along with the XMPP domain setup in OpenFire and the user&#39;s password</li>
+	<li>Click the Advanced tab &gt; Select Use encryption if available from the Connection security dropdown</li>
+	<li>Enter the OpenFire fully qualified server name in the server field</li>
+	<li>Click the Add button</li>
+	<li>Click Accept on the self-signed certificate popup</li>
+	<li>Install and launch Pidgin on a second device</li>
+	<li>Click Add...</li>
+	<li>Select XMPP from the protocol dropdown</li>
+	<li>Input the second username created above along with the XMPP domain setup in OpenFire and the user&#39;s password</li>
+	<li>Click the Advanced tab &gt; Select Use encryption if available from the Connection security dropdown</li>
+	<li>Enter the OpenFire fully qualified server name in the server field</li>
+	<li>Click the Add button</li>
+	<li>Click Accept on the self-signed certificate popup</li>
+	<li>From one of the devices, select Buddies &gt; Add Buddy</li>
+	<li>Input the opposite devices username</li>
+	<li>On the second device accept the message request and the two devices should be able to send and receive instant messages using the OpenFire XMPP server</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
