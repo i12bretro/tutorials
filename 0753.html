@@ -1,0 +1,56 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Raspberry Pi 4 Raspberry Pi OS (Raspbian) 64 bit vs 32 bit</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="System On A Chip,Speed Test,Single Board Computer,SOC,SBC,Raspbian,Raspberry Pi OS,Raspberry Pi Benchmarks,Raspberry Pi 4 32-Bit Vs 64-Bit,Raspberry Pi 4,Raspberry Pi,Linux,Head To Head Comparison,Head To Head,Debian,CPU Comparison,CPU Benchmarks,Benchmark Shootout,Benchmark,Benchmark Comparison,ARMv8,ARM Processor,ARM CPU,ARM Architecture,AARCH64,32-Bit Vs 64-Bit,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Raspberry Pi 4 Raspberry Pi OS (Raspbian) 64 bit vs 32 bit">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="06/02/2022 06:03:56 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Raspberry Pi 4 Raspberry Pi OS (Raspbian) 64 bit vs 32 bit</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>The Device</h2>
+
+<p>The Raspberry Pi 4 runs a 1.5 GHz Quad Core Broadcom BCM2711 64-bit CPU with 4GB LPDDR4 RAM.</p>
+
+<h2>The Benchmarks</h2>
+
+<p><strong>7-Zip</strong> - The 7-zip benchmark tests compression and decompression using the LZMA method. Results are shown as a rating in MIPS (million instructions per second). The rating value is calculated from the measured CPU speed and it is normalized with Intel Core 2 Duo E6600 (2.4 GHz, 4 MB L2) CPU in 64-bit Windows with multi-threading option switched off. The charted value is the total compression MIPS score.</p>
+
+<p><strong>Sysbench</strong> - The sysbench CPU benchmark verifies prime numbers by doing standard division of the number by all numbers between 2 and the square root of the number. Once a number gives a remainder of 0, the next number is calculated.</p>
+
+<p><strong>CPU Blowfish</strong> - Blowfish is a symmetric-key 64-bit block cipher</p>
+
+<p><strong>CPU CryptoHash</strong> - CrytpoHash is a cryptographic hash function that maps data of arbitrary size (often called the &quot;message&quot;) to a bit array of a fixed size (called the &quot;hash&quot; or &quot;message digest&quot;). It is a one-way function, that is practically infeasible to invert, and is used in digital signatures, message authentication and hash functions to index data in hash tables.<br />
+A Fibonacci sequence is a series of numbers in which each number is the sum of the two preceding numbers, such as 1, 1, 2, 3, 5, 8, etc. This benchmark tests the integer processing ability of a CPU.</p>
+
+<p><strong>CPU Fibonacci</strong> - A Fibonacci sequence is a series of numbers in which each number is the sum of the two preceding numbers, such as 1, 1, 2, 3, 5, 8, etc. This benchmark tests the integer processing ability of a CPU.</p>
+
+<p><strong>CPU N-Queens</strong> - N-Queens finds a way to place a variable number of queens on a chessboard so that no two queens threaten each other by sharing the same row, column or diagonal. For some reason, the Cortex-A53 which is a simpler in-order processor does better at this benchmark than more complex out-of-order processors like the Cortex-A72 and Core i5, but it is hard to conclude much from this result.</p>
+
+<p><strong>CPU ZLib</strong> - ZLib is a software library used for data compression, which is used by the gzip file compression program. This benchmark is memory intensive, so its results will reflect the speed of the RAM.</p>
+
+<p><strong>FPU FFT</strong> - Fast Fourier Transforms (FFT) converts a signal to frequencies and vice-versa. It is used in audio digital signal processing and image signal processing, and is an indication how fast a processor can process video in software.</p>
+
+<p><strong>FPU Raytracing</strong> - Raytracing is a rendering technique for generating an image by tracing the path of light as pixels in an image plane and simulating the effects of its encounters with virtual objects. Like FFT, this benchmark tests how well the processor deals with floating point numbers (i.e. numbers with decimal points).</p>
+
+<p>Sources: <a href="https://source.puri.sm/Librem5/community-wiki/-/wikis/Benchmarks" target="_blank">https://source.puri.sm/Librem5/community-wiki/-/wikis/Benchmarks</a>,<br />
+<a href="https://unix.stackexchange.com/a/607910" target="_blank">https://unix.stackexchange.com/a/607910</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
