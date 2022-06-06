@@ -1,0 +1,75 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Running a Ubuntu VM in ProxMox VE</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Hypervisor,Install Guide,Self-Hosted,Ubuntu,VM,Virtual Machine,Virtualization,Linux,Proxmox,Proxmox Host,Proxmox VE,Proxmox Step By Step,Proxmox Tutorial,How To Install Ubuntu On Proxmox,How To Run Ubuntu On Proxmox VE,Ubuntu Virtual Machine,Ubuntu Proxmox VM,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Running a Ubuntu VM in ProxMox VE">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="05/23/2022 12:29:23 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Running a Ubuntu VM in ProxMox VE</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Log into the ProxMox web UI</li>
+	<li>Select a storage from the left navigation pane to download the .iso to</li>
+	<li>Select ISO Images in the left sub-navigation pane</li>
+	<li>If running ProxMox 6, download the Ubuntu Desktop iso <a href="https://releases.ubuntu.com/20.04.4/ubuntu-20.04.4-desktop-amd64.iso" target="_blank">Download</a> and upload it to the ProxMox ISO image library</li>
+	<li>If running ProxMox 7, click Download from URL and paste the download URL from above &gt; Click Query URL &gt; Click Download</li>
+	<li>Right click the ProxMox node name &gt; Create VM</li>
+	<li>Give the VM a unique ID and Name &gt; Next</li>
+	<li>On the OS tab, Select the Ubuntu Desktop installation .iso file, leave the Type as Linux and the Version as 5.x - 2.6 Kernel &gt; Next</li>
+	<li>Leave the defaults on the System tab &gt; Next</li>
+	<li>On the Hard Disk tab, set the Disk size to 16 GiB or more &gt; Next</li>
+	<li>On the CPU tab, set Cores to 2 or more and Type to host &gt; Next</li>
+	<li>On the Memory tab, set the Memory to 4096 &gt; Next</li>
+	<li>Leave the defaults on the Network tab &gt; Next</li>
+	<li>Verify the summary and click Finish</li>
+	<li>Right click the Ubuntu VM in the left navigation pane &gt; Start</li>
+	<li>Click console in the left sub-navigation menu</li>
+	<li>Press Ctrl+C to cancel the disk check</li>
+	<li>When the install dialog displays click Install Ubuntu</li>
+	<li>Select a keyboard layout &gt; Click Continue</li>
+	<li>Uncheck Download updates while installing Ubuntu &gt; Click Continue</li>
+	<li>Click Install Now</li>
+	<li>Click Continue to write the changes to the disk</li>
+	<li>Select a Region &gt; Click continue</li>
+	<li>Enter a name, computer name, username and password &gt; Click Continue</li>
+	<li>Wait while Ubuntu copies files and installs</li>
+	<li>When prompted to Restart Now, Select Devices &gt; Optical Drives &gt; Remove disk from virtual drive</li>
+	<li>Click Restart Now to complete the installation, the VM will reboot</li>
+	<li>Login with the username and password created earlier in the process</li>
+	<li>Select Skip &gt; Next &gt; Select No, Don&#39;t send system info &gt; Next &gt; Next &gt; Done</li>
+	<li>Welcome to Ubuntu</li>
+</ol>
+
+<h2>Optional Steps</h2>
+
+<ol>
+	<li>Launch a terminal window</li>
+	<li>Run the following commands
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install qemu guest agent<br />
+	sudo apt install qemu-guest-agent -y<br />
+	# enable and start the qemu-guest-agent service<br />
+	sudo systemctl enable qemu-guest-agent --now</div>
+	</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
