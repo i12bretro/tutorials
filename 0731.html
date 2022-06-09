@@ -1,0 +1,136 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Flashing Tasmota on Sonoff S31 Lite Smart Plug</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Install Guide,Home Lab,Home Lab Ideas,Home Automation,Tasmota,Sonoff,Sonoff S31,Sonoff S31 Lite,Tasmotizer,Tasmotize,Custom Firmware,Smart Plug,Smart Outlet,Home Assistant,Browser Based,Self-Hosted,Web Based,Web Based Tools,Smart Home,Flashing Tasmota Device,ESP8266,Tasmota Firmware,Firmware,DIY,Upgrade,MQTT,OpenHAB,Automation,Timers,Electronics,Hass.io,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Flashing Tasmota on Sonoff S31 Lite Smart Plug">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="04/13/2022 06:59:49 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Flashing Tasmota on Sonoff S31 Lite Smart Plug</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Tasmota?</h2>
+
+<blockquote><em>[Tasmota is an] alternative firmware for ESP8266/ESP32 based devices with easy configuration using webUI, OTA updates, automation using timers or rules, expandability and entirely local control over MQTT, HTTP, Serial or KNX. -<a href="https://github.com/tasmota/install" target="_blank">https://github.com/tasmota/install</a></em></blockquote>
+
+<h2>Things You Will Need</h2>
+
+<ul>
+	<li class="noCheckbox">Sonoff S31 Smart Plug(s) <a href="https://amzn.to/38l6jes" target="_blank">https://amzn.to/38l6jes</a></li>
+	<li class="noCheckbox">CP2102 Serial to USB adapter <a href="https://amzn.to/3uPgBeg" target="_blank">https://amzn.to/3uPgBeg</a></li>
+	<li class="noCheckbox">Minigrabber Probe Test Leads (Optional, but removes the need to solder) <a href="https://amzn.to/3iWdcVC" target="_blank">https://amzn.to/3iWdcVC</a></li>
+</ul>
+
+<h2>Preparation</h2>
+
+<ol>
+	<li>Download Tasmotizer <a href="https://github.com/tasmota/tasmotizer/releases" target="_blank">Download</a></li>
+	<li>Download CP2102 Windows drivers <a href="https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers" target="_blank">Download</a></li>
+	<li>Extract the downloaded CP2102 zip</li>
+	<li>Plug the CP2102 USB adapter into an available USB port</li>
+	<li>Right click the Start button &gt; Device Manager</li>
+	<li>Expand Other devices and locate the CP2102 &gt; Right click on it &gt; Update driver</li>
+	<li>Select Browse my computer for drivers</li>
+	<li>Click the Browse... button &gt; Browse to and select the extracted CP2102 driver files</li>
+	<li>Check the Include subfolders box &gt; Click Next</li>
+	<li>Wait while the driver is installed</li>
+	<li>Take note of the COM port assigned to the CP2102 adapter</li>
+	<li><strong>CRUCIAL STEP: Unplug the CP2102 USB adapter</strong></li>
+</ol>
+
+<h2>Disassembly and Wiring</h2>
+
+<ol>
+	<li>Disassemble the Sonoff S31 plug by gently prying the gray end cap/power button with a spudger and sliding the two rounded plastic pieces off to reveal 3 screws</li>
+	<li>Remove the 3 screws and flip the S31&#39;s PCB over</li>
+	<li>Using the minigrabber probes (or by soldering wires from the S31&#39;s PCB to the CP2102 USB adapter, make the connections shown below<br />
+	<strong>The CP2102 adapter should NOT be plugged in at this point</strong>
+	<table border="0" class="masked">
+		<tbody>
+			<tr>
+				<td align="center" rowspan="4" valign="middle" width="125">CP2102<br />
+				USB</td>
+				<td align="right" width="75">TXD</td>
+				<td align="center" width="100">
+				<div style="width: 100%; height: 10px; background-color: #ff0;"> </div>
+				</td>
+				<td align="left" width="75">RX</td>
+				<td align="center" rowspan="4" valign="middle" width="125">S31<br />
+				PCB</td>
+			</tr>
+			<tr>
+				<td align="right">RXD</td>
+				<td>
+				<div style="width: 100%; height: 10px; background-color: #e00;"> </div>
+				</td>
+				<td align="left">TX</td>
+			</tr>
+			<tr>
+				<td align="right">GND</td>
+				<td>
+				<div style="width: 100%; height: 10px; background-color: #0c0;"> </div>
+				</td>
+				<td align="left">GND</td>
+			</tr>
+			<tr>
+				<td align="right">3V3</td>
+				<td>
+				<div style="width: 100%; height: 10px; background-color: #000;"> </div>
+				</td>
+				<td align="left">VCC</td>
+			</tr>
+		</tbody>
+	</table>
+	</li>
+	<li>After verifying the connections 3 times, hold down the button the S31 PCB and plug the CP2102 adapter into an available USB port on the PC</li>
+	<li>Continue holding the button on the S31 PCB for approximately 5 seconds to boot the plug into programming/flashing mode</li>
+</ol>
+
+<h2>Flashing Tasmota</h2>
+
+<ol>
+	<li>Launch the Tasmotizer .exe</li>
+	<li>Set the Select port field to the COM port of the CP2102 USB adapter</li>
+	<li>For the first S31 device, check the Save original firmware box and set the Flash size to 4MB</li>
+	<li>Select Release under image to have Tasmotizer download the latest release of Tasmota</li>
+	<li>Verify Erase before flashing is checked</li>
+	<li>Click the Tasmotize! button</li>
+	<li>Wait while Tasmotizer backs up the stock S31 firmware</li>
+	<li>When prompted, power cycle the plug by unplugging the CP2102 USB adapter from the PC, holding down the button on the S31 PCB and plugging the CP2102 USB adapter back into the PC</li>
+	<li>Continue holding the button on the S31 PCB for approximately 5 seconds to boot the plug into programming/flashing mode</li>
+	<li>Click OK on the Tasmotizer dialog to continue with the flashing process</li>
+	<li>Wait until Tasmotizer has completed the flash and prompts to restart the device</li>
+	<li>Unplug the CP2102 USB adapter from the PC and plug it back in, this time without holding the button the S31 PCB</li>
+</ol>
+
+<h2>Connecting to Wifi and Configuration</h2>
+
+<ol>
+	<li>From a wifi enabled device (ie laptop/smart phone), look at the available wifi networks and connect to the tasmota- SSID</li>
+	<li>Open a web browser and navigate to 192.168.4.1</li>
+	<li>Enter the Wireless network SSID and password &gt; Click Save</li>
+	<li>The S31 will attempt to connect to the Wireless network and upon connection will redirect to the new IP address</li>
+	<li>Welcome to Tasmota on the Sonoff S31 smart plug</li>
+	<li>Select Configuration &gt; Configure Module &gt; Set the module to Sonoff S31 &gt; Click Save</li>
+	<li>Back on the Configuration menu, click Configure Other &gt; Set the device Name and Friendly Name &gt; Save</li>
+</ol>
+
+<p>Further reading: <a href="https://tasmota.github.io/docs/devices/Sonoff-S31/" target="_blank">https://tasmota.github.io/docs/devices/Sonoff-S31/</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
