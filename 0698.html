@@ -1,0 +1,52 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install PowerShell on Debian/Ubuntu</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Install Guide,PowerShell,Scripting,Debian,Linux,How To Install PowerShell On Linux,How To Install PowerShell On Debian,PowerShell Scripting,PowerShell On Linux,PowerShell On Debian,Microsoft,System Administration,Terminal,Command Line,CLI,Microsoft PowerShell,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install PowerShell on Debian/Ubuntu">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="05/13/2022 01:46:22 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install PowerShell on Debian/Ubuntu</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is PowerShell?</h2>
+
+<blockquote><em>PowerShell is a cross-platform task automation solution made up of a command-line shell, a scripting language, and a configuration management framework. PowerShell runs on Windows, Linux, and macOS. -<a href="https://docs.microsoft.com/en-us/powershell/scripting/overview" target="_blank">https://docs.microsoft.com/en-us/powershell/scripting/overview</a></em></blockquote>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal window
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# lookup latest release URL<br />
+	regex=&#39;&quot;browser_download_url&quot;: &quot;(https:\/\/github.com\/PowerShell\/PowerShell\/releases\/download\/[^/]*\/powershell_[^/]*.deb_amd64\.deb)&quot;&#39; &amp;&amp; response=$(curl -H &quot;Accept: application/vnd.github.v3+json&quot; https://api.github.com/repos/PowerShell/PowerShell/releases/latest) &amp;&amp; [[ $response =~ $regex ]] &amp;&amp; downloadURL=&quot;${BASH_REMATCH[1]}&quot;<br />
+	# download powershell<br />
+	wget -O ./powershell.deb $downloadURL<br />
+	# install powershell<br />
+	sudo dpkg -i ./powershell.deb<br />
+	# run powershell<br />
+	pwsh</div>
+	</li>
+</ol>
+
+<p>Source: <a href="https://docs.microsoft.com/en-us/powershell/scripting/install/install-debian" target="_blank">https://docs.microsoft.com/en-us/powershell/scripting/install/install-debian</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
