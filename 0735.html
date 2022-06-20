@@ -1,0 +1,89 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>How I Backup and Shrink My SD Card Images [Raspberry Pi | Armbian]</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Raspberry Pi Alternative,SBC,Single Board Computer,Backup,Compact,Reduce,Reduce SD Card Image,Trim,Windows,Linux,Debian,PiShrink,SD Card Image,Win32DiskImager,7-Zip,SD Card,Micro SD Card,MicroSD Card,Raspberry Pi Image,Armbian,Shrink,Backup SD Card,Backup And Shrink SD Card,Compress SD Card Image,Storing SD Card Image Backups,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="How I Backup and Shrink My SD Card Images [Raspberry Pi | Armbian]">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="05/02/2022 11:59:46 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>How I Backup and Shrink My SD Card Images [Raspberry Pi | Armbian]</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2><span>What is Win32DiskImager?</span></h2>
+
+<blockquote><em>[Win32DiskImager] is designed to write a raw disk image to a removable device or backup a removable device to a raw image file. It is very useful for embedded development, namely Arm development projects (Android, Ubuntu on Arm, etc). -<a href="https://sourceforge.net/projects/win32diskimager/" target="_blank">https://sourceforge.net/projects/win32diskimager/</a></em></blockquote>
+
+<h2>Things You Will Need</h2>
+
+<ul>
+	<li class="noCheckbox">A microSD card to backup <a href="https://amzn.to/36CpShC" target="_blank">https://amzn.to/36CpShC</a> | <a href="https://amzn.to/3CXJngt" target="_blank">https://amzn.to/3CXJngt</a> | <a href="https://amzn.to/3JqyxSP" target="_blank">https://amzn.to/3JqyxSP</a></li>
+	<li class="noCheckbox">A Linux based VirtualBox VM <a href="https://youtu.be/V4pNO3amhV4" target="_blank">https://youtu.be/V4pNO3amhV4</a> | <a href="https://youtu.be/wIa07KhkQOg" target="_blank">https://youtu.be/wIa07KhkQOg</a> | <a href="https://youtu.be/mmTCh1NG3AM" target="_blank">https://youtu.be/mmTCh1NG3AM</a></li>
+</ul>
+
+<h2>Creating the Base Image</h2>
+
+<ol>
+	<li>Insert the SD card into the Windows PC</li>
+	<li>Download Win32DiskImager <a href="https://sourceforge.net/projects/win32diskimager/files/Archive/Win32DiskImager-1.0.0-binary.zip/download" target="_blank">Download</a></li>
+	<li>Extract the downloaded .zip file</li>
+	<li>Run Win32DiskImager.exe</li>
+	<li>Select the SD card from the Device dropdown</li>
+	<li>Click the folder icon &gt; Browse to a location to save the SD card image &gt; Enter a file name &gt; Click Open</li>
+	<li>Click the Read button at the bottom of the application window</li>
+	<li>Wait while the contents of the SD card image is read</li>
+</ol>
+
+<h2><span>What is PiShrink?</span></h2>
+
+<blockquote><em>PiShrink is a bash script that automatically shrinks a pi image that will then resize to the max size of the SD card on boot. This will make putting the image back onto the SD card faster and the shrunk images will compress better. In addition the shrunk image can be compressed with gzip and xz to create an even smaller image. Parallel compression of the image using multiple cores is supported. -<a href="https://github.com/Drewsif/PiShrink" target="_blank">https://github.com/Drewsif/PiShrink</a></em></blockquote>
+
+<h2>Shrinking the Image Partitions</h2>
+
+<ol>
+	<li>Launch VirtualBox</li>
+	<li>Select the Linux based VM &gt; Settings &gt; Shared Folders</li>
+	<li>Click the Add Share icon to the right</li>
+	<li>Click the Folder Path dropdown &gt; Other... &gt; Browse to the folder containing the Win32DiskImager .img</li>
+	<li>Check the Auto-mount box, set the Mount point to /host and check the Make Permanent box &gt; Click OK</li>
+	<li>Right click the VM &gt; Start</li>
+	<li>Log into the guest OS</li>
+	<li>Launch a terminal and run the following commands
+	<div class="codeBlock"># install prerequisites<br />
+	sudo apt install parted xz-utils<br />
+	# download the pishrink script<br />
+	wget -O ./pishrink.sh https://raw.githubusercontent.com/Drewsif/PiShrink/master/pishrink.sh<br />
+	# make the script executable<br />
+	chmod +x ./pishrink.sh<br />
+	# run pishrink on the .img file<br />
+	sudo ./pishrink.sh -v /host/&lt;%imagename.img%&gt;</div>
+	</li>
+	<li>PiShrink should complete in just a minute or two</li>
+	<li>If no errors occurred, shutdown the VM</li>
+</ol>
+
+<h2>Compressing the Image Further</h2>
+
+<ol>
+	<li>Download and install 7-zip <a href="https://www.7-zip.org/download.html" target="_blank">Download</a></li>
+	<li>Right click on the shrunken .img file &gt; 7-Zip &gt; Add to archive...</li>
+	<li>Set the Archive format to xz and the Compression level to 9 - Ultra &gt; Click OK</li>
+	<li>Wait while 7-Zip compresses .img file</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
