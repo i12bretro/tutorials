@@ -1,0 +1,67 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Home Assistant on Debian Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Home Assistant How To,Home Assistant Simplified,Home Assistant Tutorial,Getting Started With Home Assistant,Linux,Debian,Home Assistant,HASS,Run Home Assistant On Debian,Home Assistant Debian Installation,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Home Assistant on Debian Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="05/15/2022 08:46:19 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Home Assistant on Debian Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Home Assistant?</h2>
+
+<blockquote>Open source home automation that puts local control and privacy first. Powered by a worldwide community of tinkerers and DIY enthusiasts. Perfect to run on a Raspberry Pi or a local server.<i> - <a href="https://www.home-assistant.io/" target="_blank">https://www.home-assistant.io/</a></i></blockquote>
+
+<h2>Installing Home Assistant</h2>
+
+<ol>
+	<li>Log into the Debian device</li>
+	<li>Run the following commands in a terminal:
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available updates<br />
+	sudo apt upgrade -y<br />
+	# install some prerequisites<br />
+	sudo apt install jq wget curl udisks2 libglib2.0-bin network-manager dbus -y<br />
+	# install docker<br />
+	curl -fsSL https://get.docker.com | sudo sh<br />
+	# download home assistant os-agent<br />
+	wget https://github.com/home-assistant/os-agent/releases/download/1.2.2/os-agent_1.2.2_linux_x86_64.deb<br />
+	# install home assistant os-agent<br />
+	sudo dpkg -i os-agent_1.2.2_linux_x86_64.deb<br />
+	# download home assistant package<br />
+	wget https://github.com/home-assistant/supervised-installer/releases/latest/download/homeassistant-supervised.deb<br />
+	# install home assistant<br />
+	sudo dpkg -i homeassistant-supervised.deb</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP:8123/</li>
+	<li>Wait while Home Assistant initializes</li>
+	<li>Enter a Name, Username and Password to create a Home Assistant user account &gt; Click Create Account</li>
+	<li>Enter a Name for this Home Assistant installation (ie Home)</li>
+	<li>Click Detect to set the installation geolocation</li>
+	<li>Verify the Unit System and Currency &gt; Click Next</li>
+	<li>Select any anonymous data to share with the Home Assistant development team &gt; Click Next</li>
+	<li>Click Finish</li>
+	<li>Welcome to Home Assistant</li>
+</ol>
+
+<p>Source:<a href="https://community.home-assistant.io/t/installing-home-assistant-supervised-on-debian-11/200253" target="_blank">https://community.home-assistant.io/t/installing-home-assistant-supervised-on-debian-11/200253</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
