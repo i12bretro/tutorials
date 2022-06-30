@@ -1,0 +1,71 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Installing Tabby (formerly Terminus) on Windows/Linux/MacOS</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,MacOS,Windows,Windows 10,Windows 11,Linux,Debian,Cross-Platform,Terminal,Terminal Emulator,Tabbed Terminal,Tabby,Terminus,How To Install Tabby On Windows,How To Install Tabby On Linux,How To Install Tabby On MacOS,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Installing Tabby (formerly Terminus) on Windows/Linux/MacOS">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="05/01/2022 08:16:26 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Installing Tabby (formerly Terminus) on Windows/Linux/MacOS</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Tabby?</h2>
+
+<blockquote><em>Tabby (formerly Terminus) is a highly configurable terminal emulator, SSH and serial client for Windows, macOS and Linux. -<a href="https://github.com/Eugeny/tabby" target="_blank">https://github.com/Eugeny/tabby</a></em></blockquote>
+
+<h2>Microsoft Windows</h2>
+
+<ol>
+	<li>Download Tabby <a href="https://github.com/Eugeny/tabby/releases" target="_blank">Download</a></li>
+	<li>Open File Explorer and navigate to the Download location</li>
+	<li>Run the downloaded .exe</li>
+	<li>Step through the installer accepting all the defaults</li>
+	<li>Launch Tabby from the Start menu</li>
+</ol>
+
+<h2>Debian/Ubuntu Linux</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Launch a terminal window</li>
+	<li>Run the following commands
+	<div class="codeBlock"># lookup latest release URL<br />
+	regex=&#39;&quot;browser_download_url&quot;: &quot;(https:\/\/github.com\/Eugeny\/tabby\/releases\/download\/[^/]*\/[^/]*\.deb)&quot;&#39; &amp;&amp; response=$(curl -H &quot;Accept: application/vnd.github.v3+json&quot; https://api.github.com/repos/Eugeny/tabby/releases/latest) &amp;&amp; [[ $response =~ $regex ]] &amp;&amp; downloadURL=&quot;${BASH_REMATCH[1]}&quot;<br />
+	# download the .deb package<br />
+	wget -O ./tabby.deb $downloadURL<br />
+	# install tabby<br />
+	sudo dpkg -i ./tabby.deb<br />
+	# install missing dependencies<br />
+	sudo apt -f install -y<br />
+	# launch tabby<br />
+	tabby &amp;</div>
+	</li>
+</ol>
+
+<h2>MacOS</h2>
+
+<ol>
+	<li>Download Tabby <a href="https://github.com/Eugeny/tabby/releases" target="_blank">Download</a></li>
+	<li>Open Downloads in Finder</li>
+	<li>Double click the downloaded Tabby .pkg</li>
+	<li>Step through the installer accepting all the defaults</li>
+	<li>Launch Tabby from the Launchpad</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
