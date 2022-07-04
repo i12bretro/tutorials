@@ -1,0 +1,86 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Running a SteamOS VM in ProxMox VE</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="SteamOS,SteamOS Virtual Machine,SteamOS VM,How To Install SteamOS On Proxmox,How To Run SteamOS On Proxmox VE,Home Lab,Home Lab Ideas,Hypervisor,Install Guide,Self-Hosted,Virtualization,Virtual Machine,VM,Proxmox Video Card Passthrough,Proxmox VE,Proxmox Tutorial,Proxmox Step By Step,Proxmox Hardware Passthrough,Proxmox Add Physical Graphics Card,Proxmox,Linux,GPU,Graphics Card,Debian Virtual Machine,Debian,Steam,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Running a SteamOS VM in ProxMox VE">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="06/30/2022 12:33:06 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Running a SteamOS VM in ProxMox VE</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is SteamOS?</h2>
+
+<blockquote><em>SteamOS is our Linux-based operating system. The base system draws from Debian 8, code named Debian Jessie. Our work builds on top of the solid Debian core and optimizes it for a living room experience. Most of all, it is an open Linux platform that leaves you in full control. You can take charge of your system and install new software or content that you want. -<a href="https://store.steampowered.com/steamos/buildyourown" target="_blank">https://store.steampowered.com/steamos/buildyourown</a> </em></blockquote>
+
+<ol>
+	<li>Log into the ProxMox web UI</li>
+	<li>Select a storage from the left navigation pane to download the .iso to</li>
+	<li>Select ISO Images in the left sub-navigation pane</li>
+	<li>If running ProxMox 6, download the SteamOS .iso <a href="https://repo.steampowered.com/download/SteamOSDVD.iso" target="_blank">Download</a> and upload it to the ProxMox ISO image library</li>
+	<li>If running ProxMox 7, click Download from URL and paste the download URL from above &gt; Click Query URL &gt; Click Download</li>
+	<li>Right click the ProxMox node name &gt; Create VM</li>
+	<li>Give the VM a unique ID and Name &gt; Next</li>
+	<li>On the OS tab, Select the SteamOS installation .iso file, leave the Type as Linux and the Version as 5.x - 2.6 Kernel &gt; Next</li>
+	<li>On the System tab, set the BIOS field to OVMF (UEFI), Check the Add EFI Disk checkbox, Uncheck the Pre-Enroll Keys checkbox, Machine field to q35 and the SCSI Controller to VirtIO SCSI &gt; Next</li>
+	<li>On the Hard Disk tab, set the Disk size to 16 GiB or more &gt; Next</li>
+	<li>On the CPU tab, set Cores to 2 or more and Type to host &gt; Next</li>
+	<li>On the Memory tab, set the Memory to 4096 or more &gt; Next</li>
+	<li>Leave the defaults on the Network tab &gt; Next</li>
+	<li>Verify the summary and click Finish</li>
+	<li>Right click the SteamOS VM in the left navigation pane &gt; Start</li>
+	<li>Click console in the left sub-navigation menu</li>
+	<li>Press Enter to select Automated install (WILL ERASE DISK!)</li>
+	<li>Wait while SteamOS copies and installs files</li>
+	<li>Once the installation completes a desktop environment will display and SteamOS will check for and install updates</li>
+	<li>After updates are installed the VM will reboot</li>
+	<li>The first reboot can take several minutes, so be patient (You can send CTRL+ALT+F2 to the VM to view the boot progress)</li>
+</ol>
+
+<h2>Post-Installation Steps (Optional, but recommended)</h2>
+
+<ol>
+	<li>At the black screen, Send CTRL+ALT+F2</li>
+	<li>Enter the username desktop</li>
+	<li>Run the following command to set a password
+	<div class="codeBlock"># set desktop user password<br />
+	passwd<br />
+	# enter and confirm a password for the desktop user<br />
+	# start the desktop environment<br />
+	startx</div>
+	</li>
+	<li>Shutdown the VM</li>
+	<li>A physical GPU passthrough is required to run Steam and games at this point (A full tutorial can be found <a href="https://youtu.be/x01oOUltTfY" target="_blank">here</a>)</li>
+</ol>
+
+<h2>Setting Up Steam in SteamOS</h2>
+
+<ol>
+	<li>Select a language &gt; Click Next</li>
+	<li>Select I Agree on the EULA screen</li>
+	<li>Click Next at the screen calibration</li>
+	<li>Select a timezone &gt; Click Next</li>
+	<li>Click the Run Steam Now button</li>
+	<li>Select Login</li>
+	<li>Log in with an existing Steam account</li>
+</ol>
+
+<p>A full tutorial for passing a physical disk to a VM can be found <a href="https://youtu.be/ASwS8hZP5fE" target="_blank">here</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
