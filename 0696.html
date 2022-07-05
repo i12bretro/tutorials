@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Running Apache Guacamole in Docker">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="05/13/2022 01:51:24 PM" />
+        <meta name="revised" content="07/05/2022 01:43:07 PM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -55,7 +55,7 @@
 	<div class="codeBlock"># create working directories<br />
 	mkdir ~/docker/mariadb -p<br />
 	# set owner of docker directory<br />
-	sudo chown &quot;$USER&quot;:&quot;$USER&quot; /home/&quot;$USER&quot;/docker -R<br />
+	sudo chown &quot;$USER&quot;:&quot;$USER&quot; ~/docker -R<br />
 	# download the guacamole container<br />
 	docker pull guacamole/guacamole<br />
 	# run the mariadb docker container<br />
