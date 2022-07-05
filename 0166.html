@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Install a Self-Hosted Bitwarden/Vaultwarden Password Vault on Debian">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="04/09/2022 12:30:59 PM" />
+        <meta name="revised" content="07/05/2022 08:15:46 AM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -76,7 +76,7 @@
 	# fix npm vulnerabilities<br />
 	npm audit fix<br />
 	# build web vault<br />
-	npm run dist<br />
+	npm run dist:bit:selfhost<br />
 	# copy the build directory into vaultwarden/web-vault<br />
 	cp -a build ../vaultwarden/target/release/web-vault<br />
 	# cd into vaultwarden<br />
