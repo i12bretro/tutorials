@@ -1,0 +1,62 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install CertBot Let's Encrypt ACME (Automated Certificate Management Environment) Client on Windows</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,ACME,Certificate Authority,Certificates,Encryption,Free Software,Generating SSL Certificates,IT Security,Let's Encrypt,Microsoft Windows,PKI,Public Key Infrastructure,SSL,SSL Certificates,System Administrator,Web Server,Web Server Administration,Windows,Windows Based ACME Client,Windows Based Certbot Installation,Windows Based Let's Encrypt Client,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install CertBot Let's Encrypt ACME (Automated Certificate Management Environment) Client on Windows">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="05/08/2022 01:24:49 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install CertBot Let's Encrypt ACME (Automated Certificate Management Environment) Client on Windows</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Certbot?</h2>
+
+<blockquote><em>Certbot is a free, open source software tool for automatically using Let&rsquo;s Encrypt certificates on manually-administrated websites to enable HTTPS. -<a href="https://certbot.eff.org/pages/about" target="_blank">https://certbot.eff.org/pages/about</a></em></blockquote>
+
+<h2>Installing Certbot</h2>
+
+<ol>
+	<li>Log into the Windows host</li>
+	<li>Download Certbot <a href="https://certbot.eff.org/instructions?ws=webproduct&amp;os=windows" target="_blank">Download</a></li>
+	<li>Run through the Certbot installer, accepting all the defaults</li>
+</ol>
+
+<h2>Requesting a Certificate</h2>
+
+<p><em>NOTE: In order for Let&#39;s Encrypt to verify ownership of the DNS name, the host certbot is running from must be accessible via port 80 (http) or port 443 (https). For homelab users, this will normally involve port forwarding from the router to the certbot host, which is beyond the scope of this tutorial. Just note, I have forwarded port 80 on my router to the host running certbot for this handshake to complete successfully.</em></p>
+
+<ol>
+	<li>Launch PowerShell as an administrator</li>
+	<li>Run the following commands
+	<div class="codeBlock PS"># change directory to certbot installation<br />
+	cd ${ENV:ProgramFiles(x86)}\Certbot\bin<br />
+	# run the certbot command<br />
+	.\certbot.exe certonly --standalone -d &lt;%host.dns.name%&gt;</div>
+	</li>
+	<li>When prompted, enter an email address and agree to the terms of service</li>
+	<li>Choose whether to share your email and receive emails from certbot</li>
+	<li>Certbot will output information regarding the location of the certificate files</li>
+</ol>
+
+<p>Source: <a href="https://certbot.eff.org/instructions?ws=webproduct&amp;os=windows" target="_blank">https://certbot.eff.org/instructions?ws=webproduct&amp;os=windows</a></p>
+
+<ol>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
