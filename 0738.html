@@ -1,0 +1,52 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Raspberry Pi PIXEL Desktop/Theme on Debian</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Install Guide,Raspberry Pi Alternative,Raspberry Pi Desktop On Debian,Linux,Debian,Raspbian Theme,Raspberry Pi OS Theme,Raspberry Pi Lookaliike,Raspberry Pi Imposter,PIXEL Desktop,LXDE,Desktop Environment,Raspberry Pi Theme On Debian,Raspberry Pi Skin,Raspberry Pi Desktop Environment,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Raspberry Pi PIXEL Desktop/Theme on Debian">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="05/15/2022 08:50:03 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Raspberry Pi PIXEL Desktop/Theme on Debian</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is PIXEL?</h2>
+
+<blockquote>PIXEL is the default desktop environment and theme used by Raspberry Pi OS. It officially stands for &quot;<strong>P</strong>i <strong>I</strong>mproved <strong>X</strong>windows <strong>E</strong>nvironment, <strong>L</strong>ightweight&quot; and is based on LXDE<em>. -<a href="https://www.raspberrypi.com/news/introducing-pixel/" target="_blank">https://www.raspberrypi.com/news/introducing-pixel/</a></em></blockquote>
+
+<ol>
+	<li>Log into the Debian device</li>
+	<li>Run the following commands in a terminal
+	<div class="codeBlock"># add the raspberry pi os gpg key<br />
+	wget -O - http://archive.raspberrypi.org/debian/raspberrypi.gpg.key | sudo apt-key add -<br />
+	# add the raspberry pi os apt repository<br />
+	echo deb http://archive.raspberrypi.org/debian/ $(lsb_release -cs) main | sudo tee /etc/apt/sources.list.d/raspios.list<br />
+	# update repositories<br />
+	sudo apt update<br />
+	# install pixel<br />
+	sudo apt install raspberrypi-ui-mods -y</div>
+	</li>
+	<li>When prompted, press Enter to configure the display manager</li>
+	<li>Arrow down to select lightdm and press Enter</li>
+	<li>After the installation completes, reboot the system</li>
+	<li>Upon boot, the familiar Raspberry Pi login screen should be display</li>
+	<li>Login</li>
+	<li>Welcome to the PIXEL desktop experience</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
