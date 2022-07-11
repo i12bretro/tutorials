@@ -1,0 +1,123 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Running a MacOS Ventura VM in ProxMox VE</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Hypervisor,Install Guide,Apple MacOS,MacOS Ventura,Ventura VM,Ventura Virtual Machine,MacOS Proxmox,MacOS 13 Proxmox VE,Virtualization,Virtual Machine,VM,Proxmox Step By Step,MacOS Virtual Machine,Ventura,OS 13,Proxmox,Debian,OpenCore,Mac OS 13,How To Install MacOS 13 On Proxmox,How To Install MacOS Ventura On Proxmox,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Running a MacOS Ventura VM in ProxMox VE">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="07/05/2022 01:33:04 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Running a MacOS Ventura VM in ProxMox VE</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Download a MacOS Ventura .iso <a href="https://archive.org/search.php?query=MacOS%20collection&amp;and[]=mediatype%3A%22software%22" target="_blank">Download</a></li>
+	<li>Download KVM OpenCore bootloader <a href="https://github.com/thenickdude/KVM-Opencore/releases" target="_blank">Download</a></li>
+	<li>Extract the downloaded KVM OpenCore bootloader .gz file</li>
+	<li>Upload the Ventura and KVM OpenCore .iso files to the Proxmox ISO library</li>
+	<li>Log into the ProxMox web UI</li>
+	<li>Right click the ProxMox node name &gt; Create VM</li>
+	<li>Type MacOSVentura in the name field, set the VM ID to 1300 (unless 1300 is in use) &gt; Next</li>
+	<li>On the OS tab, set the Type field to Other and select the KVM OpenCore .iso in the ISO Image field &gt; Next</li>
+	<li>On the System tab, set the Graphic card field to VMware compatible, BIOS field to OVMF (UEFI), Uncheck the Pre-Enroll Keys checkbox, Check the Add EFI Disk checkbox, Machine field to q35 and the SCSI Controller to VirtIO SCSI &gt; Next</li>
+	<li>On the Hard Disk tab, set the Bus/Device field to VirtIO Block, Disk size field to 64, Cache field to Write back (unsafe) &gt; Next</li>
+	<li>On the CPU tab, set Cores field to 4, Type field to host &gt; Next</li>
+	<li>On the Memory tab, set the Memory to 4096 &gt; Next</li>
+	<li>On the Network tab, set the Model field to VMware vmxnet3 &gt; Next</li>
+	<li>Verify the summary and click Finish</li>
+	<li>Click the MacOSVentura VM &gt; Select Hardware from the left sub-navigation menu</li>
+	<li>Click Add &gt; CD/DVD Drive</li>
+	<li>Select the MacOS Ventura .iso downloaded earlier &gt; Click Create</li>
+	<li>Select the MacOSVentura VM &gt; Options &gt; Boot Order</li>
+	<li>Set the KVM OpenCore disk as the first boot option &gt; Click OK</li>
+	<li>Right click the ProxMox node name &gt; Console</li>
+	<li>Run the following commands in the terminal
+	<div class="codeBlock"># edit the VM conf file, change 1300 to the VM ID for the MacOSVentura VM<br />
+	nano /etc/pve/qemu-server/1300.conf</div>
+	</li>
+	<li>If running on an Intel CPU, add the following line to the bottom of the .conf file:
+	<p class="masked">args: -device isa-applesmc,osk=&quot;ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc&quot; -smbios type=2 -device usb-kbd,bus=ehci.0,port=2 -global nec-usb-xhci.msi=off -cpu host,kvm=on,vendor=GenuineIntel,+kvm_pv_unhalt,+kvm_pv_eoi,+hypervisor,+invtsc</p>
+	</li>
+	<li>If running on an AMD CPU, add the following line to the bottom of the .conf file:
+	<p class="masked">args: -device isa-applesmc,osk=&quot;ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc&quot; -smbios type=2 -device usb-kbd,bus=ehci.0,port=2 -global nec-usb-xhci.msi=off -cpu Penryn,kvm=on,vendor=GenuineIntel,+kvm_pv_unhalt,+kvm_pv_eoi,+hypervisor,+invtsc,+pcid,+ssse3,+sse4.2,+popcnt,+avx,+avx2,+aes,+fma,+fma4,+bmi1,+bmi2,+xsave,+xsaveopt,check</p>
+	</li>
+	<li>Press CTRL+W and search for ,media=cdrom</li>
+	<li>Delete the ,media=cdrom from the two attached .iso files (KVM OpenCore and Ventura) and add cache=unsafe</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to the conf file</li>
+	<li>Back in the Proxmox web UI, right click the MacOSVentura VM in the left navigation pane &gt; Start</li>
+	<li>Click console in the left sub-navigation menu</li>
+	<li>At the OpenCore menu, select UEFI Shell &gt; Press Enter</li>
+	<li>Type the following in the UEFI shell:
+	<div class="codeBlock CMD"># change to the Ventura.iso, the disk number may be different for you<br />
+	fs0:<br />
+	# launch the MacOS installer<br />
+	System\Library\CoreServices\boot.efi</div>
+	</li>
+	<li>After a long initialization sequence the MAC OS Setup should start</li>
+	<li>Select Disk Utility</li>
+	<li>Select the VIRTIO Block Media &gt; Click Erase</li>
+	<li>Name the drive MacOS &gt; Set the Format to APFS &gt; Click Erase</li>
+	<li>Click Done &gt; Close Disk Utility</li>
+	<li>Click Install macOS Ventura</li>
+	<li>Click Continue &gt; Click Agree &gt; Click Agree again</li>
+	<li>Select the MacOS disk &gt; Click Install</li>
+	<li>Wait while Mac OS installs files, the VM will reboot several times</li>
+	<li>Select your Country &gt; Click Continue</li>
+	<li>Confirm your languages and keyboard layout &gt; Click Continue</li>
+	<li>Click Not Now on the Accessibility screen</li>
+	<li>Click Continue on the Data &amp; Privacy screen</li>
+	<li>Select Not Now on the Migration Assistant screen</li>
+	<li>Select Set Up Later and then Skip on the Apple ID screen</li>
+	<li>Click Agree &gt; Agree again</li>
+	<li>Enter a name, user name, password &gt; Click Continue</li>
+	<li>Click Continue &gt; Select Use or Don&#39;t Use for Location Services</li>
+	<li>Pick a timezone &gt; Click Continue</li>
+	<li>Uncheck Share Mac Analytics with Apple &gt; Click Continue</li>
+	<li>Click Set Up Later on the Screen Time screen</li>
+	<li>Uncheck the Enable Ask Siri box &gt; Click Continue</li>
+	<li>Pick a theme &gt; Click Continue</li>
+	<li>Welcome to MacOS 13 Ventura</li>
+</ol>
+
+<h2>Configuring Booting Without OpenCore Mounted</h2>
+
+<ol>
+	<li>Log into the MacOSVentura VM</li>
+	<li>Launch a web browser and download the KVM OpenCore EFI folder <a href="https://github.com/thenickdude/KVM-Opencore/releases" target="_blank">Download</a></li>
+	<li>Download MountEFI from GitHub <a href="https://github.com/corpnewt/MountEFI" target="_blank">Download</a></li>
+	<li>Start LaunchPad from the dock</li>
+	<li>Search terminal &gt; Click Terminal to launch it</li>
+	<li>Run the following commands in the terminal window
+	<div class="codeBlock CMD">cd ~/Downloads/MountEFI<br />
+	chmod +x MountEFI.command<br />
+	./MountEFI.command</div>
+	</li>
+	<li>Enter the number that corresponds to the MacOS drive created during the installation &gt; Press Enter</li>
+	<li>Open a Finder window</li>
+	<li>Navigate to the mounted EFI location</li>
+	<li>If an existing EFI folder exists, rename the it to EFI.orig</li>
+	<li>Copy the KVM OpenCoreEFI folder downloaded earlier to the mounted EFI partition</li>
+	<li>Once the EFI folder is copied, shutdown the VM</li>
+	<li>Click the MacOSVentura VM &gt; Select Hardware from the left sub-navigation menu</li>
+	<li>Click the OpenCore Hard Disk to select it &gt; Click Detach</li>
+	<li>Click the detached OpenCore Hard Disk to select it again &gt; Click Remove</li>
+	<li>Right click the MacOSVentura VM in the left navigation pane &gt; Start</li>
+	<li>Click console in the left sub-navigation menu to verify the VM still boots into Ventura without the OpenCore disc image mounted</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
