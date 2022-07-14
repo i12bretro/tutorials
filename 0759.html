@@ -1,0 +1,124 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install phpIPAM on Linux [Open-source IP Address Management System]</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Linux,Network Planning,IP Address Managment,IPAM,IP Address Manager,PHPIPAM,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Browser Based,Web Based Tools,Free Open Source Software,Free Software,Open Source Software,Open-Source,FOSS,Debian,IP Address Planning,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install phpIPAM on Linux [Open-source IP Address Management System]">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="07/08/2022 08:31:48 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install phpIPAM on Linux [Open-source IP Address Management System]</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is phpIPAM?</h2>
+
+<blockquote><em>phpIPAM is an open-source web IP address management application (IPAM). It&#39;s goal is to provide light, modern and useful IP address management. It is a php-based application with a MySQL database backend, using jQuery libraries, ajax and HTML5/CSS3 features. -<a href="https://phpipam.net/" target="_blank">https://phpipam.net/</a></em></blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal window:
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install prerequisites<br />
+	sudo apt install curl wget zip git -y<br />
+	# install Apache HTTPD and MySQL<br />
+	sudo apt install apache2 mariadb-server mariadb-client -y<br />
+	# install PHP components<br />
+	sudo apt install php7.4 php7.4-curl php7.4-common php7.4-gmp php7.4-mbstring php7.4-gd php7.4-xml php7.4-mysql php7.4-ldap php-pear -y<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type N and press Enter to not switch to unix socket authentication</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the phpIPAM database and database user
+	<div class="codeBlock">CREATE DATABASE php_ipam;<br />
+	GRANT ALL ON php_ipam.* to &#39;php_ipam_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;P4P1p@m!!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># git clone phpipam to the webroot<br />
+	sudo git clone https://github.com/phpipam/phpipam.git /var/www/html/phpipam<br />
+	# cd into the new directory<br />
+	cd /var/www/html/phpipam<br />
+	# checkout the latest release<br />
+	sudo git checkout &quot;$(git tag --sort=v:tag | tail -n1)&quot;<br />
+	# set the owner of the phpipam directory<br />
+	sudo chown -R www-data:www-data /var/www/html/phpipam<br />
+	# copy sample config file<br />
+	sudo cp /var/www/html/phpipam/config.dist.php /var/www/html/phpipam/config.php<br />
+	# edit config.php<br />
+	sudo nano /var/www/html/phpipam/config.php</div>
+	</li>
+	<li>Update the database connection details
+	<p>$db[&#39;host&#39;] = &#39;127.0.0.1&#39;;<br />
+	$db[&#39;user&#39;] = &#39;php_ipam_rw&#39;;<br />
+	$db[&#39;pass&#39;] = &#39;P4P1p@m!!&#39;;<br />
+	$db[&#39;name&#39;] = &#39;php_ipam&#39;;<br />
+	$db[&#39;port&#39;] = 3306;</p>
+	</li>
+	<li>Below the database connection, add the following line to define the BASE variable
+	<p>define(&#39;BASE&#39;, &quot;/phpipam/&quot;);</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># enable mod_rewrite<br />
+	sudo a2enmod rewrite<br />
+	# restart apache2 service<br />
+	sudo systemctl restart apache2</div>
+	</li>
+</ol>
+
+<h2>phpIPAM Web Installer</h2>
+
+<ol>
+	<li>Open a web browser and navigate to http://DNSorIP/phpipam</li>
+	<li>The phpipam Installation web installer should be load</li>
+	<li>Click the New phpipam installation button</li>
+	<li>Click the Automatic database installation button</li>
+	<li>Complete the database form as follows
+	<p>MySQL/MariaDB username: php_ipam_rw<br />
+	MySQL/MariaDB password: P4P1p@m!!<br />
+	MySQL/MariaDB database location: 127.0.0.1<br />
+	MySQL/MariaDB database name: php_ipam</p>
+	</li>
+	<li>Click the Show advanced options button</li>
+	<li>Uncheck Create new database and Set permissions to tables &gt; Click the Install phpipam database button</li>
+	<li>Once the database is initialized, click the Continue button</li>
+	<li>Enter and confirm an admin user password &gt; Click Save settings</li>
+	<li>Click the Proceed to login button</li>
+	<li>Login with the username admin and the admin password set earlier</li>
+	<li>Welcome to phpIPAM</li>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
