@@ -1,0 +1,252 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Create a Proxmox Thin Client with Almost Any Hardware</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Hypervisor,Install Guide,Single Board Computer,SBC,Debian,Virtualization,Virtual Machine,VM,System Administrator,Proxmox VE,Proxmox Tutorial,Proxmox How To,Proxmox,Linux,Proxmox Thin Client,SPICE Thin Client,Debian Thin Client,Raspberry Pi Thin Client,Using A Thin Client With Proxmox VM,Raspberry Pi,Thin Client Hardware,HP,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Create a Proxmox Thin Client with Almost Any Hardware">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="06/27/2022 11:20:18 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Create a Proxmox Thin Client with Almost Any Hardware</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Background</h2>
+
+<p>I was looking for a simple and effective way to utilize cheap thin client hardware to connect to Proxmox VMs. After looking at several distros and solutions that don&#39;t support the SPICE protocol, I came across this method using a Raspberry Pi or really any hardware than can run Linux. The original idea and steps for this process, as well as the author of the script used is apalrd. Check out his blogpost (<a href="https://www.apalrd.net/posts/2022/raspi_spice_login/" target="_blank">https://www.apalrd.net/posts/2022/raspi_spice_login/</a>) and video (<a href="https://www.youtube.com/watch?v=sNgmMxrnLn8" target="_blank">https://www.youtube.com/watch?v=sNgmMxrnLn8</a>) outlining how he approached the problem and how this setup came to exist.</p>
+
+<h2>The Hardware</h2>
+
+<p>The device I used in this video is a HP t520 thin client I picked up used for about $27. It sports a 2 core/2 thread AMD GX-212JC @ 1.20 GHz, 4GB DDR3L RAM and a 16GB M.2 SSD.</p>
+
+<h2>Things You Will Need</h2>
+
+<ul>
+	<li>A USB flash drive, at least 8 GB <a href="https://amzn.to/3wkR5ju" target="_blank">https://amzn.to/3wkR5ju</a> | <a href="https://amzn.to/3qkrJ1p" target="_blank">https://amzn.to/3qkrJ1p</a> | <a href="https://amzn.to/3Nhu9b9" target="_blank">https://amzn.to/3Nhu9b9</a></li>
+</ul>
+
+<h2>Preparing the Installation Media</h2>
+
+<ol>
+	<li>Download the Debian .iso file <a href="https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-11.3.0-amd64-netinst.iso" target="_blank">Download</a></li>
+	<li>Download the Ventoy installer <a href="https://www.ventoy.net/en/download.html" target="_blank">Download</a></li>
+	<li>Extract the downloaded .zip file</li>
+	<li>Run Ventoy2Disk.exe</li>
+	<li>Plug in a USB flash drive at least 4 GB in size</li>
+	<li>Click the refresh icon</li>
+	<li>Select the flash drive from the device dropdown</li>
+	<li>Click the Install button</li>
+	<li>After the installation completes, copy the downloaded Debian .iso to the Ventoy partition</li>
+	<li>Safely remove the USB flash drive</li>
+	<li>Plug the flash drive into the target thin client device</li>
+</ol>
+
+<h2>Debian Installation and Setup</h2>
+
+<ol>
+	<li>Power on the thin client device and start pressing Delete</li>
+	<li>When the install dialog displays, arrow down to Install &gt; Press Enter</li>
+	<li>Select a language &gt; Click Continue</li>
+	<li>Select a Location &gt; Click Continue</li>
+	<li>Select a keyboard layout &gt; Click Continue</li>
+	<li>Enter a hostname for the VM &gt; Click Continue</li>
+	<li>Enter a Domain name or leave it empty &gt; Click Continue</li>
+	<li>Leave the root password blank &gt; Click Continue</li>
+	<li>Enter the full name for the new user &gt; Click Continue</li>
+	<li>Enter the username for the new user &gt; Click Continue</li>
+	<li>Enter and confirm a password for the new user &gt; Click Continue</li>
+	<li>Select a timezone &gt; Click Continue</li>
+	<li>Select Guided - user entire disk &gt; Click Continue</li>
+	<li>Select the target disk &gt; Click Continue</li>
+	<li>Select All files in one partition &gt; Click Continue</li>
+	<li>Select Finish partitioning and write changes to disk &gt; Click Continue</li>
+	<li>Select Yes to confirm writing the changes &gt; Click Continue</li>
+	<li>Wait for Debian to copy and install files</li>
+	<li>When prompted, select Yes to enable a network apt mirror &gt; Click Continue</li>
+	<li>Select a country to use for the apt mirror &gt; Click Continue</li>
+	<li>Select a mirror from the list &gt; Click Continue</li>
+	<li>Setup a HTTP proxy if necessary &gt; Click Continue</li>
+	<li>Select No to participating in package survey &gt; Click Continue</li>
+	<li>On the Software selection menu, deselect GNOME and select LXDE and SSH Server &gt; Press Enter to Continue</li>
+	<li>Select Yes to install GRUB &gt; Click Continue</li>
+	<li>Select /dev/sda for the boot loader location &gt; Click Continue</li>
+	<li>After the bootloader is installed select reboot to finish the installation</li>
+	<li>Welcome to Debian 11</li>
+</ol>
+
+<h2>Proxmox Configuration</h2>
+
+<ol>
+	<li>Open a web browser and navigate to the Proxmox Web UI and log in</li>
+	<li>Select Datacenter from the left navigation menu</li>
+	<li>Expand Permissions in the left sub-navigation menu &gt; Users</li>
+	<li>Click the Add button</li>
+	<li>Complete the Add User form as follows:
+	<p>User name: virt-viewer<br />
+	Realm: Proxmox VE authentication server<br />
+	Password: &lt;%password%&gt;<br />
+	Confirm password: &lt;%password%&gt;</p>
+	</li>
+	<li>Click Add to complete adding the user</li>
+	<li>Click Permissions in the left sub-navigation menu</li>
+	<li>Click Add &gt; User permission</li>
+	<li>Select /vms/&lt;%vm id%&gt; from the Path dropdown</li>
+	<li>Select the virt-viewer user from the User dropdown</li>
+	<li>Select the PVEVMUser role from the Role dropdown</li>
+	<li>Click Add to complete the permissions setup</li>
+	<li>Expand the node &gt; Select the target VM from the left navigation panel</li>
+	<li>Select Hardware from the left sub-navigation menu</li>
+	<li>Double-click Display &gt; Set the value to SPICE<br />
+	NOTE: If the VM guest is Windows based, it is required to install the virtio drivers <a href="https://pve.proxmox.com/wiki/Windows_VirtIO_Drivers#Installation" target="_blank">More Info</a></li>
+</ol>
+
+<h2>Configuring the Thin Client Script</h2>
+
+<ol>
+	<li>Log into Debian thin client device using the username and password created during the install</li>
+	<li>Run the following commands in the terminal
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install prerequisites<br />
+	sudo apt install virt-viewer curl -y<br />
+	# clean apt cache files<br />
+	sudo apt clean<br />
+	# create the thinclient script<br />
+	sudo nano /usr/local/bin/thinclient</div>
+	</li>
+	<li>Paste the following script into the file, modifying the PASSWORD, USERNAME and the first NODE variable values as needed
+	<p>#!/bin/bash<br />
+	set -e</p>
+
+	<p># Set auth options<br />
+	PASSWORD=&#39;virt-viewer&#39;<br />
+	USERNAME=&#39;virt-viewer@pve&#39;</p>
+
+	<p># Set VM ID from the first and only argument<br />
+	VMID=&quot;$1&quot;</p>
+
+	<p># Set Node<br />
+	# This must either be a DNS address or name of the node in the cluster<br />
+	NODE=&quot;pvehost&quot;</p>
+
+	<p># Proxy equals node if node is a DNS address<br />
+	# Otherwise, you need to set the IP address of the node here<br />
+	PROXY=&quot;$NODE&quot;</p>
+
+	<p>#The rest of the script originated from a Proxmox example</p>
+
+	<p>#Strip the DNS name to get the node name<br />
+	NODE=&quot;${NODE%%\.*}&quot;</p>
+
+	<p>#Authenticate to the API and get a ticket and CSRF token<br />
+	DATA=&quot;$(curl -f -s -S -k --data-urlencode &quot;username=$USERNAME&quot; --data-urlencode &quot;password=$PASSWORD&quot; &quot;https://$PROXY:8006/api2/json/access/ticket&quot;)&quot;</p>
+
+	<p>echo &quot;AUTH OK&quot;</p>
+
+	<p>#Extract the ticket an CSRF token from the returned data<br />
+	TICKET=&quot;${DATA//\&quot;/}&quot;<br />
+	TICKET=&quot;${TICKET##*ticket:}&quot;<br />
+	TICKET=&quot;${TICKET%%,*}&quot;<br />
+	TICKET=&quot;${TICKET%%\}*}&quot;</p>
+
+	<p>CSRF=&quot;${DATA//\&quot;/}&quot;<br />
+	CSRF=&quot;${CSRF##*CSRFPreventionToken:}&quot;<br />
+	CSRF=&quot;${CSRF%%,*}&quot;<br />
+	CSRF=&quot;${CSRF%%\}*}&quot;</p>
+
+	<p>#Request a SPICE config file from the API<br />
+	#Note that I&#39;ve removed the proxy argument<br />
+	#This results in Proxmox pointing remote-viewer to the node that is currently running the VM,<br />
+	#instead of the node that we specified with PROXY. Only useful in clustered scenarios,<br />
+	#but it doesn&#39;t hurt to leave it out.<br />
+	#I left the other command commented out, so you can replace the first curl with the second if you need the argument<br />
+	curl -f -s -S -k -b &quot;PVEAuthCookie=$TICKET&quot; -H &quot;CSRFPreventionToken: $CSRF&quot; &quot;https://$PROXY:8006/api2/spiceconfig/nodes/$NODE/qemu/$VMID/spiceproxy&quot; -X POST &gt; spiceproxy<br />
+	#curl -f -s -S -k -b &quot;PVEAuthCookie=$TICKET&quot; -H &quot;CSRFPreventionToken: $CSRF&quot; &quot;https://$PROXY:8006/api2/spiceconfig/nodes/$NODE/qemu/$VMID/spiceproxy&quot; -X POST -d &quot;proxy=$PROXY&quot; &gt; spiceproxy</p>
+
+	<p><br />
+	#Launch remote-viewer with spiceproxy file, in full screen mode<br />
+	#You can add USB passthrough options here if you&#39;d like<br />
+	#Not calling via exec, so the script continues after remote-viewer exits<br />
+	remote-viewer -f spiceproxy</p>
+
+	<p>#Kill lxsession<br />
+	#This is how LXDE is designed to logout, it&#39;s not a hack lol<br />
+	killall lxsession</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following commands in the terminal
+	<div class="codeBlock"># make the script executable<br />
+	sudo chmod +x /usr/local/bin/thinclient<br />
+	# edit the lightdm conf file<br />
+	sudo nano /etc/lightdm/lightdm.conf</div>
+	</li>
+	<li>Press CTRL+W and search for greeter-hide-users=false</li>
+	<li>Remove the # at the beginning of the line to uncomment the setting</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following commands in the terminal
+	<div class="codeBlock"># create a new user account to display in the logon dropdown<br />
+	sudo adduser vdi1012<br />
+	# follow the prompts to complete the user setup<br />
+	# enter and confirm a password for the user<br />
+	# enter a VM description as the full name<br />
+	# edit the lightdm authentication conf file<br />
+	sudo nano /etc/pam.d/lightdm</div>
+	</li>
+	<li>Paste the following line under the #%PAM-1.0 line
+	<p>auth sufficient pam_succeed_if.so user ingroup vdiusers</p>
+	</li>
+	<li>Continue with the following commands in the terminal
+	<div class="codeBlock"># create a vdiusers group<br />
+	sudo groupadd -r vdiusers<br />
+	# add the vdi1012 user to the vdiusers group<br />
+	sudo gpasswd -a vdi1012 vdiusers<br />
+	# backup the lxde autostart file<br />
+	sudo mv /etc/xdg/lxsession/LXDE/autostart /etc/xdg/lxsession/LXDE/autostart.bkup<br />
+	# create an empty lxde autostart file<br />
+	sudo touch /etc/xdg/lxsession/LXDE/autostart<br />
+	# create a lxsession config directory<br />
+	mkdir ~/.config/lxsession/LXDE -p<br />
+	# copy the system lxde autostart into the current users lxsession directory<br />
+	sudo cp /etc/xdg/lxsession/LXDE/autostart.bkup ~/.config/lxsession/LXDE/autostart<br />
+	# authenticate as the vdi1012 user<br />
+	sudo su vdi1012<br />
+	# create a lxsession config directory<br />
+	mkdir ~/.config/lxsession/LXDE -p<br />
+	# create the vdi user&#39;s autostart file<br />
+	nano ~/.config/lxsession/LXDE/autostart</div>
+	</li>
+	<li>Paste the following into the autostart file, changing the VM ID arguments as needed
+	<p>@/usr/bin/bash /usr/local/bin/thinclient 1012</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+</ol>
+
+<h2>Testing the Thin Client</h2>
+
+<ol>
+	<li>Restart the thin client for the LXDE changes to take effect</li>
+	<li>At the login screen, select the vdi1012 user from the dropdown (the VM description entered in the full name field will be listed)</li>
+	<li>Press Enter to login without a password</li>
+	<li>If everything is working as intended, a full screen display of the target VM should load</li>
+</ol>
+
+<ol>
+</ol>
+          </div>
+        </div>
+      </body>
+    </html>
+  
