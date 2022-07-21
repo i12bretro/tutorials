@@ -1,0 +1,56 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Chocolatey on Windows</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="How To Install Chocolatey On Windows,Install Guide,Windows,Microsoft,PowerShell,Microsoft Windows,Package Manager,Application Manager,Chocolatey,ChocolateyGUI,Windows Based Package Manager,Windows Based Application Manager,Chocolatey GUI,Chocolatey User Interface,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Chocolatey on Windows">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="05/06/2022 12:56:15 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Chocolatey on Windows</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Chocolatey?</h2>
+
+<blockquote><em>Chocolatey is a software management solution that allows you to manage 100% of your software, anywhere you have Windows, with any endpoint management tool. -<a href="https://docs.chocolatey.org/en-us/" target="_blank">https://docs.chocolatey.org/en-us/</a></em></blockquote>
+
+<h2>Installing Chocolatey</h2>
+
+<ol>
+	<li>Launch Powershell as administrator</li>
+	<li>Run the following command
+	<div class="codeBlock PS">Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString(&#39;https://community.chocolatey.org/install.ps1&#39;))</div>
+	</li>
+</ol>
+
+<h2>Testing Choco Install (optional)</h2>
+
+<ol>
+	<li>Once the installation script completes, run the following to install Chocolatey GUI
+	<div class="codeBlock PS"># install chocolatey GUI<br />
+	choco install chocolateygui<br />
+	# type &#39;a&#39; and press enter to accept all<br />
+	# launch chocolatey GUI<br />
+	chocolateygui</div>
+	</li>
+</ol>
+
+<p>Sources: <a href="https://docs.chocolatey.org/en-us/choco/setup" target="_blank">https://docs.chocolatey.org/en-us/choco/setup</a><br />
+<a href="https://docs.chocolatey.org/en-us/chocolatey-gui/setup/installation" target="_blank">https://docs.chocolatey.org/en-us/chocolatey-gui/setup/installation</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  
