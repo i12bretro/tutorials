@@ -22,7 +22,83 @@
           </div>
           <div></div>
           <div id="content">
-          <h2>What is OpenVPN?</h2>    <blockquote><em>OpenVPN is a virtual private network system that implements techniques to create secure point-to-point or site-to-site connections in routed or bridged configurations and remote access facilities. It implements both client and server applications. -<a href="https://openvpn.net" target="_blank">https://openvpn.net</a></em></blockquote>    <h2>Installing Docker</h2>    <ol>  	<li>Log into the Linux based device</li>  	<li>Run the following commands in the terminal  	<div class="codeBlock"># install prerequisites<br />  	sudo apt install apt-transport-https ca-certificates curl software-properties-common gnupg-agent -y<br />  	# add docker gpg key<br />  	curl -fsSL https://download.docker.com/linux/$(awk -F&#39;=&#39; &#39;/^ID=/{ print $NF }&#39; /etc/os-release)/gpg | sudo apt-key add -<br />  	# add docker software repository<br />  	sudo add-apt-repository &quot;deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/$(awk -F&#39;=&#39; &#39;/^ID=/{ print $NF }&#39; /etc/os-release) $(lsb_release -cs) stable&quot;<br />  	# install docker<br />  	sudo apt install docker-ce docker-compose containerd.io -y<br />  	# enable and start docker service<br />  	sudo systemctl enable docker &amp;&amp; sudo systemctl start docker<br />  	# add the current user to the docker group<br />  	sudo usermod -aG docker $USER<br />  	# reauthenticate for the new group membership to take effect<br />  	su - $USER</div>  	</li>  </ol>    <h2>Running OpenVPN Server</h2>    <ol>  	<li>Continue with the following commands in a terminal window  	<div class="codeBlock"># create a working directory<br />  	mkdir ~/docker/openvpn-server -p<br />  	# SET SOME VARIABLES<br />  	# set the openvpn service name (recommended to use the ovpn-data-)<br />  	OVPN_DATA=&quot;ovpn-data-docker&quot;<br />  	# set the external IP address or DNS name<br />  	OVPN_HOST=&quot;udp://VPN.SERVERNAME.COM&quot;<br />  	# set a client name identifier<br />  	OVPN_CLIENT=&quot;client1&quot;<br />  	# pull the docker image<br />  	docker pull kylemanna/openvpn<br />  	# generate new openvpn config<br />  	docker run -v ~/docker/openvpn-server:/etc/openvpn --rm kylemanna/openvpn ovpn_genconfig -u ${OVPN_HOST}<br />  	# initialize the openvpn pki<br />  	docker run -v ~/docker/openvpn-server:/etc/openvpn --rm -it kylemanna/openvpn ovpn_initpki</div>  	</li>  	<li>Enter and confirm a password to protect the PKI</li>  	<li>Enter a common name for the PKI (ie OpenVPN Server)</li>  	<li>Enter and confirm a password to protect the CA private key</li>  	<li>Continue with the following commands in a terminal window  	<div class="codeBlock"># start the openvpn-server container<br />  	docker run -d --name=openvpn-server -v ~/docker/openvpn-server:/etc/openvpn -p 1194:1194/udp --cap-add=NET_ADMIN --restart unless-stopped kylemanna/openvpn<br />  	# generate a client certificate with no password<br />  	# NOTE any client with this certificate can connect to the VPN server<br />  	docker run -v ~/docker/openvpn-server:/etc/openvpn --rm -it kylemanna/openvpn easyrsa build-client-full ${OVPN_CLIENT} nopass<br />  	# enter the password for the CA private key<br />  	# generate an openvpn configuration file for the client<br />  	docker run -v ~/docker/openvpn-server:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient ${OVPN_CLIENT} &gt; ${OVPN_CLIENT}.ovpn<br />  	# output the generated .ovpn file<br />  	cat ${OVPN_CLIENT}.ovpn</div>  	</li>  </ol>    <h2>Installing OpenVPN Client Software and Testing</h2>    <p><em>At this point the OpenVPN server is running but you will need to configure your router to forward UDP port 1194 from the WAN to the IP address of the Docker host. The process to do this will vary based on your router</em></p>    <ol>  	<li>Download the OpenVPN software <a href="https://openvpn.net/community-downloads/" target="_blank">Download</a></li>  	<li>Run the installer accepting all the default values</li>  	<li>Click the Start button and search OpenVPN GUI</li>  	<li>Select OpenVPN GUI from the results to start the application</li>  	<li>Copy the generated .ovpn configuration file from the Docker host to the OpenVPN client install directory/config</li>  	<li>Right click OpenVPN GUI in the system tray &gt; Connect</li>  </ol>    <p>Documentation: <a href="https://hub.docker.com/r/kylemanna/openvpn" target="_blank">https://hub.docker.com/r/kylemanna/openvpn</a></p>          </div>
+          <h2>What is OpenVPN?</h2>
+
+<blockquote><em>OpenVPN is a virtual private network system that implements techniques to create secure point-to-point or site-to-site connections in routed or bridged configurations and remote access facilities. It implements both client and server applications. -<a href="https://openvpn.net" target="_blank">https://openvpn.net</a></em></blockquote>
+
+<h2>Installing Docker</h2>
+
+<ol>
+	<li>Log into the Linux based device</li>
+	<li>Run the following commands in the terminal
+	<div class="codeBlock"># install prerequisites<br />
+	sudo apt install apt-transport-https ca-certificates curl software-properties-common gnupg-agent -y<br />
+	# add docker gpg key<br />
+	curl -fsSL https://download.docker.com/linux/$(awk -F&#39;=&#39; &#39;/^ID=/{ print $NF }&#39; /etc/os-release)/gpg | sudo apt-key add -<br />
+	# add docker software repository<br />
+	sudo add-apt-repository &quot;deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/$(awk -F&#39;=&#39; &#39;/^ID=/{ print $NF }&#39; /etc/os-release) $(lsb_release -cs) stable&quot;<br />
+	# install docker<br />
+	sudo apt install docker-ce docker-compose containerd.io -y<br />
+	# enable and start docker service<br />
+	sudo systemctl enable docker &amp;&amp; sudo systemctl start docker<br />
+	# add the current user to the docker group<br />
+	sudo usermod -aG docker $USER<br />
+	# reauthenticate for the new group membership to take effect<br />
+	su - $USER</div>
+	</li>
+</ol>
+
+<h2>Running OpenVPN Server</h2>
+
+<ol>
+	<li>Continue with the following commands in a terminal window
+	<div class="codeBlock"># create a working directory<br />
+	mkdir ~/docker/openvpn-server -p<br />
+	# SET SOME VARIABLES<br />
+	# set the openvpn service name (recommended to use the ovpn-data-)<br />
+	OVPN_DATA=&quot;ovpn-data-docker&quot;<br />
+	# set the external IP address or DNS name<br />
+	OVPN_HOST=&quot;udp://VPN.SERVERNAME.COM&quot;<br />
+	# set a client name identifier<br />
+	OVPN_CLIENT=&quot;client1&quot;<br />
+	# pull the docker image<br />
+	docker pull kylemanna/openvpn<br />
+	# generate new openvpn config<br />
+	docker run -v ~/docker/openvpn-server:/etc/openvpn --rm kylemanna/openvpn ovpn_genconfig -u ${OVPN_HOST}<br />
+	# initialize the openvpn pki<br />
+	docker run -v ~/docker/openvpn-server:/etc/openvpn --rm -it kylemanna/openvpn ovpn_initpki</div>
+	</li>
+	<li>Enter and confirm a password to protect the PKI</li>
+	<li>Enter a common name for the PKI (ie OpenVPN Server)</li>
+	<li>Enter and confirm a password to protect the CA private key</li>
+	<li>Continue with the following commands in a terminal window
+	<div class="codeBlock"># start the openvpn-server container<br />
+	docker run -d --name=openvpn-server -v ~/docker/openvpn-server:/etc/openvpn -p 1194:1194/udp --cap-add=NET_ADMIN --restart unless-stopped kylemanna/openvpn<br />
+	# generate a client certificate with no password<br />
+	# NOTE any client with this certificate can connect to the VPN server<br />
+	docker run -v ~/docker/openvpn-server:/etc/openvpn --rm -it kylemanna/openvpn easyrsa build-client-full ${OVPN_CLIENT} nopass<br />
+	# enter the password for the CA private key<br />
+	# generate an openvpn configuration file for the client<br />
+	docker run -v ~/docker/openvpn-server:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient ${OVPN_CLIENT} &gt; ${OVPN_CLIENT}.ovpn<br />
+	# output the generated .ovpn file<br />
+	cat ${OVPN_CLIENT}.ovpn</div>
+	</li>
+</ol>
+
+<h2>Installing OpenVPN Client Software and Testing</h2>
+
+<p><em>At this point the OpenVPN server is running but you will need to configure your router to forward UDP port 1194 from the WAN to the IP address of the Docker host. The process to do this will vary based on your router</em></p>
+
+<ol>
+	<li>Download the OpenVPN software <a href="https://openvpn.net/community-downloads/" target="_blank">Download</a></li>
+	<li>Run the installer accepting all the default values</li>
+	<li>Click the Start button and search OpenVPN GUI</li>
+	<li>Select OpenVPN GUI from the results to start the application</li>
+	<li>Copy the generated .ovpn configuration file from the Docker host to the OpenVPN client install directory/config</li>
+	<li>Right click OpenVPN GUI in the system tray &gt; Connect</li>
+</ol>
+
+<p>Documentation: <a href="https://hub.docker.com/r/kylemanna/openvpn" target="_blank">https://hub.docker.com/r/kylemanna/openvpn</a></p>          </div>
         </div>
       </body>
     </html>
