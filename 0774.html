@@ -1,0 +1,48 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Delay Proxmox VE VM Autostart</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Hypervisor,Self-Hosted,Proxmox VE,Proxmox Tutorial,Proxmox Node,Proxmox How To,Proxmox Host,Proxmox,Linux,Debian,Delayed AutoStart,Delayed Auto-Boot VMs,Proxmox Advanced Configuration,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Delay Proxmox VE VM Autostart">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="07/30/2022 01:59:49 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Delay Proxmox VE VM Autostart</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Background?</h2>
+
+<blockquote>I have a Proxmox node that hosts my Windows domain controller. Part of the hardware setup for the VM is a USB 3.0 PCI card that allows me to control the devices (mostly external HDDs) directly from within the VM. The problem I was running into was whenever my Proxmox host rebooted or lost power and came back up, the USB 3.0 PCI card wouldn&#39;t passthrough properly. I&#39;d have to manually shutdown the VM, then start it for the passthrough to work. I figured that since a simple stop/start of the VM was fixing the passthrough it had something to do with the timing of the Proxmox host releasing the PCI device before the Windows VM started it&#39;s boot process. I started investigating how to delay starting the VMs with the autostart option enabled and came across this blog post <a href="https://dannyda.com/2020/06/24/how-to-delay-the-first-auto-start-virtual-machinevm-guest-system-in-proxmox-ve-pve/" target="_blank">⧉</a> with a very straightforward and simple solution. This is also a viable solution for those who use NAS or other externally hosted storage for their VMs and want to allow additional time for that hardware to become available prior to Proxmox starting VMs.</blockquote>
+
+<ol>
+	<li>Log into the Proxmox web UI</li>
+	<li>Select the target node &gt; Shell</li>
+	<li>Run the following commands in the terminal
+	<div class="codeBlock CMD"># create a backup of the pve-guests service<br />
+	cp /etc/systemd/system/multi-user.target.wants/pve-guests.service ~/pve-guests.service.bkup<br />
+	# edit the pve-guests service file<br />
+	nano /etc/systemd/system/multi-user.target.wants/pve-guests.service</div>
+	</li>
+	<li>Press CTRL+W and search for ExecStartPre</li>
+	<li>Add the following before the existing ExecStartPre line, changing the 60 to the number seconds to delay the startup of VMs
+	<p>ExecStartPre=/bin/sleep 60</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>That&#39;s it. The next time the Proxmox node reboots the auto starting of VMs will be delayed by the specified number of seconds, allowing more time for dependent hardware or storage to become available</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
