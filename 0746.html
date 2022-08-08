@@ -1,0 +1,172 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Self-Hosted ACME (Automated Certificate Management Environment) Server with Step-CA on Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Self-Hosted ACME Server,Self-Hosted Let's Encrypt,Let's Encrypt Alternative,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Self-Signed SSL,Self-Signed PKI,Self-Signed HTTPS,Self-Signed Certificate,Public Key Infrastructure,Public Key User Interface,SSL Certificates,Self-Signed,PKI,Linux,IT Security,HTTPS,Debian,Encryption,Certificates,Certificate Authority,Let's Encrypt,ACME,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Self-Hosted ACME (Automated Certificate Management Environment) Server with Step-CA on Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="05/06/2022 12:46:52 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Self-Hosted ACME (Automated Certificate Management Environment) Server with Step-CA on Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Step-CA?</h2>
+
+<blockquote><em>[Step-CA is] a private certificate authority (X.509 &amp; SSH) &amp; ACME server for secure automated certificate management, so you can use TLS everywhere &amp; SSO for SSH. -<a href="https://github.com/smallstep/certificates" target="_blank">https://github.com/smallstep/certificates</a></em></blockquote>
+
+<h2>Installing Step-CA and Step-CLI</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# clean up downloaded apt files<br />
+	sudo apt clean<br />
+	# lookup latest steps-ca release URL<br />
+	regex=&#39;&quot;browser_download_url&quot;: &quot;(https:\/\/github.com\/smallstep\/certificates\/releases\/download\/[^/]*\/step-ca_[^/]*amd64\.deb)&quot;&#39; &amp;&amp; response=$(curl -H &quot;Accept: application/vnd.github.v3+json&quot; https://api.github.com/repos/smallstep/certificates/releases/latest) &amp;&amp; [[ $response =~ $regex ]] &amp;&amp; downloadURL=&quot;${BASH_REMATCH[1]}&quot;<br />
+	# download steps-ca server<br />
+	wget -O ./steps-ca.deb $downloadURL<br />
+	# install steps-ca server<br />
+	sudo dpkg -i ./steps-ca.deb<br />
+	# lookup latest steps-cli release URL<br />
+	regex=&#39;&quot;browser_download_url&quot;: &quot;(https:\/\/github.com\/smallstep\/cli\/releases\/download\/[^/]*\/step-cli_[^/]*amd64\.deb)&quot;&#39; &amp;&amp; response=$(curl -H &quot;Accept: application/vnd.github.v3+json&quot; https://api.github.com/repos/smallstep/cli/releases/latest) &amp;&amp; [[ $response =~ $regex ]] &amp;&amp; downloadURL=&quot;${BASH_REMATCH[1]}&quot;<br />
+	# download steps-cli client<br />
+	wget -O ./steps-cli.deb $downloadURL<br />
+	# install steps-cli client<br />
+	sudo dpkg -i ./steps-cli.deb<br />
+	# create the /etc/step-ca directory<br />
+	sudo mkdir /etc/step-ca<br />
+	# elevate to root user<br />
+	sudo su<br />
+	# set the step-ca path<br />
+	export STEPPATH=/etc/step-ca<span style="display: none;"> </span></div>
+	</li>
+</ol>
+
+<h2>Initialize A New Certificate Authority</h2>
+
+<ol>
+	<li>Continue with the following commands in a terminal
+	<div class="codeBlock"># initilize a CA<br />
+	step ca init</div>
+	</li>
+	<li>Select standalone &gt; press Enter</li>
+	<li>Enter a name for the PKI/Certificate Authority [ie i12bretro Certificate Authority] &gt; Press Enter</li>
+	<li>Enter the IP address and/or DNS name of the Step-CA host [ie debian.i12bretro.local,192.168.0.57] &gt; Press Enter</li>
+	<li>Enter the port for Step-CA to listen on [ie :8443] &gt; Press Enter</li>
+	<li>Enter a first provisioner e-mail address [ie i12bretro@i12bretro.local] &gt; Press Enter</li>
+	<li>Enter a password for the CA or leave it blank to have a password generated &gt; Press Enter</li>
+</ol>
+
+<h2>Installing Step-CA Service/Daemon</h2>
+
+<ol>
+	<li>Continue with the following commands in a terminal
+	<div class="codeBlock"># add ACME provisioner<br />
+	step ca provisioner add acme --type ACME<br />
+	# exit root shell<br />
+	exit<br />
+	# create password.txt, replace with the CA password<br />
+	echo &#39;$YourCAPassword!!&#39; | sudo tee -a /etc/step-ca/password.txt &gt; /dev/null<br />
+	# create step-ca user<br />
+	sudo useradd --system --home /etc/step-ca --shell /bin/false step-ca<br />
+	# set ownership of /etc/step-ca<br />
+	sudo chown step-ca:step-ca /etc/step-ca -R<br />
+	# limit permissions on the password.txt file<br />
+	sudo chmod 400 /etc/step-ca/password.txt<br />
+	# create step-ca log directory<br />
+	sudo mkdir /var/log/step-ca -p<br />
+	# set ownership of step-ca logs<br />
+	sudo chown step-ca:step-ca /var/log/step-ca -R<br />
+	# edit the ca configuration<br />
+	sudo nano /etc/step-ca/config/ca.json<span style="display: none;"> </span></div>
+	</li>
+	<li>By default, step-ca certificates are only valid for 24 hours. To adjust this, paste the following inside each of the provisioners sections of the ca.json configuration file and adjust the values as needed<span style="display: none;"> </span>
+	<p>&quot;claims&quot;: {<br />
+	 &quot;maxTLSCertDuration&quot;:&quot;26280h&quot;,<br />
+	 &quot;defaultTLSCertDuration&quot;:&quot;8760h&quot;<br />
+	},</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes and close nano</li>
+	<li>Continue with the following commands in a terminal
+	<div class="codeBlock"># create service file<br />
+	sudo nano /etc/systemd/system/step-ca.service</div>
+	</li>
+	<li>Paste the following configuration into step-ca.service
+	<p>[Unit]<br />
+	Description=step-ca service<br />
+	After=network.target<br />
+	StartLimitIntervalSec=0</p>
+
+	<p>[Service]<br />
+	Type=simple<br />
+	Restart=always<br />
+	RestartSec=1<br />
+	User=step-ca<br />
+	Group=step-ca<br />
+	Environment=STEPPATH=/etc/step-ca<br />
+	ExecStart=/bin/sh -c &quot;/usr/bin/step-ca ${STEPPATH}/config/ca.json --password-file=${STEPPATH}/password.txt &gt;&gt; /var/log/step-ca/step-ca.log 2&gt;&amp;1&quot;</p>
+
+	<p>[Install]<br />
+	WantedBy=multi-user.target</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes and close nano</li>
+	<li>Continue with the following commands to enable and start the service:
+	<div class="codeBlock"># reload systemd services<br />
+	sudo systemctl daemon-reload<br />
+	# start step-ca service on boot and now<br />
+	sudo systemctl enable step-ca --now</div>
+	</li>
+</ol>
+
+<h2>Automating Certificate Requests</h2>
+
+<ol>
+	<li>Log into the server needing to request a certificate</li>
+	<li>Continue following commands in a terminal window
+	<div class="codeBlock"># copy the step-ca root certificate to trusted certs<br />
+	sudo cp /etc/step-ca/certs/root_ca.crt /usr/local/share/ca-certificates/<br />
+	# copy the step-ca intermediate certificate to trusted certs<br />
+	sudo cp /etc/step-ca/certs/intermediate_ca.crt /usr/local/share/ca-certificates/<br />
+	# update ca certs<br />
+	sudo update-ca-certificates<br />
+	# remove apt version of certbot if installed<br />
+	sudo apt remove certbot -y<br />
+	# install snapd<br />
+	sudo apt install snapd -y<br />
+	# install snap core and update<br />
+	sudo snap install core; sudo snap refresh core<br />
+	# install certbot snap<br />
+	sudo snap install --classic certbot<br />
+	# create certbot symbolic link<br />
+	sudo ln -s /snap/bin/certbot /usr/bin/certbot<br />
+	# request the certificate<br />
+	sudo REQUESTS_CA_BUNDLE=/etc/step-ca/certs/root_ca.crt certbot certonly --standalone -d &lt;%host%&gt; --server https://&lt;%step-ca-host%&gt;:&lt;%step-ca-port%&gt;/acme/acme/directory</div>
+	</li>
+	<li>When prompted, enter an email address and agree to the terms of service</li>
+	<li>Choose whether to share your email and receive emails from certbot</li>
+	<li>Certbot will output information regarding the location of the certificate files</li>
+</ol>
+
+<p>Sources: <a href="https://smallstep.com/docs/step-ca/installation" target="_blank">https://smallstep.com/docs/step-ca/installation</a><br />
+<a href="https://certbot.eff.org/instructions?ws=other&amp;os=debianbuster" target="_blank">https://certbot.eff.org/instructions?ws=other&amp;os=debianbuster</a><br />
+<a href="https://smallstep.com/docs/tutorials/acme-challenge/" target="_blank">https://smallstep.com/docs/tutorials/acme-challenge/</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
