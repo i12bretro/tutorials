@@ -1,0 +1,116 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Running a MacOS 13 Ventura VM in VMware ESXi</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Hypervisor,Install Guide,Virtualization,Mac OS 13,MacOS,VMware,VM,Virtual Machines,Ventura VM,Ventura,How To Install MacOS Ventura On ESXi,OS 13,VMware Player,Ventura Virtual Machine,Apple,Apple MacOS,.vmdk,VMs,ESXi,VSphere,VMware ESXi,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Running a MacOS 13 Ventura VM in VMware ESXi">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="07/27/2022 10:55:38 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Running a MacOS 13 Ventura VM in VMware ESXi</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Downloads and Configuring ESXi</h2>
+
+<ol>
+	<li>Download a MacOS Ventura .iso <a href="https://archive.org/search.php?query=Mac%20OS%20Monterey&amp;and[]=mediatype%3A%22software%22" target="_blank">Download</a></li>
+	<li>Download Unlocker for VMware ESXi <a href="https://github.com/hugepants/esxi-unlocker/releases/" target="_blank">Download</a></li>
+	<li>Download WinSCP <a href="https://winscp.net/eng/downloads.php" target="_blank">Download</a></li>
+	<li>Extract the downloaded Unlocker for VMware ESXi</li>
+	<li>Rename the extracted folder unlocker</li>
+	<li>Log into the ESXi web UI</li>
+	<li>Enable the SSH service by selecting Actions &gt; Services &gt; Enable Secure Shell (SSH)</li>
+	<li>Extract WinSCP and run the executable</li>
+	<li>Connect to the ESXi host IP address via WinSCP</li>
+	<li>Copy the extracted Unlocker folder to the ESXi host /root directory</li>
+	<li>Connect to the ESXi host via SSH</li>
+	<li>Run the following commands to install ESXi Unlocker
+	<div class="codeBlock"># change directory to unlocker<br />
+	cd /unlocker<br />
+	# make the install script executable<br />
+	chmod +x ./esxi-install.sh<br />
+	# run the install script<br />
+	./esxi-install.sh<br />
+	# reboot esxi host<br />
+	reboot</div>
+	</li>
+</ol>
+
+<h2>Creating the Ventura VM</h2>
+
+<ol>
+	<li>Log into the ESXi web UI</li>
+	<li>In the left navigation pane, right click on Virtual Machines &gt; Create/Register VM</li>
+	<li>Select Create a new virtual machine &gt; Click Next</li>
+	<li>Name the VM MacOS 13 &gt; Set the Guest OS family to Mac OS and Guest OS Version to Apple MacOS 12 (64-bit) &gt; Click Next</li>
+	<li>Select the storage datastore to use &gt; Click Next</li>
+	<li>Set the Memory to at least 4096, Hard disk 1 to 50 GB or more</li>
+	<li>Expand Network &gt; Set the Adapter Type to VMXNET 3</li>
+	<li>Expand CD/DVD Drive 1 &gt; Make sure Datastore ISO file is selected &gt; Click Browse next to the CD/DVD Media field</li>
+	<li>Click Upload &gt; Browse to and select the Mac OS installation ISO</li>
+	<li>Once the upload completes, click the Mac OS ISO to highlight it &gt; Click Select</li>
+	<li>Back on the Hardware customization screen click Next</li>
+	<li>Review the summary provided and click Finish Click the new MacOS 13 VM Click Power on at the top of the page</li>
+</ol>
+
+<h2>Installing MacOS Ventura</h2>
+
+<ol>
+	<li>After an initialization sequence the MAC OS Setup should start</li>
+	<li>Select a Language &gt; Click the next arrow</li>
+	<li>Select Disk Utility</li>
+	<li>Select the VMware Virtual SATA Hard Drive Media &gt; Click Erase</li>
+	<li>Name the drive MacOS &gt; Set the Format to APFS &gt; Click Erase</li>
+	<li>Click Done &gt; Close Disk Utility</li>
+	<li>Click Install macOS Ventura</li>
+	<li>Click Continue &gt; Click Agree &gt; Click Agree again</li>
+	<li>Select the MacOS disk &gt; Click Install</li>
+	<li>Wait while Mac OS installs files, the VM will reboot several times</li>
+	<li>Select your Country &gt; Click Continue</li>
+	<li>Confirm your languages and keyboard layout &gt; Click Continue</li>
+	<li>Click Not Now on the Accessibility screen</li>
+	<li>Click Continue on the Data &amp; Privacy screen</li>
+	<li>Select Not Now on the Migration Assistant screen</li>
+	<li>Select Set Up Later and then Skip on the Apple ID screen</li>
+	<li>Click Agree &gt; Agree again</li>
+	<li>Enter a name, user name, password &gt; Click Continue</li>
+	<li>Click Customize Settings</li>
+	<li>Click Continue &gt; Select Use or Don&#39;t Use for Location Services</li>
+	<li>Pick a time zone &gt; Click Continue</li>
+	<li>Choose whether to share analytics with Apple &gt; Click Continue</li>
+	<li>Click Set Up Later on the Screen Time screen</li>
+	<li>Pick a theme &gt; Click Continue</li>
+	<li>Welcome to MacOS 13 Ventura</li>
+</ol>
+
+<h2>Install VMware Tools (optional, but recommended)</h2>
+
+<ol>
+	<li>Download MacOS Unlocker for VMware Workstation <a href="https://github.com/paolo-projects/auto-unlocker/releases" target="_blank">Download</a></li>
+	<li>Extract the downloaded .zip file</li>
+	<li>Run Unlocker.exe</li>
+	<li>Click the Download button under the Tools section</li>
+	<li>Back in the ESXi web UI select Storage from the left navigation menu</li>
+	<li>Click the Datastore browser icon at the top of the main content pane</li>
+	<li>Click Upload &gt; Browse to and select the darwin.iso downloaded by MacOS Unlocker</li>
+	<li>Once the upload completes click Close to close out of the Datastore browser</li>
+	<li>Select the MacOS 13 VM &gt; Actions &gt; Edit settings</li>
+	<li>Attach darwin.iso to CD/DVD drive 1</li>
+	<li>Inside the VM, double click the mounted VMware tools and run the installer</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
