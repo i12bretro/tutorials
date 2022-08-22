@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Running Matrix Synapse Home Server in Docker on Ubuntu Server">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="05/15/2022 08:37:11 PM" />
+        <meta name="revised" content="08/22/2022 03:09:46 PM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -69,7 +69,7 @@
 	<li>Press CTRL+W and search for name: sqlite3</li>
 	<li>Comment out the sqlite database parameters by adding a # to the beginning of each of the lines</li>
 	<li>Arrow up slightly and uncomment the psycopg2 database connection and complete it as follows:
-	<p>datebase:<br />
+	<p>database:<br />
 	&emsp;name: psycopg2<br />
 	&emsp;txn_limit: 10000<br />
 	&emsp;args:<br />
@@ -108,8 +108,7 @@
 	<li>Login using the Synapse username and password created earlier</li>
 </ol>
 
-<p>Documentation: <a href="https://registry.hub.docker.com/r/matrixdotorg/synapse/" target="_blank">https://registry.hub.docker.com/r/matrixdotorg/synapse/</a></p>
-          </div>
+<p>Documentation: <a href="https://registry.hub.docker.com/r/matrixdotorg/synapse/" target="_blank">https://registry.hub.docker.com/r/matrixdotorg/synapse/</a></p>          </div>
         </div>
       </body>
     </html>
