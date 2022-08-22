@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Install Matrix Synapse Home Server on Debian Linux">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="05/08/2022 12:35:19 PM" />
+        <meta name="revised" content="08/22/2022 12:18:24 PM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -22,7 +22,8 @@
           </div>
           <div></div>
           <div id="content">
-          <h2>What is Matrix?</h2>
+          <h2><br />
+What is Matrix?</h2>
 
 <blockquote>
 <p>Matrix is an open source project that publishes the<br />
@@ -74,8 +75,8 @@ reference implementations. -<a href="https://matrix.org" target="_blank">https:/
 	</li>
 	<li>Press CTRL+W and search for name: sqlite3</li>
 	<li>Comment out the sqlite database parameters by adding a # to the beginning of each of the lines</li>
-	<li>Arrow up slightly and uncomment the psycopg2 database connection and complete it as follows:
-	<p>datebase:<br />
+	<li>Paste the following psycopg2 (Postgres) database connection and update it as needed:
+	<p>database:<br />
 	&emsp;name: psycopg2<br />
 	&emsp;txn_limit: 10000<br />
 	&emsp;args:<br />
@@ -89,8 +90,9 @@ reference implementations. -<a href="https://matrix.org" target="_blank">https:/
 	</li>
 	<li>Press CTRL+W and search for name: bind_addresses: [</li>
 	<li>Edit the bind addresses value to add either the host servers IP address or set the value to &#39;0.0.0.0&#39; to listen on all interfaces</li>
-	<li>Add the following line at the bottom of the file<br />
-	<p>suppress_key_server_warning: true</p></li>
+	<li>Add the following line at the bottom of the file
+	<p>suppress_key_server_warning: true</p>
+	</li>
 	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
 	<li>Continue with the following commands
 	<div class="codeBlock"># generate a randoml string<br />
@@ -100,7 +102,7 @@ reference implementations. -<a href="https://matrix.org" target="_blank">https:/
 	# restart the synapse service<br />
 	sudo systemctl restart matrix-synapse<br />
 	# create a new synapse user<br />
-	register_new_matrix_user -c /etc/matrix-synapse/homeserver.yaml http://DNSorIP:8008</div>
+	register_new_matrix_user -c /etc/matrix-synapse/homeserver.yaml http://localhost:8008</div>
 	</li>
 	<li>Enter a username, enter and confirm the password and choose if the user is an admin</li>
 	<li>At this point the Matrix Synapse server is running, but only over http</li>
@@ -169,7 +171,7 @@ reference implementations. -<a href="https://matrix.org" target="_blank">https:/
 	</li>
 	<li>Press CTRL+W and search for port: 8008</li>
 	<li>Change the tls: false value to true (tls: true)</li>
-	<li>Press CTRL+W and search for tls_certificate_path: </li>
+	<li>Press CTRL+W and search for tls_certificate_path:</li>
 	<li>Uncomment the line and update to /etc/letsencrypt/live/&lt;%DNS NAME%&gt;/fullchain.pem</li>
 	<li>Arrow down a few lines to find tls_private_key_path</li>
 	<li>Uncomment the line and update to /etc/letsencrypt/live/&lt;%DNS NAME%&gt;/privkey.pem</li>
@@ -182,12 +184,15 @@ reference implementations. -<a href="https://matrix.org" target="_blank">https:/
 
 <h2>Installing Element Web Client (Optional)</h2>
 <link href="https:\/\/github\.com\/vector-im\/element-web\/releases\/tag\/([^/]*)" rel="alternate" type="text\/html" />
+<link href="https:\/\/github\.com\/vector-im\/element-web\/releases\/tag\/([^/]*)" rel="alternate" type="text\/html" />
+<link href="https:\/\/github\.com\/vector-im\/element-web\/releases\/tag\/([^/]*)" rel="alternate" type="text\/html" />
 <ol>
 	<li>Continue with the following commands to install the Element web client
 	<div class="codeBlock"># install apache2<br />
 	sudo apt install apache2 -y<br />
 	# lookup the latest release tag<br />
-	regex=&#39;&lt;link rel=&quot;alternate&quot; type=&quot;text\/html&quot; href=&quot;https:\/\/github\.com\/vector-im\/element-web\/releases\/tag\/([^/]*)&quot;&#39; &amp;&amp; response=$(curl -s https://github.com/vector-im/element-web/releases.atom) &amp;&amp; [[ $response =~ $regex ]] &amp;&amp; latestTag=&quot;${BASH_REMATCH[1]}&quot;<br />
+	regex=&#39;&lt;link rel=&quot;alternate&quot; type=&quot;text\/html&quot; href=&quot;https:\/\/github\.com\/vector-im\/element-web\/releases\/tag\/([^/]*)&quot;&#39; &amp;&amp; response=$(curl -s https://github.com/vector-im/element-web/releases.atom) &amp;&amp; [[ $response =~ $regex ]]
+	&amp;&amp; latestTag=&quot;${BASH_REMATCH[1]}&quot;<br />
 	# download element-web<br />
 	wget -O element.tar.gz https://github.com/vector-im/element-web/releases/download/$latestTag/element-$latestTag.tar.gz<br />
 	# extract element to wwwroot<br />
@@ -205,8 +210,7 @@ reference implementations. -<a href="https://matrix.org" target="_blank">https:/
 	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
 	<li>Open a web browser and navigate to http://DNSorIP/element</li>
 	<li>Log in using the Synapse username and password created earlier</li>
-</ol>
-          </div>
+</ol>          </div>
         </div>
       </body>
     </html>
