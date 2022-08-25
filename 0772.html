@@ -1,0 +1,63 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>How to Install Microsoft Internet Information Services (IIS) on Windows Server</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,How To Install IIS On Windows Server,IIS,Internet Information Services,Microsoft,Microsoft Windows,Windows Server,Windows Administration,Windows,Web Server,Web Server Administration,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="How to Install Microsoft Internet Information Services (IIS) on Windows Server">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="07/29/2022 06:37:04 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>How to Install Microsoft Internet Information Services (IIS) on Windows Server</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is IIS (Internet Information Services)?</h2>
+
+<blockquote><em>Internet Information Services (IIS) for Windows&reg; Server is a flexible, secure and manageable Web server for hosting anything on the Web. From media streaming to web applications, IIS&#39;s scalable and open architecture is ready to handle the most demanding tasks. -<a href="https://www.iis.net/" target="_blank">https://www.iis.net/</a></em></blockquote>
+
+<ol>
+	<li>Log into the Windows server with an account with admin privileges</li>
+	<li>Launch Server Manager from the Start menu if it does not automatically load</li>
+	<li>Click Add roles and features</li>
+	<li>Click Next on the Before you begin screen</li>
+	<li>Select Role-based or feature-based installation &gt; Next</li>
+	<li>Leave Select a server from the server pool selected and select the current Windows server &gt; Next</li>
+	<li>Check the Web Server (IIS) box</li>
+	<li>A popup will appear with additional required roles and features, click the Add Features button</li>
+	<li>Click Next</li>
+	<li>Click Next on the Select features screen</li>
+	<li>Click Next on the Web Server Role (IIS) screen</li>
+	<li>Select any additional role services to include in the installation (Common HTTP Features &gt; HTTP Redirection; Security &gt; Windows Authentication are recommended)</li>
+	<li>Click Install on the confirmation screen</li>
+	<li>Leave the installation progress screen open until the install completes</li>
+	<li>Once the Feature installation completes successfully, click the Close button</li>
+	<li>Click the Start menu &gt; Search for IIS &gt; Select Internet Information Services (IIS) Manager</li>
+	<li>In IIS Manager, expand the server name &gt; Expand sites &gt; Right click on Default web Site &gt; Select Explore</li>
+	<li>A File Explorer window will display the wwwroot folder for IIS</li>
+	<li>Right click in the whitespace &gt; New &gt; Text Document &gt; Name the new file default.html</li>
+	<li>Edit default.html in Notepad and paste the following
+	<p>&lt;html&gt;<br />
+	&lt;body&gt;<br />
+	&lt;h1&gt;Hello world&lt;/h1&gt;<br />
+	&lt;h3&gt;Served from IIS&lt;/h3&gt;<br />
+	&lt;/body&gt;<br />
+	&lt;/html&gt;</p>
+	</li>
+	<li>Save the changes to default.html and close Notepad</li>
+	<li>Open a web browser and navigate to http://DNSorIP/default.html</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
