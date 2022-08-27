@@ -1,0 +1,96 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>How to Install PHP for Windows Internet Information Services (IIS)</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Microsoft,Windows Server,Windows Administration,Web Server,Web Server Administration,Windows,Windows 2022,Server 2022,Microsoft Windows 2022,Microsoft Windows,How To Install PHP For IIS,How To Run PHP On IIS,PHP For IIS On Windows Server,PHP IIS Installation Guide,PHP IIS Install Guide,PHP,PHP Hypertext Preprocessor,Web Development,Web Developer,PHP Development,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="How to Install PHP for Windows Internet Information Services (IIS)">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="07/01/2022 09:58:21 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>How to Install PHP for Windows Internet Information Services (IIS)</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is IIS (Internet Information Services)?</h2>
+
+<blockquote><em>Internet Information Services (IIS) for Windows&reg; Server is a flexible, secure and manageable Web server for hosting anything on the Web. From media streaming to web applications, IIS&#39;s scalable and open architecture is ready to handle the most demanding tasks. -<a href="https://www.iis.net/" target="_blank">https://www.iis.net/</a></em></blockquote>
+
+<blockquote> </blockquote>
+
+<h2>What is PHP (PHP Hypertext Preprocessor)?</h2>
+
+<blockquote><em>A popular general-purpose scripting language that is especially suited to web development.<br />
+Fast, flexible and pragmatic, PHP powers everything from your blog to the most popular websites in the world. -<a href="https://www.php.net/" target="_blank">https://www.php.net/</a></em></blockquote>
+
+<p> </p>
+
+<p>NOTE: This tutorial assumes IIS is already installed and running on the host. Check out this previous tutorial to find out how to install IIS <a href="https://youtu.be/Gia2dmFrNxs" target="_blank">here</a></p>
+
+<ol>
+	<li>Log into the Windows server with an account with admin privileges</li>
+	<li>Download the Non-Thread Safe (NTS) VS16 x64 PHP for Windows .zip <a href="https://windows.php.net/download/" target="_blank">Download</a></li>
+	<li><label for="cb_li_917989_0">Download Microsoft Visual C++ </label><label for="cb_li_917989_0"><a href="https://aka.ms/vs/16/release/vc_redist.x64.exe" target="_blank">Download</a></label></li>
+	<li>Install Microsoft Visual C++</li>
+	<li>Extract the downloaded PHP for Windows .zip file</li>
+	<li>Rename the extracted folder PHP</li>
+	<li>Cut the PHP folder to a safe location to run from, such as C:\Program Files</li>
+	<li>Click the Start button &gt; Search Control &gt; Click Control Panel</li>
+	<li>Click on System &gt; Advanced system settings</li>
+	<li>Click the Environment Variables...</li>
+	<li>Edit the System Path variable</li>
+	<li>Click the New button</li>
+	<li>Add the PHP installation directory (ie C:\Program Files\PHP\</li>
+	<li>Click OK to all open dialog windows</li>
+	<li>Launch Server Manager from the Start</li>
+	<li>Click Add roles and features</li>
+	<li>Click Next on the Before you begin screen</li>
+	<li>Select Role-based or feature-based installation &gt; Next</li>
+	<li>Leave Select a server from the server pool selected and select the current Windows server &gt; Next</li>
+	<li>Expand Web Server (IIS) &gt; Expand Web Server &gt; Expand Application Development &gt; Check the box next to CGI to select it</li>
+	<li>Click Next</li>
+	<li>Click Next on the Select features screen</li>
+	<li>Click Install on the confirmation screen</li>
+	<li>Leave the installation progress screen open until the install completes</li>
+	<li>Once the Feature installation completes successfully, click the Close button</li>
+	<li>Back in Server Manager, click Tools &gt; Internet Information Services (IIS) Manager</li>
+	<li>Click the server name to select it &gt; Double click Handler Mappings</li>
+	<li>Click Add Module Mapping at the top right of the dialog</li>
+	<li>Complete the Add Module Mapping form as follow
+	<p>Request Path: *.php<br />
+	Module: FastCGIModule<br />
+	Executable: C:\Program Files\PHP\php-cgi.exe<br />
+	Name: PHP</p>
+	</li>
+	<li>Click OK</li>
+	<li>Click Yes to confirm creating the FastCGI application</li>
+	<li>Click the server name again to select it and return to the main options menu &gt; Double click Default Document</li>
+	<li>Click Add... at the top right of the dialog</li>
+	<li>Type index.php &gt; Click OK</li>
+	<li>Right click on the server name &gt; Stop</li>
+	<li>Right click on the server name again &gt; Start</li>
+	<li>Expand the server name &gt; Expand sites &gt; Right click on Default web Site &gt; Select Explore</li>
+	<li>A File Explorer window will display the wwwroot folder for IIS</li>
+	<li>Right click in the whitespace &gt; New &gt; Text Document &gt; Name the new file phpinfo.php</li>
+	<li>Edit phpinfo.php in Notepad and paste the following
+	<p>&lt;?php<br />
+	&emsp;phpinfo();<br />
+	?&gt;</p>
+	</li>
+	<li>Save the changes to phpinfo.php and close Notepad</li>
+	<li>Open a web browser and navigate to http://DNSorIP/phpinfo.php</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
