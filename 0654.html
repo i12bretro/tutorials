@@ -1,0 +1,54 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Share Proxmox Backups Locally with Samba</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Hypervisor,Home Lab Ideas,Install Guide,Backing Up Proxmox Virtual Machines,Backups,Debian,Samba,SMB,VM Backups,Windows,Linux,Linux Tips,Proxmox,Proxmox How To,Proxmox Node,Proxmox Tutorial,Proxmox VE,Proxmox VM Backups,VM,Virtual Machine,Virtualization,Mount Samba Share,Microsoft,Network,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Share Proxmox Backups Locally with Samba">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="08/08/2022 06:02:41 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Share Proxmox Backups Locally with Samba</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Log into Proxmox VE, either at the console or the web UI and launch the web shell</li>
+	<li>Run the following commands
+	<div class="codeBlock"># update software repositories<br />
+	apt update<br />
+	# install samba<br />
+	apt install samba -y<br />
+	# edit the samba conf file<br />
+	nano /etc/samba/smb.conf</div>
+	</li>
+	<li>Paste the following at the bottom of the file
+	<p>[vmbackups]<br />
+	comment = Proxmox backups<br />
+	path = /var/lib/vz<br />
+	guest ok = no<br />
+	public = yes<br />
+	writable = yes</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following commands
+	<div class="codeBlock"># restart samba service<br />
+	systemctl restart smbd</div>
+	</li>
+	<li>Test that the new samba share is accessible, from Windows \\DNSorIP\vmbackups</li>
+	<li>When prompted, login with root and the Proxmox root password</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
