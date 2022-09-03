@@ -1,0 +1,75 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Run n8n - Open Source Workflow Automation - in Docker</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,FOSS,Free Open Source Software,Free Software,Linux,Open Source,Open Source Software,Open-Source,Ubuntu,N8n,Integomat Alternative,Make Alternative,Nodemation,Graphical Software Integration,Workflow Automation,Application Integration Platform,Docker Made Easy,Docker,Container,Containerization,Docker How To,Docker Simplified,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Run n8n - Open Source Workflow Automation - in Docker">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="07/25/2022 09:50:55 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Run n8n - Open Source Workflow Automation - in Docker</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is n8n?</h2>
+
+<blockquote><em>n8n is an extendable workflow automation tool. With a fair-code distribution model, n8n will always have visible source code, be available to self-host, and allow you to add your own custom functions, logic and apps. n8n&#39;s node-based approach makes it highly versatile, enabling you to connect anything to everything. -<a href="https://github.com/n8n-io/n8n" target="_blank">https://github.com/n8n-io/n8n</a></em></blockquote>
+
+<h2>Installing Docker</h2>
+
+<ol>
+	<li>Log into the Linux based device</li>
+	<li>Run the following commands in the terminal
+	<div class="codeBlock"># install prerequisites<br />
+	sudo apt install apt-transport-https ca-certificates curl software-properties-common gnupg-agent -y<br />
+	# add docker gpg key<br />
+	curl -fsSL https://download.docker.com/linux/$(awk -F&#39;=&#39; &#39;/^ID=/{ print $NF }&#39; /etc/os-release)/gpg | sudo apt-key add -<br />
+	# add docker software repository<br />
+	sudo add-apt-repository &quot;deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/$(awk -F&#39;=&#39; &#39;/^ID=/{ print $NF }&#39; /etc/os-release) $(lsb_release -cs) stable&quot;<br />
+	# install docker<br />
+	sudo apt install docker-ce docker-compose containerd.io -y<br />
+	# enable and start docker service<br />
+	sudo systemctl enable docker &amp;&amp; sudo systemctl start docker<br />
+	# add the current user to the docker group<br />
+	sudo usermod -aG docker $USER<br />
+	# reauthenticate for the new group membership to take effect<br />
+	su - $USER</div>
+	</li>
+</ol>
+
+<h2>Running the n8n Container</h2>
+
+<ol>
+	<li>Now that Docker is installed, run the following commands to setup the n8n Docker container and run it
+	<div class="codeBlock"># create working directory<br />
+	mkdir ~/docker/n8n -p &amp;&amp; mkdir ~/docker/mariadb<br />
+	# set ownership on the working directories<br />
+	sudo chown &quot;$USER&quot;:&quot;$USER&quot; ~/docker -R<br />
+	# run the mariadb docker container<br />
+	docker run -d --name mariadb -e MYSQL_ROOT_PASSWORD=r00tp@$$ -e MYSQL_USER=n8n_rw -e MYSQL_PASSWORD=&#39;n8n_N8N!&#39; -e MYSQL_DATABASE=n8n_db -v ~/docker/mariadb:/var/lib/mysql -p 3306:3006 -d mariadb:latest<br />
+	# run the n8n container<br />
+	docker run -d --name=n8n --link mariadb -p 5678:5678 -v ~/docker/n8n:/home/node/.n8n -e GENERIC_TIMEZONE=America/New_York -e TZ=America/New_York -e DB_TYPE=mysqldb -e DB_MYSQLDB_DATABASE=n8n_db -e DB_MYSQLDB_HOST=mariadb -e DB_MYSQLDB_PORT=3306 -e DB_MYSQLDB_USER=n8n_rw -e DB_MYSQLDB_PASSWORD=&#39;n8n_N8N!&#39; n8nio/n8n</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP:5678</li>
+	<li>Complete the form with an email, first name, last name and password &gt; Click next</li>
+	<li>Complete the questionnaire &gt; Click continue</li>
+	<li>Click Get started</li>
+	<li>Welcome to n8n</li>
+</ol>
+
+<p>Documentation: <a href="https://hub.docker.com/r/n8nio/n8n" target="_blank">https://hub.docker.com/r/n8nio/n8n</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
