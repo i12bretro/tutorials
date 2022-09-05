@@ -1,0 +1,66 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Passthrough Mounting A Physical Disk Drive in VirtualBox</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Hypervisor,.vmdk,Windows,Virtualization,VirtualBox,Virtual Machines,Virtual Machine,Virtual Disk,Virtual Disk Image,VM,VDI,Storage,SSD,HDD,VirtualBox Add Physical Storage,Hard Disk,Hard Drive,Disk,Debian,Add Storage,VirtualBox Hardware Passthrough,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Passthrough Mounting A Physical Disk Drive in VirtualBox">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="08/09/2022 06:21:42 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Passthrough Mounting A Physical Disk Drive in VirtualBox</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Creating the Physical Disk VMDK</h2>
+
+<ol>
+	<li>Connect the physical disk to the host</li>
+	<li>Log into the VirtualBox host</li>
+	<li>Launch PowerShell as administrator</li>
+	<li>Run the following commands
+	<div class="codeBlock PS"># list physical disks<br />
+	Get-PhysicalDisk</div>
+	</li>
+	<li>Take note of the disk number for the target disk to mount in VirtualBox</li>
+	<li>Continue with the following commands
+	<div class="codeBlock PS"># cd to the virtualbox installation directory<br />
+	cd &quot;$ENV:ProgramFiles\Oracle\VirtualBox&quot;<br />
+	# create a vmdk disk pointing to the target physical disk<br />
+	# usage<br />
+	# .\VBoxManage.exe internalcommands createrawvmdk -filename &quot;&lt;%fullpathto.vmdk%&gt;&quot; -rawdisk \\.\PhysicalDrive&lt;%disknumber%&gt;<br />
+	.\VBoxManage.exe internalcommands createrawvmdk -filename &quot;D:\VMs\SSD.vmdk&quot; -rawdisk \\.\PhysicalDrive2<br />
+	# launch virtualbox manager<br />
+	.\VirtualBox.exe</div>
+	</li>
+</ol>
+
+<h2>Attaching the Physical Disk to a Virtual Machine</h2>
+
+<p><span style="font-size:12px;"><em>NOTE: If you don&#39;t run VirtualBox Manager as administrator you will get permissions errors trying to access the physical disk</em></span></p>
+
+<ol>
+	<li>Right click on the target VM &gt; Settings</li>
+	<li>Select Storage from the left navigation menu</li>
+	<li>Click the Add Hard disk icon</li>
+	<li>Click Add &gt; Browse to and select the .vmdk file created earlier</li>
+	<li>Scroll to the bottom of the listing and select the .vmdk &gt; Click Choose</li>
+	<li>Click OK to confirm the VM settings</li>
+	<li>Right click on the target VM &gt; Start</li>
+</ol>
+
+<p>Documentation: <a href="https://www.virtualbox.org/manual/ch09.html#rawdisk" target="_blank">https://www.virtualbox.org/manual/ch09.html#rawdisk</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
