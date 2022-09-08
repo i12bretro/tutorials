@@ -1,0 +1,131 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install n8n - Open Source Workflow Automation - on Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,FOSS,Free Open Source Software,Free Open-Source Software,Free Software,Linux,Open Source,Open Source Software,Open-Source,Debian,N8n,Integomat Alternative,Make Alternative,Nodemation,Graphical Software Integration,Workflow Automation,Application Integration Platform,Application Automation Platform,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install n8n - Open Source Workflow Automation - on Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="07/25/2022 09:48:33 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install n8n - Open Source Workflow Automation - on Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is n8n?</h2>
+
+<blockquote><em>n8n is an extendable workflow automation tool. With a fair-code distribution model, n8n will always have visible source code, be available to self-host, and allow you to add your own custom functions, logic and apps. n8n&#39;s node-based approach makes it highly versatile, enabling you to connect anything to everything. -<a href="https://github.com/n8n-io/n8n" target="_blank">https://github.com/n8n-io/n8n</a></em></blockquote>
+
+<h2>Installing n8n</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal window
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# add nodejs software repository<br />
+	curl -sL https://deb.nodesource.com/setup_16.x | sudo bash -<br />
+	# install nodejs<br />
+	sudo apt install nodejs -y<br />
+	# install mariadb<br />
+	sudo apt install mariadb-server mariadb-client -y<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type N and press Enter to not switch to unix socket authentication</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the Firefly database and database user
+	<div class="codeBlock">CREATE DATABASE n8n;<br />
+	GRANT ALL ON n8n.* to &#39;n8n_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;n8n_N8N!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># set environmental variables<br />
+	export DB_TYPE=&quot;mysqldb&quot;<br />
+	export DB_MYSQLDB_DATABASE=&quot;n8n&quot;<br />
+	export DB_MYSQLDB_HOST=&quot;localhost&quot;<br />
+	export DB_MYSQLDB_USER=&quot;n8n_rw&quot;<br />
+	export DB_MYSQLDB_PASSWORD=&quot;n8n_N8N!&quot;<br />
+	export GENERIC_TIMEZONE=&quot;America/New_York&quot;<br />
+	# install n8n<br />
+	sudo npm install n8n --location=global<br />
+	# audit and fix vulnerabilities<br />
+	sudo npm audit fix<br />
+	# run n8n<br />
+	n8n</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP:5678</li>
+	<li>Complete the form with an email, first name, last name and password &gt; Click next</li>
+	<li>Complete the questionnaire &gt; Click continue</li>
+	<li>Click Get started</li>
+	<li>Welcome to n8n</li>
+</ol>
+
+<h2>Running n8n as a Service</h2>
+
+<ol>
+	<li>Press CTRL+C to end the running n8n process</li>
+	<li>Continue with the following commands
+	<div class="codeBlock"># create n8n service file<br />
+	sudo nano /etc/systemd/system/n8n.service</div>
+	</li>
+	<li>Paste the following configuration into n8n.service
+	<p>[Unit]<br />
+	Description=n8n<br />
+	After=mariadb.service</p>
+
+	<p>[Service]<br />
+	User=root<br />
+	Group=root<br />
+	Environment=DB_TYPE=mysqldb<br />
+	Environment=DB_MYSQLDB_DATABASE=n8n<br />
+	Environment=DB_MYSQLDB_HOST=localhost<br />
+	Environment=DB_MYSQLDB_USER=n8n_rw<br />
+	Environment=DB_MYSQLDB_PASSWORD=n8n_N8N!<br />
+	Environment=GENERIC_TIMEZONE=America/New_York<br />
+	ExecStart=n8n<br />
+	WorkingDirectory=/usr/bin</p>
+
+	<p>[Install]<br />
+	WantedBy=multi-user.target</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following commands
+	<div class="codeBlock"># reload systemd services<br />
+	sudo systemctl daemon-reload<br />
+	# start n8n service on boot and now<br />
+	sudo systemctl enable n8n --now</div>
+	</li>
+	<li>Back in the web browser, refresh n8n to verify it is now running a service</li>
+	<li>Log in using the email address and password setup earlier</li>
+</ol>
+
+<p>Source: <a href="https://docs.n8n.io/hosting/installation/npm/" target="_blank">https://docs.n8n.io/hosting/installation/npm/</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
