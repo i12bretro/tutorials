@@ -1,74 +1,17 @@
-    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <!DOCTYPE html>
     <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
       <head>
         <title>Install phpSysInfo on Debian/Ubuntu</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-				        <script type="text/javascript">
-          $(function(){
-            $('textarea').each(function(i,e){
-              theTextarea = $(this);
-              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
-            });
-
-            $('li').each(function(i,e){
-							if(!$(this).hasClass('noCheckbox')){
-								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
-								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
-								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
-							}
-            });
-
-            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
-              theElement = $(this);
-              var lines = theElement.html().split("\n");
-              theElement.empty();
-              for(l=0;l<lines.length;l++){
-                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
-									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
-									                } else {
-                  theElement.append(lines[l]);
-                }
-              }
-            });
-
-            $(document).on('click','input.copy-text',function(){
-              theButton = $(this);
-														$('input.copy-text').attr('src','images/clipboard.png');
-							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
-              try {
-                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
-                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
-								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
-									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
-                } else {
-                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
-                }
-                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
-																theButton.attr('src','images/clipboard_active.png');
-								              } catch(err) {
-              }
-              return false;
-            });
-
-            $(document).on('click','input.completeBox',function(){
-              theBox = $(this);
-              $('#'+ theBox.attr('rel')).addClass('strikethrough');
-              theBox.prop('disabled',true);
-              theBox.parent('li').prevAll().each(function(i,e){
-                theLI = $(this);
-                if(theLI.find('input[type=checkbox]').not(':checked')){
-                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
-                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
-                }
-              });
-            });
-
-            if(window.self !== window.top){
-															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
-							            }
-          });
-        </script>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Web Based,Web Based Tools,PHP,LAMP,Web Server,Web Server Administrator,Web Server Administration,PHP System Monitor,FOSS,Free Open Source Software,Free Software,Linux,Open-Source,Open Source Software,Debian,Self-Hosted,PHPSysInfo,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install phpSysInfo on Debian/Ubuntu">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="08/08/2022 05:44:26 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
         <link href="css/steps.css" rel="stylesheet" type="text/css" />
       </head>
       <body>
@@ -102,8 +45,7 @@
 	<li>Open a web browser and navigate to http://DNSorIP/phpsysinfo</li>
 </ol>
 
-<p>Source:&nbsp;<a href="https://github.com/phpsysinfo/phpsysinfo/releases/latest" target="_blank">https://github.com/phpsysinfo/phpsysinfo/releases/latest</a></p>
-          </div>
+<p>Source:&nbsp;<a href="https://github.com/phpsysinfo/phpsysinfo/releases/latest" target="_blank">https://github.com/phpsysinfo/phpsysinfo/releases/latest</a></p>          </div>
         </div>
       </body>
     </html>
