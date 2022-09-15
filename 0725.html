@@ -1,0 +1,67 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Running a Home Assistant Operating System [HAOS] VM in VirtualBox</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Hypervisor,Install Guide,Getting Started With Home Assistant,Home Assistant Simplified,Home Assistant Tutorial,Linux,Home Assistant VirtualBox Installation,Home Assistant Quick Start,VirtualBox,Home Assistant OS,Home Assistant OS Virtual Machine,Home Assistant OS VirtualBox,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Running a Home Assistant Operating System [HAOS] VM in VirtualBox">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="07/01/2022 09:10:20 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Running a Home Assistant Operating System [HAOS] VM in VirtualBox</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Home Assistant Operating System [HAOS]?</h2>
+
+<blockquote><em>[Home Assistant Operating System is a] minimal Operating System optimized to power Home Assistant. It comes with Supervisor to manage Home Assistant Core and Add-on. -<a href="https://www.home-assistant.io/installation/" target="_blank">https://www.home-assistant.io/installation/</a></em></blockquote>
+
+<ol>
+	<li>Open a web browser and download the Home Assistant Operating System .vdi <a href="https://www.home-assistant.io/installation/alternative" target="_blank">Download</a></li>
+	<li>Extract the downloaded .zip file</li>
+	<li>Launch VirtualBox</li>
+	<li>Create a New VM by selecting Machine &gt; New
+	<p>Name: HAOS<br />
+	Machine Folder: C:\VMs<br />
+	Type: Linux<br />
+	Version: Other Linux (64-bit)<br />
+	Memory Size: 2048 MB<br />
+	Hard disk: Use an existing virtual hard disk now</p>
+	</li>
+	<li>Click the folder icon &gt; Browse to and select the extracted HAOS .vdi file</li>
+	<li>Click Create</li>
+	<li>Select the VM and Click Settings</li>
+	<li>Select System</li>
+	<li>Check the Enable EFI checkbox</li>
+	<li>On the Processor tab, give the VM at least 2 processors</li>
+	<li>Select Display</li>
+	<li>Slide the Video Memory to 128 MB</li>
+	<li>Select Network</li>
+	<li>Set the attached to dropdown to Bridged Adapter</li>
+	<li>Select Audio</li>
+	<li>Set the Audio Controller dropdown to Intel HD Audio</li>
+	<li>Click OK</li>
+	<li>Make sure the HAOS VM is selected and click Start &gt; Normal</li>
+	<li>Welcome to Home Assistant Operating System</li>
+	<li>Open a web browser and navigate to http://DNSorIP:8123</li>
+	<li>Enter a Name, Username and Password to create a Home Assistant user account &gt; Click Create Account</li>
+	<li>Enter a Name for this Home Assistant installation (ie Home)</li>
+	<li>Click Detect to set the installation geolocation</li>
+	<li>Verify the Unit System and Currency &gt; Click Next</li>
+	<li>Select any anonymous data to share with the Home Assistant development team &gt; Click Next</li>
+	<li>Click Finish</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
