@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Running a MacOS 12 Monterey VM in VMware">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="05/26/2022 03:28:16 PM" />
+        <meta name="revised" content="09/22/2022 06:25:42 AM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -47,7 +47,7 @@
 	<li>Adjust the disk size if necessary &gt; Click Next</li>
 	<li>Click Finish<br />
 	<em>NOTE: If running an AMD processor, edit the .vmx file in the folder you specified for the VM, add the following to the bottom of the file and save your changes</em>
-	<p>mc.version = &quot;0&quot;<br />
+	<p>smc.version = &quot;0&quot;<br />
 	cpuid.0.eax = &quot;0000:0000:0000:0000:0000:0000:0000:1011&quot;<br />
 	cpuid.0.ebx = &quot;0111:0101:0110:1110:0110:0101:0100:0111&quot;<br />
 	cpuid.0.ecx = &quot;0110:1100:0110:0101:0111:0100:0110:1110&quot;<br />
@@ -101,8 +101,7 @@
 	<li>Click Browse next to ISO Image File &gt; Browse to the extracted Unlocker files \tools &gt; Select darwin.iso</li>
 	<li>Click the Connect checkbox</li>
 	<li>Inside the VM, double click the mounted VMware tools and run the installer</li>
-</ol>
-          </div>
+</ol>          </div>
         </div>
       </body>
     </html>
