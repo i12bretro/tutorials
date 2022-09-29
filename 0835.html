@@ -1,0 +1,50 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Updating to Windows 11 22H2 on Unsupported Hardware [No TPM | No Secure Boot]</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Windows 11,Windows,Microsoft,Installation Media,11,Microsoft Windows,22H2,Windows 11 22H2,Update,Unsupported Hardware,TPM,Secure Boot,Virtual Machine,VM,Install Guide,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Updating to Windows 11 22H2 on Unsupported Hardware [No TPM | No Secure Boot]">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="09/28/2022 08:20:46 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Updating to Windows 11 22H2 on Unsupported Hardware [No TPM | No Secure Boot]</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Download the Windows 11 TPM/SecureBoot bypass script <a href="https://github.com/AveYo/MediaCreationTool.bat" target="_blank">Download</a></li>
+	<li>Download the Windows 11 22H2 Installation .iso file <a href="https://www.microsoft.com/software-download/windows11" target="_blank">Download</a></li>
+	<li>Extract the downloaded MediaCreationTool .zip archive</li>
+	<li>Navigate into the downloaded folder /bypass11 &gt; Right click on Skip_TPM_Check_on_Dynamic_Update.cmd &gt; Run as administrator</li>
+	<li>Press Enter once the script completes to close the command prompt</li>
+	<li>Double click the downloaded Windows 11 22H2 .iso file to mount it</li>
+	<li>In File Explorer, navigate to the mounted Windows 11 22H2 disc image and double click Setup.exe</li>
+	<li>Once the installer loads, click the Change how Setup downloads updates option &gt; Select Not right now &gt; Click Next</li>
+	<li>Step through the rest of the setup as normal</li>
+	<li>After a few reboots the system will be updated to Windows 11 22H2</li>
+</ol>
+
+<h2>Cleanup After Testing</h2>
+
+<p>After verifying the update has not caused any issues, follow the steps below to free up the space used by the Windows.old backup</p>
+
+<ol>
+	<li>Right click on the Start button &gt; Settings</li>
+	<li>Select Storage &gt; Temporary files</li>
+	<li>Check the box next to Previous Windows installation(s) &gt; Click Remove files</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
