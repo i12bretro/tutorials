@@ -1,0 +1,53 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Fixing a Corrupted Raspberry Pi SD Card Partition Table</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="SBC,Single Board Computer,Micro SD Card,Linux,Armbian,Debian,Home Lab,Raspberry Pi Image,SD Card,Corrupted SD Card,Corrupt Raspberry Pi,Fix Corrupt SD Card,Fix Corrupt Raspberry Pi OS,Raspberry Pi OS,GParted,File System,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Fixing a Corrupted Raspberry Pi SD Card Partition Table">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="10/09/2022 06:50:55 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Fixing a Corrupted Raspberry Pi SD Card Partition Table</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Download the GParted live disc <a href="https://gparted.org/download.php" target="_blank">Download</a></li>
+	<li>Insert the SD card into a PC and boot into the GParted live disc</li>
+	<li>Minimize the GParted UI and launch Terminal from the desktop</li>
+	<li>Run the following command in the open terminal
+	<div class="codeBlock CMD">sudo testdisk</div>
+	</li>
+	<li>Select Create</li>
+	<li>Use the arrows to select the SD card device &gt; Proceed</li>
+	<li>Use the arrows to select Intel</li>
+	<li>Select Analyse &gt; Quick Search</li>
+	<li>Press Enter to continue</li>
+	<li>Arrow over and select Write to apply the partition table to the SD card &gt; Type Y and press Enter to confirm</li>
+	<li>Quit out of TestDisk back to the terminal</li>
+	<li>Continue with the following commands to check and repair the filesystems on the SD card
+	<div class="codeBlock CMD"># take note of the device identifiers for the SD card (/dev/sda1 and /dev/sda2 in the example)<br />
+	sudo fdisk -l<br />
+	# run the following command for each partition on the SD card, replacing x with the correct disk identifier<br />
+	sudo fsck /dev/sdx1 -fy<br />
+	sudo fsck /dev/sdx2 -fy</div>
+	</li>
+	<li>Shutdown the GParted live disc</li>
+	<li>Insert the SD card back into the Raspberry Pi</li>
+	<li>Power it on to see if the SD card is now able to boot</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
