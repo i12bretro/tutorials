@@ -1,0 +1,91 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Resizing/Extending Logical Volumes (LVM) in Proxmox</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Hypervisor,Linux,Proxmox Tutorial,Proxmox,Ubuntu,Debian,Virtualization,How To Resize Proxmox Root Volume,How To Resize Proxmox LVM,LVM,Linux Volume Management,Volumes Groups,Logical Volumes,Disks,Physical Disk,Disk Partitioning,Partition Resizing,Volume Resizing,LVM Resizing,Proxmox Storage,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Resizing/Extending Logical Volumes (LVM) in Proxmox">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="08/21/2022 09:24:47 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Resizing/Extending Logical Volumes (LVM) in Proxmox</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is LVM?</h2>
+
+<blockquote><em>LVM stands for Logical Volume Management. It is a system of managing logical volumes, or filesystems, that is much more advanced and flexible than the traditional method of partitioning a disk into one or more segments and formatting that partition with a filesystem. - <a href="https://wiki.ubuntu.com/Lvm" target="_blank">https://wiki.ubuntu.com/Lvm</a></em></blockquote>
+
+<h2>WARNING</h2>
+
+<blockquote>Below are the steps I took when I replaced my Proxmox 32GB microSD with a 64GB and cloned the installation from the old card to the new one. Do not attempt these steps without first having a backup as there is a high risk of data loss if the partition changes are unsuccessful</blockquote>
+
+<h2>Extending a LVM Volume</h2>
+
+<ol>
+	<li>Log into the device using LVM, in this example I&#39;ll be extending the pve-root and data volumes in Proxmox</li>
+	<li>Run the following commands in terminal
+	<div class="codeBlock"># login as root if needed (not needed for proxmox)<br />
+	sudo su<br />
+	# list disks and partitions<br />
+	fdisk -l<br />
+	# list volume groups<br />
+	vgdisplay<br />
+	# list logical volumes<br />
+	lvdisplay<br />
+	# edit partitions with fdisk, change device id as needed<br />
+	fdisk /dev/sda<br />
+	# print the partition table<br />
+	p<br />
+	# delete a partition<br />
+	d<br />
+	# enter the lvm partition number<br />
+	3<br />
+	# create a new partition<br />
+	n<br />
+	# enter the new partition number, same as the number deleted<br />
+	3<br />
+	# press enter to accept the default first sector<br />
+	# press enter to accept the default last sector<br />
+	# when prompted about removing the LVM signature, enter N<br />
+	n<br />
+	# set the partition type<br />
+	t<br />
+	# enter the partition number<br />
+	3<br />
+	# set the type to Linux LVM<br />
+	30<br />
+	# write the changes<br />
+	w<br />
+	# list disks and partitions, noting the size increase<br />
+	fdisk -l<br />
+	# extend the existing physical volume<br />
+	pvresize /dev/sda3<br />
+	# extend the pve-root logical volume to 100% available free space<br />
+	lvresize -L +8GB /dev/pve/root<br />
+	# extend the underlying file system<br />
+	resize2fs /dev/mapper/pve-root<br />
+	# list logical volumes, noting root is now 8GB larger<br />
+	lvdisplay<br />
+	# extend the data to 100% available free space<br />
+	lvextend -l +100%FREE pve/data<br />
+	# list logical volumes, noting data is now over 35GB<br />
+	lvdisplay</div>
+	</li>
+</ol>
+
+<p>Further Reading: <a href="https://wiki.ubuntu.com/Lvm" target="_blank">https://wiki.ubuntu.com/Lvm</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
