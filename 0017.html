@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Setting Up DD-WRT OpenVPN Server and Certificate Creation">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="03/25/2022 09:16:58 PM" />
+        <meta name="revised" content="10/24/2022 09:58:15 AM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -28,7 +28,13 @@
 
 <p>For increased security, use a non-standard TCP or UDP port for your OpenVPN server, making sure to update the client &quot;remote&quot; line with the matching port number.</p>
 
-<p>In this tutorial I am running DD-WRT in a VirtualBox VM. Learn how at https://www.youtube.com/watch?v=BRLukj4dZxk</p>
+<p>In this tutorial I am running DD-WRT in a VirtualBox VM. Learn how at <a href="https://youtu.be/BRLukj4dZxk" target="_blank">https://youtu.be/BRLukj4dZxk</a></p>
+
+<h2>Prerequisites</h2>
+
+<ul>
+	<li class="noCheckbox">A XCA PKI database <a href="https://youtu.be/ezzj3x207lQ" target="_blank">https://youtu.be/ezzj3x207lQ</a></li>
+</ul>
 
 <h2>Create Required Certificates</h2>
 
@@ -207,8 +213,7 @@
 	<li>Save your changes</li>
 	<li>Copy the .ovpn template to OpenVPN install directory/config</li>
 	<li>Right click OpenVPN GUI in the system tray &gt; Connect</li>
-</ol>
-          </div>
+</ol>          </div>
         </div>
       </body>
     </html>
