@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Create and Apply SSL Certificates to ProxMox VE Web UI">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="04/25/2022 03:11:11 PM" />
+        <meta name="revised" content="10/24/2022 11:10:15 AM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -22,7 +22,13 @@
           </div>
           <div></div>
           <div id="content">
-          <h2>Create Your SSL Certificate</h2>
+          <h2>Prerequisites</h2>
+
+<ul>
+	<li class="noCheckbox">A XCA PKI database <a href="https://youtu.be/ezzj3x207lQ" target="_blank">https://youtu.be/ezzj3x207lQ</a></li>
+</ul>
+
+<h2>Create Your SSL Certificate</h2>
 
 <ol>
 	<li>Launch XCA</li>
@@ -76,17 +82,16 @@
 	<li>Download WinSCP <a href="https://winscp.net/eng/downloads.php" target="_blank">Download</a></li>
 	<li>Extract WinSCP and run the executable</li>
 	<li>Connect to the ProxMox VE IP address via WinSCP</li>
-	<li>Navigate to /etc/pve/nodes/&lt;node name&gt;/</li>
+	<li>Navigate to /etc/pve/nodes/&lt;#node name#&gt;/</li>
 	<li>Rename pve-ssl.pem and pve-ssl.key to .old</li>
-	<li>Copy the created pve-ssl.pem and pve-ssl.key to /etc/pve/nodes/&lt;node name&gt;/</li>
+	<li>Copy the created pve-ssl.pem and pve-ssl.key to /etc/pve/nodes/&lt;#node name#&gt;/</li>
 	<li>Connect to the ProxMox VE host via SSH or console and run the following command
 	<div class="codeBlock">systemctl restart pveproxy</div>
 	</li>
 	<li>Open a web browser and navigate to the ProxMox VE web UI</li>
 	<li>Authenticate at the ProxMox VE login</li>
 	<li>The ProxMox VE web UI should be utilizing the new SSL certificate</li>
-</ol>
-          </div>
+</ol>          </div>
         </div>
       </body>
     </html>
