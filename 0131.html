@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Enabling SSL for Pi-Hole Admin Interface (lighttpd) UPDATED">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="04/25/2022 03:11:11 PM" />
+        <meta name="revised" content="10/24/2022 10:10:54 AM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -22,7 +22,13 @@
           </div>
           <div></div>
           <div id="content">
-          <h2>Create Your SSL Certificate</h2>
+          <h2>Prerequisites</h2>
+
+<ul>
+	<li class="noCheckbox">A XCA PKI database <a href="https://youtu.be/ezzj3x207lQ" target="_blank">https://youtu.be/ezzj3x207lQ</a></li>
+</ul>
+
+<h2>Create Your SSL Certificate</h2>
 
 <ol>
 	<li>Launch XCA</li>
@@ -78,8 +84,8 @@
 	<li>Connect to the Raspberry Pi via Remote Desktop Client</li>
 	<li>Copy the certificates exported above to the Pi</li>
 	<li>Copy the certificates exported above to /etc/lighttpd
-	<div class="codeBlock">cp /home/i12bretro/Downloads/PiHole.pem /etc/lighttpd<br />
-	cp /home/i12bretro/Downloads/ca-chain.pem /etc/lighttpd</div>
+	<div class="codeBlock">cp ~/Downloads/PiHole.pem /etc/lighttpd<br />
+	cp ~/Downloads/ca-chain.pem /etc/lighttpd</div>
 	</li>
 	<li>Edit lighttpd.conf
 	<div class="codeBlock">mousepad</div>
@@ -92,18 +98,17 @@
 	</li>
 	<li>Optionally, to redirect all http traffic to https, add the following to the end of the file:
 	<p>$HTTP[&quot;scheme&quot;] == &quot;http&quot; {<br />
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; url.redirect = (&quot;&quot; =&gt; &quot;https://${url.authority}${url.path}${qsa}&quot;)<br />
+	            url.redirect = (&quot;&quot; =&gt; &quot;https://${url.authority}${url.path}${qsa}&quot;)<br />
 	}</p>
 	</li>
-	<li>File &gt; Save &gt; /home/i12bretro/Downloads/10-ssl.conf</li>
+	<li>File &gt; Save &gt; ~/Downloads/10-ssl.conf</li>
 	<li>In terminal, paste the following commands
-	<div class="codeBlock">sudo cp /home/i12bretro/Downloads/10-ssl.conf /etc/lighttpd/conf-available/<br />
+	<div class="codeBlock">sudo cp ~/Downloads/10-ssl.conf /etc/lighttpd/conf-available/<br />
 	sudo ln -s /etc/lighttpd/conf-available/10-ssl.conf /etc/lighttpd/conf-enabled/10-ssl.conf<br />
 	sudo service lighttpd restart</div>
 	</li>
 	<li>Open a web browser and navigate to PiHole via https://</li>
-</ol>
-          </div>
+</ol>          </div>
         </div>
       </body>
     </html>
