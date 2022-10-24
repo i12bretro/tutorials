@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Replace OpenVPN Access Server VPN Server and CA Certificates">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="06/01/2022 06:21:48 PM" />
+        <meta name="revised" content="10/24/2022 10:38:49 AM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -24,7 +24,13 @@
           <div id="content">
           <p>NOTE: Following this procedure will invalidate any client certificates currently in use with the OpenVPN Access Server. These clients will need to re-download their certificates from the OpenVPN Access Server to get connected using the updated certificates</p>
 
-<h2>Create OpenVPN Server&nbsp;Certificate</h2>
+<h2>Prerequisites</h2>
+
+<ul>
+	<li class="noCheckbox">A XCA PKI database <a href="https://youtu.be/ezzj3x207lQ" target="_blank">https://youtu.be/ezzj3x207lQ</a></li>
+</ul>
+
+<h2>Create OpenVPN Server Certificate</h2>
 
 <ol>
 	<li>Launch XCA</li>
@@ -101,8 +107,7 @@
 	<li>Click the Stop VPN services button</li>
 	<li>Click the Confirm Stop button</li>
 	<li>Click the Start VPN services button</li>
-</ol>
-          </div>
+</ol>          </div>
         </div>
       </body>
     </html>
