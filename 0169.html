@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Roll Your Own Google Docs with Collabora On ownCloud">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="04/25/2022 03:11:11 PM" />
+        <meta name="revised" content="10/24/2022 10:35:16 AM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -22,7 +22,13 @@
           </div>
           <div></div>
           <div id="content">
-          <h2>Installing Collabora Office</h2>
+          <h2>Prerequisites</h2>
+
+<ul>
+	<li class="noCheckbox">A XCA PKI database <a href="https://youtu.be/ezzj3x207lQ" target="_blank">https://youtu.be/ezzj3x207lQ</a></li>
+</ul>
+
+<h2>Installing Collabora Office</h2>
 
 <ol>
 	<li>Log into the Linux device</li>
@@ -110,58 +116,59 @@
 	&lt;key_file_path desc=&quot;Path to the key file&quot; relative=&quot;false&quot;&gt;/etc/ssl/certs/nettools.i12bretro.local.key&lt;/key_file_path&gt;<br />
 	&lt;ca_file_path desc=&quot;Path to the ca file&quot; relative=&quot;false&quot;&gt;/etc/ssl/certs/CA.pem&lt;/ca_file_path&gt;</p>
 	</li>
-	<li>Press CTRL+W and search for &lt;wopi</li>
-	<li>Add a new host for the DNS name of the ownCloud server<br />
-	<host allow="true">nettools.i12bretro.local</host></li>
+	<li>Press CTRL+W and search for &lt;wopi<wopi< li=""></wopi<></li>
+	<li>Add a new host for the DNS name of the ownCloud server
+	<p>&lt;host allow=true&quot;&gt;nettools.i12bretro.local&lt;/host&gt;</p>
+	</li>
 	<li>Press CTRL+O, Enter, CTRL+X</li>
 	<li>Continue the configuration by running the following commands in terminal:
 	<div class="codeBlock"># create CODE proxy configuration file<br />
 	sudo nano /etc/apache2/conf-available/code.conf</div>
 	</li>
 	<li>Paste the following into code.conf
-	<p> Options -Indexes</p>
+	<p>Options -Indexes</p>
 
-	<p>  #Encoded slashes need to be allowed<br />
-	  AllowEncodedSlashes NoDecode</p>
+	<p>#Encoded slashes need to be allowed<br />
+	AllowEncodedSlashes NoDecode</p>
 
-	<p>  # Container uses a unique non-signed certificate<br />
-	  SSLProxyEngine On<br />
-	  SSLProxyVerify None<br />
-	  SSLProxyCheckPeerCN Off<br />
-	  SSLProxyCheckPeerName Off</p>
+	<p># Container uses a unique non-signed certificate<br />
+	SSLProxyEngine On<br />
+	SSLProxyVerify None<br />
+	SSLProxyCheckPeerCN Off<br />
+	SSLProxyCheckPeerName Off</p>
 
-	<p>  # keep the host<br />
-	  ProxyPreserveHost On</p>
+	<p># keep the host<br />
+	ProxyPreserveHost On</p>
 
-	<p>  # static html, js, images, etc. served from loolwsd<br />
-	  # loleaflet is the client part of Collabora Online<br />
-	  ProxyPass           /loleaflet https://127.0.0.1:9980/loleaflet retry=0<br />
-	  ProxyPassReverse    /loleaflet https://127.0.0.1:9980/loleaflet</p>
+	<p># static html, js, images, etc. served from loolwsd<br />
+	# loleaflet is the client part of Collabora Online<br />
+	ProxyPass           /loleaflet https://127.0.0.1:9980/loleaflet retry=0<br />
+	ProxyPassReverse    /loleaflet https://127.0.0.1:9980/loleaflet</p>
 
-	<p>  # WOPI discovery URL<br />
-	  ProxyPass           /hosting/discovery https://127.0.0.1:9980/hosting/discovery retry=0<br />
-	  ProxyPassReverse    /hosting/discovery https://127.0.0.1:9980/hosting/discovery</p>
+	<p># WOPI discovery URL<br />
+	ProxyPass           /hosting/discovery https://127.0.0.1:9980/hosting/discovery retry=0<br />
+	ProxyPassReverse    /hosting/discovery https://127.0.0.1:9980/hosting/discovery</p>
 
-	<p>  # Capabilities<br />
-	  ProxyPass           /hosting/capabilities https://127.0.0.1:9980/hosting/capabilities retry=0<br />
-	  ProxyPassReverse    /hosting/capabilities https://127.0.0.1:9980/hosting/capabilities</p>
+	<p># Capabilities<br />
+	ProxyPass           /hosting/capabilities https://127.0.0.1:9980/hosting/capabilities retry=0<br />
+	ProxyPassReverse    /hosting/capabilities https://127.0.0.1:9980/hosting/capabilities</p>
 
-	<p>  # Main websocket<br />
-	  ProxyPassMatch &quot;/lool/(.*)/ws$&quot; wss://127.0.0.1:9980/lool/$1/ws nocanon</p>
+	<p># Main websocket<br />
+	ProxyPassMatch &quot;/lool/(.*)/ws$&quot; wss://127.0.0.1:9980/lool/$1/ws nocanon</p>
 
-	<p>  # Admin Console websocket<br />
-	  ProxyPass   /lool/adminws wss://127.0.0.1:9980/lool/adminws</p>
+	<p># Admin Console websocket<br />
+	ProxyPass   /lool/adminws wss://127.0.0.1:9980/lool/adminws</p>
 
-	<p>  # Download as, Fullscreen presentation and Image upload operations<br />
-	  ProxyPass           /lool https://127.0.0.1:9980/lool<br />
-	  ProxyPassReverse    /lool https://127.0.0.1:9980/lool</p>
+	<p># Download as, Fullscreen presentation and Image upload operations<br />
+	ProxyPass           /lool https://127.0.0.1:9980/lool<br />
+	ProxyPassReverse    /lool https://127.0.0.1:9980/lool</p>
 	</li>
-	<li>Press CTRL+O, Enter, CTRL+X</li>
+	<li>Press CTRL+O, Enter, CTRL+X to save the changes and exit nano</li>
 	<li>Continue the configuration by running the following commands in terminal:
 	<div class="codeBlock"># edit default SSL configuration file<br />
 	sudo nano /etc/apache2/sites-available/default-ssl.conf</div>
 	</li>
-	<li>Add the following line just above the /VirtualHost tag
+	<li>Add the following line just above the &lt;/VirtualHost tag
 	<p>Include /etc/apache2/conf-available/code.conf</p>
 	</li>
 	<li>Press CTRL+O, Enter, CTRL+X</li>
@@ -196,8 +203,7 @@
 	</li>
 </ol>
 
-<p>Source: <a href="https://www.collaboraoffice.com/code/linux-packages/" target="_blank">https://www.collaboraoffice.com/code/linux-packages/</a></p>
-          </div>
+<p>Source: <a href="https://www.collaboraoffice.com/code/linux-packages/" target="_blank">https://www.collaboraoffice.com/code/linux-packages/</a></p>          </div>
         </div>
       </body>
     </html>
