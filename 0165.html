@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Setting Up SSL for Airsonic on Windows">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="04/25/2022 03:11:11 PM" />
+        <meta name="revised" content="10/24/2022 10:24:36 AM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -22,7 +22,13 @@
           </div>
           <div></div>
           <div id="content">
-          <h2>Create Your SSL Certificate</h2>
+          <h2>Prerequisites</h2>
+
+<ul>
+	<li class="noCheckbox">A XCA PKI database <a href="https://youtu.be/ezzj3x207lQ" target="_blank">https://youtu.be/ezzj3x207lQ</a></li>
+</ul>
+
+<h2>Create Your SSL Certificate</h2>
 
 <ol>
 	<li>Launch XCA</li>
@@ -73,27 +79,27 @@
 	<li>Stop the Apache Tomcat service</li>
 	<li>Navigate to the Apache Tomcat/conf directory in Explorer</li>
 	<li>Edit the server.xml file in a text editor</li>
-	<li>Comment out the existing connector and paste the following:<br />
-	&lt;Connector port=&quot;8000&quot;<br />
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; protocol=&quot;org.apache.coyote.http11.Http11AprProtocol&quot;<br />
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; maxThreads=&quot;150&quot;<br />
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SSLEnabled=&quot;true&quot;<br />
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SSLProtocol=&quot;TLS&quot;<br />
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; clientAuth=&quot;false&quot;<br />
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; secure=&quot;true&quot;<br />
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; scheme=&quot;https&quot;<br />
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SSLCertificateFile=&quot;G:\xampp\~certificates\airsonic.i12bretro.local.crt&quot;<br />
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SSLCertificateKeyFile=&quot;G:\xampp\~certificates\airsonic.i12bretro.local.key&quot;<br />
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SSLCertificateChainFile=&quot;G:\xampp\~certificates\ca-chain.pem&quot;<br />
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; keyAlias=&quot;airsonic.i12bretro.local&quot;<br />
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sslEnabledProtocols=&quot;TLSv1.1+TLSv1.2+TLSv1.3&quot;&gt;<br />
-	&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;UpgradeProtocol className=&quot;org.apache.coyote.http2.Http2Protocol&quot; /&gt;<br />
-	&nbsp;&nbsp;&nbsp; &lt;/Connector&gt;</li>
+	<li>Comment out the existing connector and paste the following:
+	<p>&lt;Connector port=&quot;8000&quot;<br />
+	protocol=&quot;org.apache.coyote.http11.Http11AprProtocol&quot;<br />
+	maxThreads=&quot;150&quot;<br />
+	SSLEnabled=&quot;true&quot;<br />
+	SSLProtocol=&quot;TLS&quot;<br />
+	clientAuth=&quot;false&quot;<br />
+	secure=&quot;true&quot;<br />
+	scheme=&quot;https&quot;<br />
+	SSLCertificateFile=&quot;G:\xampp\~certificates\airsonic.i12bretro.local.crt&quot;<br />
+	SSLCertificateKeyFile=&quot;G:\xampp\~certificates\airsonic.i12bretro.local.key&quot;<br />
+	SSLCertificateChainFile=&quot;G:\xampp\~certificates\ca-chain.pem&quot;<br />
+	keyAlias=&quot;airsonic.i12bretro.local&quot;<br />
+	sslEnabledProtocols=&quot;TLSv1.1+TLSv1.2+TLSv1.3&quot;&gt;<br />
+	&lt;UpgradeProtocol className=&quot;org.apache.coyote.http2.Http2Protocol&quot; /&gt;<br />
+	&lt;/Connector&gt;</p>
+	</li>
 	<li>Go back to the Services dialog and start Apache Tomcat</li>
 	<li>Open a web browser and navigate to https://DNSorIP:8000/airsonic</li>
 	<li>Airsonic should now be running securely with https using the new certificate</li>
-</ol>
-          </div>
+</ol>          </div>
         </div>
       </body>
     </html>
