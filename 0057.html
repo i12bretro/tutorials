@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Installing and Setting Up SSL for Subsonic on Windows">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="04/25/2022 03:11:11 PM" />
+        <meta name="revised" content="10/24/2022 10:03:56 AM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -22,7 +22,13 @@
           </div>
           <div></div>
           <div id="content">
-          <h2>Create Your SSL Certificate</h2>
+          <h2>Prerequisites</h2>
+
+<ul>
+	<li class="noCheckbox">A XCA PKI database <a href="https://youtu.be/ezzj3x207lQ" target="_blank">https://youtu.be/ezzj3x207lQ</a></li>
+</ul>
+
+<h2>Create Your SSL Certificate</h2>
 
 <ol>
 	<li>Launch XCA</li>
@@ -123,8 +129,7 @@
 	<li>Click the Start button to start the Subsonic service</li>
 	<li>Open a web browser and navigate to https://DNSorIP:Port</li>
 	<li>Subsonic should now be running securely with https using the new certificate</li>
-</ol>
-          </div>
+</ol>          </div>
         </div>
       </body>
     </html>
