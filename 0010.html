@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Adding Self-Signed PKI to Windows Trusted Certificate Store via Group Policy">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="03/24/2022 09:08:53 PM" />
+        <meta name="revised" content="10/24/2022 09:52:34 AM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -25,6 +25,12 @@
           <p>This is part three of a series of creating your own self-signed PKI and some ways to utilize the PKI to setup SSL for your web server or create your own OpenVPN server.</p>
 
 <p>Disclaimer: I am not a security expert. This is just the easiest way I have found to create and utilize SSL for my homelab services.</p>
+
+<h2>Prerequisites</h2>
+
+<ul>
+	<li class="noCheckbox">A XCA PKI database <a href="https://youtu.be/ezzj3x207lQ" target="_blank">https://youtu.be/ezzj3x207lQ</a></li>
+</ul>
 
 <h2>Exporting Certificates from XCA</h2>
 
@@ -63,8 +69,7 @@
 	<li>Close the Group Policy Management Editor window</li>
 	<li>Force Group Policy update by Right clicking the start button &gt; Run &gt; cmd</li>
 	<li>Type gpupdate /force</li>
-</ol>
-          </div>
+</ol>          </div>
         </div>
       </body>
     </html>
