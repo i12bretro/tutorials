@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Roll Your Own Google Docs with Collabora On NextCloud">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="05/24/2022 12:45:57 PM" />
+        <meta name="revised" content="10/24/2022 10:43:38 AM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -22,7 +22,13 @@
           </div>
           <div></div>
           <div id="content">
-          <h2>Installing Collabora Office</h2>
+          <h2>Prerequisites</h2>
+
+<ul>
+	<li class="noCheckbox">A XCA PKI database <a href="https://youtu.be/ezzj3x207lQ" target="_blank">https://youtu.be/ezzj3x207lQ</a></li>
+</ul>
+
+<h2>Installing Collabora Office</h2>
 
 <ol>
 	<li>Log into the Linux device</li>
@@ -161,7 +167,7 @@
 	<div class="codeBlock"># edit default SSL configuration file<br />
 	sudo nano /etc/apache2/sites-available/default-ssl.conf</div>
 	</li>
-	<li>Add the following line just above the /VirtualHost tag
+	<li>Add the following line just above the &lt;/VirtualHost tag
 	<p>Include /etc/apache2/conf-available/code.conf</p>
 	</li>
 	<li>Press CTRL+O, Enter, CTRL+X</li>
@@ -198,8 +204,7 @@
 	<li>The new document should load in a word processor inside the web browser and be ready for editing</li>
 </ol>
 
-<p>Source: <a href="https://www.collaboraoffice.com/code/linux-packages/" target="_blank">https://www.collaboraoffice.com/code/linux-packages/</a></p>
-          </div>
+<p>Source: <a href="https://www.collaboraoffice.com/code/linux-packages/" target="_blank">https://www.collaboraoffice.com/code/linux-packages/</a></p>          </div>
         </div>
       </body>
     </html>
