@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Enabling SSL for Pi-Hole Admin Interface (lighttpd)">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="04/25/2022 03:11:11 PM" />
+        <meta name="revised" content="10/24/2022 10:06:19 AM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -23,6 +23,12 @@
           <div></div>
           <div id="content">
           <p>This video is outdated after I found updating Pi-hole will overwrite the SSL config. The new video showing updated steps can be found at: <a href="https://youtu.be/yUdmBGe9wYA" target="_blank">https://youtu.be/yUdmBGe9wYA</a></p>
+
+<h2>Prerequisites</h2>
+
+<ul>
+	<li class="noCheckbox">A XCA PKI database <a href="https://youtu.be/ezzj3x207lQ" target="_blank">https://youtu.be/ezzj3x207lQ</a></li>
+</ul>
 
 <h2>Create Your SSL Certificate</h2>
 
@@ -97,20 +103,20 @@
 	</li>
 	<li>File &gt; Open /etc/lighttpd/lighttpd.conf</li>
 	<li>Add &quot;mod_openssl&quot; to server.modules</li>
-	<li>Add the following lines<br />
-	server.name = &quot;pihole.i12bretro.local&quot;<br />
+	<li>Add the following lines
+	<p>server.name = &quot;pihole.i12bretro.local&quot;<br />
 	server.port = 443<br />
 	ssl.engine = &quot;enable&quot;<br />
 	ssl.pemfile = &quot;PiHole.pem&quot;<br />
-	ssl.ca-file = &quot;ca-chain.pem&quot;</li>
+	ssl.ca-file = &quot;ca-chain.pem&quot;</p>
+	</li>
 	<li>File &gt; Save &gt; /home/pi/Downloads/lighttpd.conf</li>
 	<li>In terminal, paste the following commands
 	<div class="codeBlock">cp /home/pi/Downloads/lighttpd.conf /etc/lighttpd<br />
 	service lighttpd restart</div>
 	</li>
 	<li>Open a web browser and navigate to PiHole via https://</li>
-</ol>
-          </div>
+</ol>          </div>
         </div>
       </body>
     </html>
