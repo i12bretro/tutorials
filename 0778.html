@@ -1,0 +1,59 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Add Progress Bar Output to Native Linux Copy (cp) and Move (mv) Commands</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Move,Copy,MV,CP,Linux,Debian,Enhanced Copy And Move,Add Progress Bars To Linux Copy And Move,Progress Bar,Enhanced Linux Utilities,GNU,Enhanced GNU CP,Enhanced GNU MV,Progress Bar GNU CP,Progress Bar GNU MV,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Add Progress Bar Output to Native Linux Copy (cp) and Move (mv) Commands">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="08/20/2022 09:46:55 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Add Progress Bar Output to Native Linux Copy (cp) and Move (mv) Commands</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Advanced Copy?</h2>
+
+<blockquote><em>Advanced Copy is a mod for the GNU cp and GNU mv tools which adds a progress bar and provides some info on what&#39;s going on. It was written by Florian Zwicke and released under the GPL. -<a href="https://github.com/jarun/advcpmv/" target="_blank">https://github.com/jarun/advcpmv/</a></em></blockquote>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Launch a terminal and run the following commands
+	<div class="codeBlock"># download coreutils<br />
+	wget http://ftp.gnu.org/gnu/coreutils/coreutils-8.32.tar.xz<br />
+	# extract the coreutils tar.xz<br />
+	tar xvJf coreutils-8.32.tar.xz<br />
+	# cd into the extracted coreutils directory<br />
+	cd coreutils-8.32<br />
+	# download the advance copy/move patch file<br />
+	wget https://raw.githubusercontent.com/jarun/advcpmv/master/advcpmv-0.8-8.32.patch<br />
+	# apply the patch file<br />
+	patch -p1 -i advcpmv-0.8-8.32.patch<br />
+	# prepare the current directory for building<br />
+	./configure<br />
+	# build the patch cp and make binaries<br />
+	make<br />
+	# copy the new patch cp and mv commands for use<br />
+	sudo cp ./src/cp /usr/local/bin/cp &amp;&amp; sudo cp ./src/mv /usr/local/bin/mv<br />
+	# cd back to user home<br />
+	cd ~<br />
+	# test a file copy with progress bar functionality by using -g or --progress-bar<br />
+	cp large-test large-test-copy -g</div>
+	</li>
+</ol>
+
+<h2> </h2>          </div>
+        </div>
+      </body>
+    </html>
+  
