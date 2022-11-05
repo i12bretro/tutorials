@@ -1,0 +1,89 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Setting Up LDAP Authentication for Kanboard</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,LDAP,Self-Hosted,Web Based,Web Based Tools,Kanban,Kanboard,Task Management,Todo,Windows,Microsoft Windows,XAMPP,PHP Based Applications,PHP Based Task Management,PHP Based Kanban Board,Kanban Board,Kanban Task Management,AD,Active Directory,Administration,Web Server Administration,Web Server,Web Server Customization,System Administrator,System Administration,PHP,Microsoft,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Setting Up LDAP Authentication for Kanboard">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="08/10/2022 06:11:12 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Setting Up LDAP Authentication for Kanboard</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <p>NOTE: This tutorial assumes Kanboard is already installed and running. If it isn&#39;t, follow one of these tutorials to install it<br />
+Linux: <a href="https://youtu.be/" target="_blank">https://youtu.be/</a><br />
+Windows: <a href="https://youtu.be/on_8FD3DRKk" target="_blank">https://youtu.be/on_8FD3DRKk</a></p>
+
+<h2>What is Kanboard?</h2>
+
+<blockquote><em>Kanboard is project management software that focuses on the Kanban methodology. -<a href="https://github.com/kanboard/kanboard" target="_blank">https://github.com/kanboard/kanboard</a></em></blockquote>
+
+<h2>Active Directory Setup</h2>
+
+<ol>
+	<li>Open Active Directory Users and Computers</li>
+	<li>Expand the domain &gt; Users</li>
+	<li>Right Click Users &gt; New &gt; User</li>
+	<li>Create a read only account to use for LDAP binding
+	<p>First Name: Read<br />
+	Last Name: Only<br />
+	User logon name: readonly_svc</p>
+	</li>
+	<li>Click Next</li>
+	<li>Set the user&#39;s password and confirm it</li>
+	<li>Uncheck User must change password on next logon</li>
+	<li>Check User cannot change password</li>
+	<li>Check Password never expires &gt; Click Next</li>
+	<li>Click Finish</li>
+	<li>Right Click Users &gt; New &gt; Group</li>
+	<li>Give the group a name (ie DevTeam) and click OK</li>
+	<li>Right Click the newly created group &gt; Properties</li>
+	<li>Select the Members tab &gt; Click Add...</li>
+	<li>Add users that will be allowed access Kanboard</li>
+	<li>Click OK</li>
+</ol>
+
+<h2>Configuring Kanboard for LDAP</h2>
+
+<ol>
+	<li>Navigate to the PHP install directory in File Explorer</li>
+	<li>Edit php.ini in a text editor</li>
+	<li>Find the ldap extension and make sure it is enabled by removing the # at the start of the line
+	<p>extension=ldap</p>
+	</li>
+	<li>Save the changes to php.ini</li>
+	<li>Restart the Apache HTTPD service</li>
+	<li>Navigate to the Kanboard installation directory</li>
+	<li>Edit config.php in a text editor</li>
+	<li>Edit the following fields to configure the LDAP connection
+	<p>define(&#39;LDAP_AUTH&#39;, true);<br />
+	define(&#39;LDAP_SERVER&#39;, &#39;ldap://i12bretro.local:389&#39;);<br />
+	define(&#39;LDAP_BIND_TYPE&#39;, &#39;proxy&#39;);<br />
+	define(&#39;LDAP_USERNAME&#39;, &#39;readonly_svc@i12bretro.local&#39;);<br />
+	define(&#39;LDAP_PASSWORD&#39;, &#39;Read0nly!!&#39;);<br />
+	define(&#39;LDAP_USER_BASE_DN&#39;, &#39;CN=Users,DC=i12bretro,DC=local&#39;);<br />
+	define(&#39;LDAP_USER_FILTER&#39;, &#39;(&amp;(objectClass=user)(sAMAccountName=%s)(memberof=cn=DevTeam,CN=Users,dc=i12bretro,dc=local))&#39;);<br />
+	define(&#39;LDAP_USER_ATTRIBUTE_USERNAME&#39;, &#39;sAMAccountName&#39;);</p>
+	</li>
+	<li>Save the changes to config.php</li>
+	<li>Open a browser and navigate to the Kanboard URL</li>
+	<li>Attempt logging in with a valid LDAP user name and password</li>
+</ol>
+
+<p>Documentation: <a href="https://docs.kanboard.org/en/latest/admin_guide/ldap_authentication.html" target="_blank">https://docs.kanboard.org/en/latest/admin_guide/ldap_authentication.html</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
