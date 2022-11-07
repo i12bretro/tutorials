@@ -1,0 +1,57 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Add A Firewall to Debian Linux with UFW</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab Ideas,Home Lab,Install Guide,Debian,Firewall,Home Server,Homelab,Homelab Ideas,IT Security,Linux,UFW,Ubuntu Firewall,Network Firewall,Software Firewall,Install UFW On Debian,Debian Firewall,How To Install A Firewall On Debian Linux,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Add A Firewall to Debian Linux with UFW">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="10/29/2022 12:17:59 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Add A Firewall to Debian Linux with UFW</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is UFW?</h2>
+
+<blockquote><em>The Uncomplicated Firewall (ufw, and gufw - a Graphical User Interface version of the same) is a frontend for iptables and is particularly well-suited for host-based firewalls. Ufw provides a framework for managing netfilter, as well as a command-line interface for manipulating the firewall. -<a href="https://wiki.debian.org/Uncomplicated%20Firewall%20%28ufw%29" target="_blank">https://wiki.debian.org/Uncomplicated%20Firewall%20%28ufw%29</a></em></blockquote>
+
+<ol>
+	<li>Log into the Debian device</li>
+	<li>Run the following commands in a terminal window:
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install ufw<br />
+	sudo apt install ufw -y<br />
+	# enable ufw<br />
+	sudo ufw enable<br />
+	# output the ufw status<br />
+	sudo ufw status<br />
+	# add some default firewall rules<br />
+	sudo ufw default deny incoming<br />
+	sudo ufw default allow outgoing<br />
+	# if a webserver is running, allow the incoming traffic<br />
+	sudo ufw allow 80/tcp<br />
+	sudo ufw allow 443/tcp<br />
+	# to allow incoming ssh connections, open port 22<br />
+	sudo ufw allow 22/tcp<br />
+	# output the ufw status<br />
+	sudo ufw status<br />
+	# to install a graphical user interface for ufw, install gufw<br />
+	sudo apt install gufw -y</div>
+	</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
