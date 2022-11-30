@@ -8,6 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Install Pi-Hole on Windows 10 Via WSL">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="11/30/2022 10:18:34 AM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -40,25 +41,28 @@
 	<li>Right click the downloaded .cmd file &gt; Run as Administrator</li>
 	<li>Press Enter to accept the default install location (C:\Program Files)</li>
 	<li>Press Enter to continue with the installation</li>
-	<li>When prompted, enter and confirm a Pi-Hole&nbsp;admin password</li>
+	<li>When prompted, enter and confirm a Pi-Hole admin password</li>
 	<li>After the Pi-Hole installation script completes, right click the Start button &gt; run &gt; type cmd &gt; Press Enter</li>
 	<li>Run the following commands in command prompt
-	<div class="codeBlock">sudo nano /etc/resolv.conf</div>
+	<div class="codeBlock"># enter wsl prompt<br />
+	wsl<br />
+	# edit resolv.conf<br />
+	sudo nano /etc/resolv.conf</div>
 	</li>
 	<li>Add the following line
 	<p>nameserver 127.0.0.1</p>
 	</li>
-	<li>Press&nbsp;CTRL+O, Enter, CTRL+X to write the changes to resolv.conf</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to resolv.conf</li>
 	<li>Run the following command to update the Pi-Hole blocklist
-	<div class="codeBlock">sudo pihole -g</div>
+	<div class="codeBlock"># update pihole<br />
+	sudo pihole -g</div>
 	</li>
 	<li>Open a web browser and navigate to http://localhost/admin</li>
 	<li>Click Login</li>
 	<li>Authenticate with the admin password set earlier</li>
 </ol>
 
-<p>Special thanks to the developer of this installation script&nbsp;<a href="https://github.com/DesktopECHO/Pi-Hole-for-WSL1" target="_blank">https://github.com/DesktopECHO/Pi-Hole-for-WSL1</a></p>
-          </div>
+<p>Special thanks to the developer of this installation script <a href="https://github.com/DesktopECHO/Pi-Hole-for-WSL1" target="_blank">https://github.com/DesktopECHO/Pi-Hole-for-WSL1</a></p>          </div>
         </div>
       </body>
     </html>
