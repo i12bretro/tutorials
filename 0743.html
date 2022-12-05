@@ -1,0 +1,106 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Easy!Appointments on Linux [Opensource Appointment Scheduler System]</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Easy!Appointments,Scheduling Application,Apache HTTPD,MySQL,MariaDB,LAMP,Linux,Debian,PHP,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Easy!Appointments on Linux [Opensource Appointment Scheduler System]">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="06/05/2022 01:15:23 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Easy!Appointments on Linux [Opensource Appointment Scheduler System]</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Easy!Appointments?</h2>
+
+<blockquote><em>Easy!Appointments is a highly customizable web application that allows customers to book appointments with you via a sophisticated web interface. Moreover, it provides the ability to sync your data with Google Calendar so you can use them with other services. It is an open source project that you can download and install even for commercial use. Easy!Appointments will run smoothly with your existing website as it can be installed in a single folder of the server and of course share an existing database. -<a href="https://github.com/alextselegidis/easyappointments#about" target="_blank">https://github.com/alextselegidis/easyappointments#about</a></em></blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal window:
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install prerequisites<br />
+	sudo apt install curl wget zip -y<br />
+	# install Apache HTTPD and MySQL<br />
+	sudo apt install apache2 mariadb-server mariadb-client -y<br />
+	# install PHP components<br />
+	sudo apt install php7.4 php7.4-curl php7.4-common php7.4-json php7.4-mysqli php7.4-mysql -y<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type N and press Enter to not switch to unix socket authentication</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the Easy!Appointments database and database user
+	<div class="codeBlock">CREATE DATABASE easy_appointments;<br />
+	GRANT ALL ON easy_appointments.* to &#39;easy_appointments_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;EasyAppo1ntm3nts!!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># fetch the latest download URL<br />
+	regex=&#39;&quot;browser_download_url&quot;: &quot;(https:\/\/github.com\/alextselegidis\/easyappointments\/releases\/download\/[^/]*\/easyappointments-[^/]*\.zip)&quot;&#39; &amp;&amp; response=$(curl -H &quot;Accept: application/vnd.github.v3+json&quot; https://api.github.com/repos/alextselegidis/easyappointments/releases/latest) &amp;&amp; [[ $response =~ $regex ]] &amp;&amp; downloadURL=&quot;${BASH_REMATCH[1]}&quot;<br />
+	# download the latest release<br />
+	wget -O easyappointments.zip $downloadURL<br />
+	# create target directory<br />
+	sudo mkdir /var/www/html/easyappointments<br />
+	# extract the downloaded zip to /var/www/html/easyappointments<br />
+	sudo unzip ./easyappointments.zip -d /var/www/html/easyappointments<br />
+	# set the owner of the easyappointments directory<br />
+	sudo chown -R www-data:www-data /var/www/html/easyappointments<br />
+	# copy sample config file<br />
+	sudo cp /var/www/html/easyappointments/config-sample.php /var/www/html/easyappointments/config.php<br />
+	# edit config.php<br />
+	sudo nano /var/www/html/easyappointments/config.php</div>
+	</li>
+	<li>Scroll down to the const BASE_URL variable and set the value to the IP address or DNS name of the host
+	<p>const BASE_URL = &#39;http://localhost/easyappointments&#39;;</p>
+	</li>
+	<li>Press CTRL+W and search for db_name</li>
+	<li>Update or add the following configuration
+	<p>const DB_HOST = &#39;localhost&#39;;<br />
+	const DB_NAME = &#39;easy_appointments&#39;;<br />
+	const DB_USERNAME = &#39;easy_appointments_rw&#39;;<br />
+	const DB_PASSWORD = &#39;EasyAppo1ntm3nts!!&#39;;</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+</ol>
+
+<h2>Easy!Appointments Web Installer</h2>
+
+<ol>
+	<li>Open a web browser and navigate to http://DNSorIP/easyappointments</li>
+	<li>The Easy!Appointments Installation web installer should be load</li>
+	<li>Complete the Administrator and Company form fields &gt; Click Install Easy!Appointments</li>
+	<li>Welcome to Easy!Appointments</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
