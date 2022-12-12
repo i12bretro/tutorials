@@ -1,0 +1,155 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Sync EmuDeck Saves with Rclone on SteamDeck</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="SteamDeck,Steam,SteamOS,Rclone,EmuDec,Emulation,Sync,Backup,Bidreictional Sync,Samba,CIFS,Backup Emulation Save Data,Backup EmuDeck Save Data,Automatic File Sync,Backup Emulator Saves To The Cloud,Linux,Arch,Arch Linux,Backup SteamDeck Emulator Saves,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Sync EmuDeck Saves with Rclone on SteamDeck">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="12/07/2022 02:10:49 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Sync EmuDeck Saves with Rclone on SteamDeck</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is EmuDeck?</h2>
+
+<blockquote><em>EmuDeck is a collection of scripts that allows you to autoconfigure your Steam Deck, it creates your roms directory structure and downloads all of the needed Emulators for you along with the best configurations for each of them. -<a href="https://github.com/dragoonDorise/EmuDeck" target="_blank">https://github.com/dragoonDorise/EmuDeck</a></em></blockquote>
+
+<h2>What is Rclone?</h2>
+
+<blockquote><em>Rclone is a command-line program to manage files on cloud storage. It is a feature-rich alternative to cloud vendors&#39; web storage interfaces. -<a href="https://rclone.org/" target="_blank">https://rclone.org/</a></em></blockquote>
+
+<h2>Things You Will Need</h2>
+
+<ul>
+	<li class="noCheckbox">A SteamDeck</li>
+	<li class="noCheckbox">A storage location to backup to</li>
+</ul>
+
+<h2>Before You Begin</h2>
+
+<p>Make a manual backup of your save files just in case something goes wrong during the initial setup of Rclone.</p>
+
+<h2>Install and Configure Rclone</h2>
+
+<ol>
+	<li>Boot the SteamDeck &gt; Long press the power button &gt; Shutdown &gt; Switch to Desktop</li>
+	<li>Click the Application menu &gt; Search Konsole &gt; Select Konsole to launch a terminal</li>
+	<li>Continue with the following commands in Konsole
+	<div class="codeBlock"># set a password if you haven&#39;t already<br />
+	# enter and confirm a password<br />
+	passwd<br />
+	# if emudeck was installed on microSD, run the following to create a symlink in the home directory<br />
+	# if you&#39;re not sure, navigate to the path in Dolphin, right click and Open Terminal, then run pwd<br />
+	mkdir ~/Emulation<br />
+	ln -s /run/media/mmcblk0p1/Emulation/saves ~/Emulation/<br />
+	# make steamos writable<br />
+	sudo steamos-readonly disable<br />
+	# install rclone<br />
+	sudo -v ; curl https://rclone.org/install.sh | sudo bash<br />
+	# make steamos readonly<br />
+	sudo steamos-readonly enable<br />
+	# verify rclone installed<br />
+	rclone version<br />
+	# configure rclone<br />
+	rclone config<br />
+	# setup a new rclone remote storage location<br />
+	n<br />
+	# enter a name for the remote storage location<br />
+	EmuDeckSaves<br />
+	# select the type of storage<br />
+	# here you can select the storage type to use<br />
+	# SMB/CIFS in this example<br />
+	smb<br />
+	<br />
+	# follow the prompts to configure the remote storage<br />
+	# this will vary depending on the storage type selected<br />
+	# the steps below are for smb<br />
+	<br />
+	# enter the smb host<br />
+	i12bretroDC<br />
+	# enter the smb username to use<br />
+	i12bretro<br />
+	# enter the smb port or press enter to use the default<br />
+	&lt;%enter%&gt;<br />
+	# choose a password option<br />
+	y<br />
+	# enter and confirm the smb password to use<br />
+	&lt;%smb password%&gt;<br />
+	# enter an optional auth domain<br />
+	i12bretro.local<br />
+	# enter advanced config<br />
+	n<br />
+	# review the summary and confirm<br />
+	y<br />
+	# quit rclone config<br />
+	q<br />
+	# test the configuration<br />
+	# if any errors are shown, troubleshoot before moving on<br />
+	rclone test memory EmuDeckSaves:/EmuDeck/Saves<br />
+	# if using a subdirectory, add it after the remote storage name<br />
+	rclone test memory EmuDeckSaves:/EmuDeck/Saves<br />
+	# run an initial sync<br />
+	# once the sync completes, verify the contents of the SMB share<br />
+	rclone bisync --resync --copy-links ~/Emulation/saves EmuDeckSaves:/EmuDeck/Saves</div>
+	</li>
+</ol>
+
+<h2>Scheduling Automatic Sync</h2>
+
+<ol>
+	<li>Continue with the following steps in terminal
+	<div class="codeBlock"># create a systemd user config directory<br />
+	mkdir ~/.config/systemd/user -p<br />
+	# create and edit a systemd timer<br />
+	nano ~/.config/systemd/user/sync-emudeck-saves.timer</div>
+	</li>
+	<li>Paste the following into the .timer, adjust the OnCalendar value to change from every 15 minutes
+	<p>[Unit]<br />
+	Description=Scheduled EmuDeck saves Rclone sync timer</p>
+
+	<p>[Timer]<br />
+	OnCalendar=*:0/15<br />
+	Persistent=true</p>
+
+	<p>[Install]<br />
+	WantedBy=timers.target</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to save the changes and exit</li>
+	<li>Continue with the following steps in terminal
+	<div class="codeBlock"># create and edit a systemd service<br />
+	nano ~/.config/systemd/user/sync-emudeck-saves.service</div>
+	</li>
+	<li>Paste the following into the .service, updating the two paths in the rclone command to match the source and destionation as needed
+	<p>[Unit]<br />
+	Description=Scheduled EmuDeck saves Rclone sync service</p>
+
+	<p>[Service]<br />
+	ExecStart=/usr/bin/rclone bisync --copy-links /home/deck/Emulation/saves EmuDeckSaves:/EmuDeck/Saves</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to save the changes and exit</li>
+	<li>Continue with the following steps in terminal
+	<div class="codeBlock"># start and enable the systemd timer<br />
+	systemctl enable sync-emudeck-saves.timer --now --user<br />
+	# list the systemd timers<br />
+	systemctl list-timers --all --user</div>
+	</li>
+	<li>Create some test files in both the SMB share and ~/Emulation/saves and verify the two way sync is working as expected</li>
+</ol>
+
+<p>Special thanks to jcnix for the idea <a href="https://github.com/jcnix/emudeck-saves-sync" target="_blank">https://github.com/jcnix/emudeck-saves-sync</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
