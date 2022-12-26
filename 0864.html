@@ -1,0 +1,91 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install n8n - Open Source Workflow Automation - on MacOS</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Application Automation Platform,Application Integration Platform,FOSS,Free Open Source Software,Free Open-Source Software,Free Software,Graphical Software Integration,Integomat Alternative,Make Alternative,N8n,Nodemation,Workflow Automation,MacOS,NodeJS,MariaDB,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install n8n - Open Source Workflow Automation - on MacOS">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="12/12/2022 07:36:07 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install n8n - Open Source Workflow Automation - on MacOS</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is n8n?</h2>
+
+<blockquote><em>n8n is an extendable workflow automation tool. With a fair-code distribution model, n8n will always have visible source code, be available to self-host, and allow you to add your own custom functions, logic and apps. n8n&#39;s node-based approach makes it highly versatile, enabling you to connect anything to everything. -<a href="https://github.com/n8n-io/n8n" target="_blank">https://github.com/n8n-io/n8n</a></em></blockquote>
+
+<h2>Installing Homebrew Package Manager</h2>
+
+<ol>
+	<li>Start LaunchPad from the dock</li>
+	<li>Search terminal &gt; Click Terminal to launch it</li>
+	<li>Run the following commands in the terminal window
+	<div class="codeBlock CMD"># if prompted, click install and agree to install command line tools<br />
+	# install homebrew<br />
+	/bin/bash -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&quot;<br />
+	# enter your password<br />
+	# press Enter to continue</div>
+	</li>
+</ol>
+
+<h2>Installing n8n</h2>
+
+<ol>
+	<li>Run the following commands in a terminal window
+	<div class="codeBlock CMD"># install nodejs<br />
+	brew install node@16<br />
+	# correct brew link to nodejs v16<br />
+	brew unlink node<br />
+	brew link --overwrite node@16<br />
+	# install mariadb<br />
+	brew install mariadb<br />
+	# start the mariadb service<br />
+	mysql.server start<br />
+	# set mariadb service to autostart<br />
+	brew services start mariadb<br />
+	# connect to the database<br />
+	sudo mysql -uroot</div>
+	</li>
+	<li>Run the following commands to create the n8n database and database user
+	<div class="codeBlock CMD">CREATE DATABASE n8n;<br />
+	GRANT ALL ON n8n.* to &#39;n8n_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;n8n_N8N!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;</div>
+	</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock CMD"># set environmental variables<br />
+	export DB_TYPE=&quot;mysqldb&quot;<br />
+	export DB_MYSQLDB_DATABASE=&quot;n8n&quot;<br />
+	export DB_MYSQLDB_HOST=&quot;localhost&quot;<br />
+	export DB_MYSQLDB_USER=&quot;n8n_rw&quot;<br />
+	export DB_MYSQLDB_PASSWORD=&#39;n8n_N8N!&#39;<br />
+	export GENERIC_TIMEZONE=&quot;America/New_York&quot;<br />
+	# install n8n<br />
+	sudo npm install n8n --location=global<br />
+	# run n8n<br />
+	sudo n8n start</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP:5678</li>
+	<li>Complete the form with an email, first name, last name and password &gt; Click next</li>
+	<li>Complete the questionnaire &gt; Click continue</li>
+	<li>Click Get started</li>
+	<li>Welcome to n8n</li>
+</ol>
+
+<p>Source: <a href="https://docs.n8n.io/hosting/installation/npm/" target="_blank">https://docs.n8n.io/hosting/installation/npm/</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
