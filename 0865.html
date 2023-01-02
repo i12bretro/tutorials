@@ -1,0 +1,118 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Passing a Physical GPU to a MacOS Proxmox VM with PCI Passthrough</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Proxmox How To,GPU Passthrough,Graphics Card,GPU Pass Through,Proxmox VE,Proxmox Video Card Passthrough,Home Lab,Home Lab Ideas,Debian,GPU,Hypervisor,Linux,PCI,PCIe,Passthrough,Proxmox,Proxmox Add Physical GPU,Proxmox Add Physical Graphics Card,Proxmox Step By Step,Proxmox Tutorial,VM,Virtual Machine,MacOS,Mac OS,IOMMU,VFIO,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Passing a Physical GPU to a MacOS Proxmox VM with PCI Passthrough">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="12/22/2022 07:06:27 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Passing a Physical GPU to a MacOS Proxmox VM with PCI Passthrough</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Things You Will Need</h2>
+
+<ul>
+	<li class="noCheckbox">A MacOS Proxmox VM <a href="https://www.youtube.com/@i12bretro/search?query=macos%20proxmox" target="_blank">Catalina | Big Sur | Monterey | Ventura</a></li>
+	<li class="noCheckbox">A supported GPU for the target version of Mac OS<br />
+	Use the charts at <a href="https://dortania.github.io/OpenCore-Install-Guide/macos-limits.html#gpu-support" target="_blank">https://dortania.github.io/OpenCore-Install-Guide/macos-limits.html#gpu-support</a> to determine GPU support</li>
+</ul>
+
+<h2>Enabling PCI Passthrough</h2>
+
+<ol>
+	<li>Log into Proxmox VE either via SSH or the web based shell</li>
+	<li>Run the following commands
+	<div class="codeBlock"># edit grub configuration to enable IOMMU<br />
+	nano /etc/default/grub</div>
+	</li>
+	<li>Press CTRL+W and search for GRUB_CMDLINE_LINUX_DEFAULT=</li>
+	<li>Add the following value to GRUB_CMDLINE_LINUX_DEFAULT
+	<ol start="1" style="list-style-type: lower-alpha;">
+		<li>If running an Intel CPU, intel_iommu=on
+		<p>GRUB_CMDLINE_LINUX_DEFAULT=&quot;quiet intel_iommu=on&quot;</p>
+		</li>
+		<li>If running an AMD CPU, amd_iommu=on
+		<p>GRUB_CMDLINE_LINUX_DEFAULT=&quot;quiet amd_iommu=on&quot;</p>
+		</li>
+	</ol>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following commands
+	<div class="codeBlock"># update grub with config change<br />
+	update-grub<br />
+	# add vfio modules<br />
+	nano /etc/modules</div>
+	</li>
+	<li>Add the following to the bottom of the file
+	<p>vfio<br />
+	vfio_iommu_type1<br />
+	vfio_pci<br />
+	vfio_virqfd</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following commands
+	<div class="codeBlock"># IOMMU interrupt mapping<br />
+	echo &quot;options vfio_iommu_type1 allow_unsafe_interrupts=1&quot; &gt; /etc/modprobe.d/iommu_unsafe_interrupts.conf<br />
+	echo &quot;options kvm ignore_msrs=1&quot; &gt; /etc/modprobe.d/kvm.conf<br />
+	# blacklist drivers<br />
+	echo &quot;blacklist radeon&quot; &gt;&gt; /etc/modprobe.d/blacklist.conf<br />
+	echo &quot;blacklist nouveau&quot; &gt;&gt; /etc/modprobe.d/blacklist.conf<br />
+	echo &quot;blacklist nvidia&quot; &gt;&gt; /etc/modprobe.d/blacklist.conf<br />
+	# list pci devices<br />
+	lspci -v</div>
+	</li>
+	<li>Scroll through the output and find the GPU (usually a video and audio device associated with it) and make note of the device identifier (ex 01:00.0, 01:00.1)</li>
+	<li>Continue with the following commands
+	<div class="codeBlock"># output the vendor ID(s) of the devices<br />
+	# replace the device identifier (01:00) as needed<br />
+	lspci -n -s 01:00</div>
+	</li>
+	<li>Make note of the vendor ID(s) output in the format abcd:1234</li>
+	<li>Continue with the following commands
+	<div class="codeBlock"># replace the vendor ids from the output of the previous step as needed<br />
+	echo &quot;options vfio-pci ids=1002:679a,1002:aaa0 disable_vga=1&quot; &gt; /etc/modprobe.d/vfio.conf<br />
+	# update initramfs<br />
+	update-initramfs -u<br />
+	# reboot proxmox host<br />
+	reboot now</div>
+	</li>
+	<li>After the system reboot, log back in and run the following command to verify the GPU is now using the vfio-pci driver
+	<div class="codeBlock"># replace the device identifier (01:00) as needed<br />
+	lspci -knn -s 01:00</div>
+	</li>
+</ol>
+
+<h2>Passing GPU to a MacOS VM</h2>
+
+<ol>
+	<li>Log into the Proxmox web UI</li>
+	<li>Expand the target node and select the target MacOS VM from the left navigation menu</li>
+	<li>Select Hardware from the left sub-navigation menu</li>
+	<li>Click Add &gt; PCI Device</li>
+	<li>Select the GPU from the listing<br />
+	<span style="font-size:14px;"><em>NOTE: I have found that there is some trial and error required to get the GPU to work properly depending on the guest operating system. If you find that the GPU isn&#39;t working with all options checked, stop the VM, and edit the PCI hardware, unchecking one option at a time to see if you can find a working combination</em></span></li>
+	<li>Select Display &gt; Set the dropdown to none (none) &gt; Click OK</li>
+	<li>If you intend to use the VM at the console (not via RDP or VNC), you will need to passthrough a USB keyboard and mouse by clicking Add &gt; USB Device &gt; Select the USB device(s) or port(s) to pass to the VM</li>
+	<li>Click Start at the top right of the page</li>
+	<li>Watch the output of the GPU on an external display<br />
+	<span style="font-size:14px;"><em>If there is no output from the GPU, stop the VM and adjust the PCI hardware options as noted above</em></span></li>
+</ol>
+
+<p>Documentation: <a href="https://pve.proxmox.com/wiki/Pci_passthrough" target="_blank">https://pve.proxmox.com/wiki/Pci_passthrough</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
