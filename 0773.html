@@ -1,0 +1,80 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Let's Install Pi.Alert - A Network Intrusion Monitor</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Debian,FOSS,Free Open-Source Software,Free Software,Linux,Network,Open-Source,Open Source,PiAlert,Network Intrusion Monitor,Pi.Alert,Pi-Alert,Monitor Network For New Devices,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Let's Install Pi.Alert - A Network Intrusion Monitor">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="12/28/2022 09:20:10 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Let's Install Pi.Alert - A Network Intrusion Monitor</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Pi.Alert?</h2>
+
+<blockquote><em>[Pi.Alert is a] WIFI / LAN intruder detector. Check the devices connected and alert you with unknown devices. It also warns of the disconnection of &quot;always connected&quot; devices. -<a href="https://github.com/pucherot/Pi.Alert/" target="_blank">https://github.com/pucherot/Pi.Alert/</a></em></blockquote>
+
+<h2>Installing Pi.Alert</h2>
+
+<ol>
+	<li>Log into the Debian/Ubuntu device</li>
+	<li>Launch a terminal and run the following commands
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install prerequisites<br />
+	sudo apt install apt-utils arp-scan dnsutils net-tools python3 -y<br />
+	# install web/db components<br />
+	sudo apt install lighttpd php php-cgi php-fpm php-sqlite3 sqlite3 -y<br />
+	# clean apt package cache<br />
+	sudo apt clean<br />
+	# download the latest release<br />
+	wget -O ./pialert.tar https://github.com/pucherot/Pi.Alert/raw/main/tar/pialert_latest.tar<br />
+	# create target directory<br />
+	sudo mkdir /var/www/pialert<br />
+	# create logs directory<br />
+	sudo mkdir /var/log/pialert<br />
+	# extract the downloaded tar to /var/www/pialert<br />
+	sudo tar xf ./pialert.tar -C /var/www/pialert --strip-components=1<br />
+	# set the owner of the pialert directory<br />
+	sudo chown -R www-data:www-data /var/www/pialert<br />
+	# update pialert path in conf file<br />
+	sed -i &#39;s/\/home\/pi\/pialert/\/var\/www\/pialert/&#39; /var/www/pialert/config/pialert.conf<br />
+	# update pialert path in cron jobs<br />
+	sed -i &#39;s/python ~\/pialert\/back\/pialert.py/python3 \/var\/www\/pialert\/back\/pialert.py/g&#39; /var/www/pialert/install/pialert.cron<br />
+	# update log paths for cron jobs<br />
+	sed -i &#39;s/~\/pialert\/log\//\/var\/log\/pialert\//g&#39; /var/www/pialert/install/pialert.cron<br />
+	# create cronjob schedule<br />
+	(crontab -l 2&gt;/dev/null; cat /var/www/pialert/install/pialert.cron) | sudo crontab -<br />
+	# create symbolic link to pialert<br />
+	sudo ln -s /var/www/pialert/front/ /var/www/html/pialert<br />
+	# copy pialert lighttpd conf<br />
+	sudo cp /var/www/pialert/install/pialert_front.conf /etc/lighttpd/conf-available<br />
+	# enable the pialert conf<br />
+	sudo ln -s /etc/lighttpd/conf-available/pialert_front.conf /etc/lighttpd/conf-enabled/pialert_front.conf<br />
+	# enable lighttpd fastcgi<br />
+	sudo lighttpd-enable-mod fastcgi-php<br />
+	# restart lighttpd service<br />
+	sudo systemctl restart lighttpd</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP/pialert</li>
+	<li>Welcome to Pi.Alert<br />
+	<span style="font-size:12px;"><em>NOTE: By default, Pi.Alert cron job runs every 5 minutes to check for new devices on the network</em></span></li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
