@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Self-hosted URL Shortener with Shlink">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="01/09/2023 07:27:16 AM" />
+        <meta name="revised" content="01/13/2023 08:49:24 AM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -36,7 +36,7 @@
 	# install software updates<br />
 	sudo apt upgrade -y<br />
 	# install pre-requisites<br />
-	sudo apt install lsb-release apt-transport-https ca-certificates -y<br />
+	sudo apt install lsb-release apt-transport-https ca-certificates unzip -y<br />
 	# add php gpg key<br />
 	sudo wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg<br />
 	# add php apt repository<br />
@@ -85,12 +85,12 @@
 	# run the shlinkio installer<br />
 	sudo -u www-data php /var/www/shlinkio/bin/install</div>
 	</li>
-	<li>Type 0 for MySQL &gt; Press Enter</li>
+	<li>Type 1 for MariaDB &gt; Press Enter</li>
 	<li>Type shlinkio for the database name &gt; Press Enter</li>
 	<li>Press enter to use localhost for the database host</li>
 	<li>Press enter to accept the default MySQL port</li>
 	<li>Type shlinkio_rw for the database username &gt; Press Enter</li>
-	<li>Type the shlinkio_rw password created earlier &gt; Press Enter</li>
+	<li>Type the shlinkio_rw password created earlier ($hlink10!) &gt; Press Enter</li>
 	<li>Press Enter at the Unix socket prompt</li>
 	<li>Enter the default domain name to use for shortened URLs,</li>
 	<li>Type 0 for http &gt; Press Enter</li>
@@ -124,8 +124,7 @@
 	Require all granted<br />
 	Order allow,deny<br />
 	allow from all<br />
-	&lt;/Directory&gt;<br />
-	<directory shlinkio=""></directory></p>
+	&lt;/Directory&gt;</p>
 	</li>
 	<li>Press CTRL+O, Enter, CTRL+X to write the changes to shlinkio.conf</li>
 	<li>Continue with the following commands to enable the site and restart Apache:
