@@ -1,0 +1,144 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Setting Up Shared Database Container in Docker</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Docker Made Easy,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Container,Containerization,Docker,Docker Host,Docker Made Simple,Linux,PHP,PHP Developer,System Administrator,Web Server Administration,Web Server,Web,Shared Database Docker Container,MariaDB,MySQL,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Setting Up Shared Database Container in Docker">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="01/14/2023 09:50:29 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Setting Up Shared Database Container in Docker</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>The Objective</h2>
+
+<p>To setup a single database container that can be used with multiple applications and frontends.</p>
+
+<h2>Preparation</h2>
+
+<ol>
+	<li>Pull the Docker images used in the examples by running the following commands in a terminal
+	<div class="codeBlock"># mariadb<br />
+	docker pull mariadb<br />
+	# phpmyadmin<br />
+	docker pull phpmyadmin<br />
+	# wordpress<br />
+	docker pull wordpress</div>
+	</li>
+</ol>
+
+<h2>Method 1 - Container Links</h2>
+
+<p>This method utilizes the --link flag. Container links are a &quot;legacy feature&quot; of Docker and may become deprecated in a future release. Further reading <a href="https://docs.docker.com/network/links/" target="_blank">https://docs.docker.com/network/links/</a></p>
+
+<ol>
+	<li>Run the following commands in a terminal to setup the container stack using --link
+	<div class="codeBlock"># create working directories<br />
+	mkdir ~/docker/mariadb -p &amp;&amp; mkdir ~/docker/wordpress -p<br />
+	# set permissions on working directories<br />
+	sudo chown &quot;$USER&quot;:&quot;$USER&quot; ~/docker -R<br />
+	# run the mariadb docker container<br />
+	docker run -d --name mariadb -e MYSQL_ROOT_PASSWORD=r00tp@ss -v ~/docker/mariadb:/var/lib/mysql --restart=unless-stopped mariadb:latest<br />
+	# run phpmyadmin container linked to the mariadb container<br />
+	docker run -d --name phpmyadmin --link mariadb -e PMA_HOST=mariadb -p 8080:80 --restart=unless-stopped phpmyadmin<br />
+	# connect to mysql CLI inside the mariadb container<br />
+	docker exec -it mariadb mysql --user root -pr00tp@ss<br />
+	# create a new database and service account for wordpress<br />
+	CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;<br />
+	GRANT ALL ON wordpress.* TO &#39;wordpress_rw&#39;@&#39;%&#39; IDENTIFIED BY &#39;W0rdPr3ss!!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	# run the wordpress docker container<br />
+	docker run -d --name wordpress --link mariadb -p 8880:80 -e WORDPRESS_DB_HOST=mariadb -e WORDPRESS_DB_USER=wordpress_rw -e WORDPRESS_DB_PASSWORD=&#39;W0rdPr3ss!!&#39; -e WORDPRESS_DB_NAME=wordpress -v ~/docker/wordpress:/var/www/html --restart unless-stopped wordpress</div>
+	</li>
+	<li>Remove the created containers by running the following commands
+	<div class="codeBlock"># remove the containers<br />
+	docker rm wordpress -f &amp;&amp; docker rm phpmyadmin -f &amp;&amp; docker rm mariadb -f<br />
+	# remove working directories<br />
+	sudo rm ~/docker/mariadb -R &amp;&amp; sudo rm ~/docker/wordpress -R</div>
+	</li>
+</ol>
+
+<h2>Method 2 - Docker Networking</h2>
+
+<p>Create a Docker network and connect each of the containers to it so they can communicate.</p>
+
+<ol>
+	<li>Run the following commands in a terminal to setup the container stack using Docker networking
+	<div class="codeBlock"># create working directories<br />
+	mkdir ~/docker/mariadb -p &amp;&amp; mkdir ~/docker/wordpress -p<br />
+	# set permissions on working directories<br />
+	sudo chown &quot;$USER&quot;:&quot;$USER&quot; ~/docker -R<br />
+	# create the docker network<br />
+	docker network create containers<br />
+	# run the mariadb docker container<br />
+	docker run -d --name mariadb -e MYSQL_ROOT_PASSWORD=r00tp@ss -v ~/docker/mariadb:/var/lib/mysql --network containers --restart=unless-stopped mariadb:latest<br />
+	# run phpmyadmin container<br />
+	docker run -d --name phpmyadmin -e PMA_HOST=mariadb -p 8080:80 --restart=unless-stopped --network containers phpmyadmin<br />
+	# connect to mysql CLI inside the mariadb container<br />
+	docker exec -it mariadb mysql --user root -pr00tp@ss<br />
+	# create a new database and service account for wordpress<br />
+	CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;<br />
+	GRANT ALL ON wordpress.* TO &#39;wordpress_rw&#39;@&#39;%&#39; IDENTIFIED BY &#39;W0rdPr3ss!!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	# run the wordpress docker container<br />
+	docker run -d --name wordpress -p 8880:80 -e WORDPRESS_DB_HOST=mariadb -e WORDPRESS_DB_USER=wordpress_rw -e WORDPRESS_DB_PASSWORD=&#39;W0rdPr3ss!!&#39; -e WORDPRESS_DB_NAME=wordpress -v ~/docker/wordpress:/var/www/html --network containers --restart=unless-stopped wordpress</div>
+	</li>
+	<li>Remove the created containers and network by running the following commands
+	<div class="codeBlock"># remove the containers<br />
+	docker rm wordpress -f &amp;&amp; docker rm phpmyadmin -f &amp;&amp; docker rm mariadb -f<br />
+	# remove docker network<br />
+	docker network rm containers<br />
+	# remove working directories<br />
+	sudo rm ~/docker/mariadb -R &amp;&amp; sudo rm ~/docker/wordpress -R</div>
+	</li>
+</ol>
+
+<h2>Method 3 - Exposing Host Ports</h2>
+
+<p>Expose ports on the host into the container and connect other containers to the host&#39;s exposed port</p>
+
+<ol>
+	<li>Run the following commands in a terminal to setup the container stack using exposed ports on the host
+	<div class="codeBlock"># create working directories<br />
+	mkdir ~/docker/mariadb -p &amp;&amp; mkdir ~/docker/wordpress -p<br />
+	# set permissions on working directories<br />
+	sudo chown &quot;$USER&quot;:&quot;$USER&quot; ~/docker -R<br />
+	# run the mariadb docker container<br />
+	docker run -d --name mariadb -e MYSQL_ROOT_PASSWORD=r00tp@ss -v ~/docker/mariadb:/var/lib/mysql -p 3306:3306 --restart=unless-stopped mariadb:latest<br />
+	# run phpmyadmin container<br />
+	docker run -d --name phpmyadmin -e PMA_HOST=$(hostname -f) -p 8080:80 --restart=unless-stopped phpmyadmin<br />
+	# connect to mysql CLI inside the mariadb container<br />
+	docker exec -it mariadb mysql --user root -pr00tp@ss<br />
+	# create a new database and service account for wordpress<br />
+	CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;<br />
+	GRANT ALL ON wordpress.* TO &#39;wordpress_rw&#39;@&#39;%&#39; IDENTIFIED BY &#39;W0rdPr3ss!!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	# run the wordpress docker container<br />
+	docker run -d --name wordpress -p 8880:80 -e WORDPRESS_DB_HOST=$(hostname -f) -e WORDPRESS_DB_USER=wordpress_rw -e WORDPRESS_DB_PASSWORD=&#39;W0rdPr3ss!!&#39; -e WORDPRESS_DB_NAME=wordpress -v ~/docker/wordpress:/var/www/html --restart=unless-stopped wordpress</div>
+	</li>
+	<li>Remove the created containers and network by running the following commands
+	<div class="codeBlock"># remove the containers<br />
+	docker rm wordpress -f &amp;&amp; docker rm phpmyadmin -f &amp;&amp; docker rm mariadb -f<br />
+	# remove working directories<br />
+	sudo rm ~/docker/mariadb -R &amp;&amp; sudo rm ~/docker/wordpress -R</div>
+	</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
