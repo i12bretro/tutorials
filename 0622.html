@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Running Plex Media Server in Docker on Ubuntu Server">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="05/15/2022 08:31:07 PM" />
+        <meta name="revised" content="01/19/2023 07:53:58 PM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -58,7 +58,7 @@
 	# set owner of working directories<br />
 	sudo chown &quot;$USER&quot;:&quot;$USER&quot; ~/docker -R<br />
 	# run the plex media center docker container<br />
-	docker run -d --name plex --network=host -e TZ=&quot;America/New_York&quot; -v ~/docker/plex/data:/config -v ~/docker/plex/transcode:/transcode -v ~/docker/plex/media:/data plexinc/pms-docker</div>
+	docker run -d --name plex --network=host -e TZ=&quot;America/New_York&quot; -v ~/docker/plex/data:/config -v ~/docker/plex/transcode:/transcode -v ~/docker/plex/media:/data --restart=unless-stopped plexinc/pms-docker</div>
 	</li>
 	<li>Open a web browser and navigate to http://DNSorIP:32400/web</li>
 	<li>Log in with one of the available options or click sign up with email</li>
@@ -70,8 +70,7 @@
 	<li>Welcome to Plex Media Server</li>
 </ol>
 
-<p>Source: <a href="https://hub.docker.com/r/plexinc/pms-docker" target="_blank">https://hub.docker.com/r/plexinc/pms-docker</a></p>
-          </div>
+<p>Source: <a href="https://hub.docker.com/r/plexinc/pms-docker" target="_blank">https://hub.docker.com/r/plexinc/pms-docker</a></p>          </div>
         </div>
       </body>
     </html>
