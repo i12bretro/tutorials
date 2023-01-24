@@ -11,6 +11,9 @@
 			tr { line-height: 24px; }
 			tbody tr td { vertical-align: bottom; }
 			.dataTables_filter { position: absolute; top: 50px; right: 100px; z-index: 100; }
+			img.viewIcon { height: 24px; }
+			a:link { color: #e00; transition: color 0.35s; }
+			a:hover { color: #333; }
 		</style>
 	</head>
 	<body>
@@ -21,9 +24,9 @@
 			</div>
 			<div></div>
 			<div id="content">
-				<table border="0" cellspacing="2" cellpadding="2" align="center">
+				<table border="0" cellspacing="2" cellpadding="2" align="center" width="100%">
 					<thead>
-						<tr><th width="80">ID</th><th>Title</th><th width="175">Last Modified</th></tr>
+						<tr><th width="80">ID</th><th>Title</th><th width="40">View</th><th width="195">Last Modified</th></tr>
 					</thead>
 					<tbody id="tutorialList">
 					
@@ -33,13 +36,10 @@
 		</div>
 	</body>
 	<script>
-		$.ajax({ type:'GET', url: 'https://api.allorigins.win/raw?url='+ encodeURIComponent('https://github.com/i12bretro/tutorials/file-list/main'), success: function(html){ 
-				m = null;
-				console.log(html);
-				regex = /<div role="rowheader".*?>.*?<a.*?href="\/i12bretro\/tutorials\/commit\/(.*?)">(\d{4}): (.*?)<\/a>.*?<time-ago.*?>(.*?)<\/time-ago>/gmsi
-				while ( (m = regex.exec( html )) != null  ){
-          $('#tutorialList').append('<tr><td align="center">'+ m[2] +'</td><td align="left"><a href="https://i12bretro.github.io/tutorials/'+ m[2] +'.html" target="_blank">'+ m[3] +'</a></td><td align="center">'+ m[4] +'</td></tr>');
-				}
+		$.ajax({ type:'GET', dataType: 'json', url: './data.json', success: function(r){ 
+				r.forEach((tut) => {
+					$('#tutorialList').append(`<tr><td align="center">${('0000'+ tut.i).slice(-4)}</td><td><a href="https://i12bretro.github.io/tutorials/${('0000'+ tut.i).slice(-4)}.html" target="_blank">${tut.t}</a></td><td align="center"><a href="https://youtu.be/${tut.v}" target="_blank"><img src="images/youtube.png" alt="View on YouTube" title="View on YouTube" class="viewIcon" /></a></td><td align="center">${new Date((tut.d * 1000)).toLocaleString().replace(', ',' ')}</td></tr>`);
+				});
 				initTable();
 			}
 		});
