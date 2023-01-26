@@ -36,7 +36,7 @@
 		</div>
 	</body>
 	<script>
-		$.ajax({ type:'GET', dataType: 'json', url: './data.json', success: function(r){ 
+		$.ajax({ type:'GET', dataType: 'json', cache: false, url: './data.json', success: function(r){ 
 				r.forEach((tut) => {
 					$('#tutorialList').append(`<tr><td align="center">${('0000'+ tut.i).slice(-4)}</td><td><a href="https://i12bretro.github.io/tutorials/${('0000'+ tut.i).slice(-4)}.html" target="_blank">${tut.t}</a></td><td align="center"><a href="https://youtu.be/${tut.v}" target="_blank"><img src="images/youtube.png" alt="View on YouTube" title="View on YouTube" class="viewIcon" /></a></td><td align="center">${new Date((tut.d * 1000)).toLocaleString().replace(', ',' ')}</td></tr>`);
 				});
