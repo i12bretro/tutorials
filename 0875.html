@@ -1,0 +1,68 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Can Proxmox VE Run a Windows XP VM?</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Hypervisor,Install Guide,Proxmox Step By Step,Proxmox Host,Proxmox,Proxmox Tutorial,Proxmox VE,VM,Virtual Machine,Virtualization,Microsoft Windows,Microsoft,Microsoft Windows XP,Vintage Microsoft,Windows Version 5,Windows XP,How To Install Windows XP In Proxmox,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Can Proxmox VE Run a Windows XP VM?">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="01/08/2023 01:59:07 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Can Proxmox VE Run a Windows XP VM?</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Download a Windows XP x64 .iso <a href="https://archive.org/search.php?query=windows%20xp%20x64&amp;and[]=mediatype%3A%22software%22" target="_blank">Download</a></li>
+	<li>Upload the Windows XP x64 .iso file to the Proxmox ISO library</li>
+	<li>Log into the ProxMox web UI</li>
+	<li>Right click the ProxMox node name &gt; Create VM</li>
+	<li>Give the VM a unique ID and Name &gt; Next</li>
+	<li>Set the Type to Microsoft Windows, Version to XP/2003 and select the Windows XP iso</li>
+	<li>Leave the defaults on the System tab &gt; Next</li>
+	<li>On the Hard Disk tab, set the Bus/Device dropdown to IDE and the Disk size to 4 GB or more &gt; Next</li>
+	<li>On the CPU tab, set Cores to 1 or more &gt; Next</li>
+	<li>On the Memory tab, set the Memory to 1024 or more &gt; Next</li>
+	<li>On the Network tab, set the Model field to Realtek RTL8139 &gt; Next</li>
+	<li>Verify the summary and click Finish</li>
+	<li>Right click the Windows XP VM in the left navigation pane &gt; Start</li>
+	<li>Click console in the left sub-navigation menu</li>
+	<li>Windows Setup will start automatically</li>
+	<li>Press Enter to Continue with Setup </li>
+	<li>Press F8 to Agree to the Licensing Agreement</li>
+	<li>Press Enter to Install to the Unpartitioned space</li>
+	<li>Select the top option to Format the partition using the NTFS file system (Quick) &gt; Press Enter</li>
+	<li>Wait for Windows to reboot the VM</li>
+	<li>Do not press anything to boot the CD-ROM</li>
+	<li>Wait for Windows to install and configure drivers and devices</li>
+	<li>Click Next</li>
+	<li>Enter a name and organization, click Next</li>
+	<li>Enter a valid Windows XP product key<span class="hidden"> (DG8FV-B9TKY-FRT9J-6CRCC-XPQ4G)</span>, click Next</li>
+	<li>Give the Computer a name</li>
+	<li>Set an administrator password and re-type to confirm &gt; Click Next</li>
+	<li>Set the date/time and select a timezone &gt; Click Next</li>
+	<li>Click the Next button to accept default and continue installing Windows XP</li>
+	<li>Click OK to allow Windows to adjust the screen resolution</li>
+	<li>Click OK if the screen resolution looks better</li>
+	<li>Click Next at the Welcome Screen</li>
+	<li>Select Not right now for automatic updates &gt; Click Next</li>
+	<li>Click Skip on the internet connection screen</li>
+	<li>Select No, not at this time on the Register with Microsoft screen &gt; Click Next</li>
+	<li>Enter a user name &gt; Click Next</li>
+	<li>Click Finish</li>
+	<li>Welcome back to Windows XP</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
