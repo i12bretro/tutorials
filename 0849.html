@@ -1,0 +1,70 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Schedule Proxmox VM Startup and Shutdown with Cron</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Hypervisor,Web Based,Web Based Tools,Proxmox,VM,Virtual Machine,Virtualization,Linux,Proxmox Step By Step,Proxmox Tutorial,Proxmox VE,Schedule,Scheduling,CRON,Schedule VM Startup,Schedule VM Shutdown,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Schedule Proxmox VM Startup and Shutdown with Cron">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="12/30/2022 07:35:14 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Schedule Proxmox VM Startup and Shutdown with Cron</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Cron?</h2>
+
+<blockquote><em>The cron daemon is a background process that runs particular programs at particular times (for example, every minute, day, week, or month), as specified in a crontab. By default, users may also create crontabs of their own so that processes are run on their behalf. -<a href="https://packages.debian.org/stable/cron" target="_blank">https://packages.debian.org/stable/cron</a></em></blockquote>
+
+<ol>
+	<li>Log into Proxmox VE either via SSH or the web based shell</li>
+	<li>Run the following commands in the terminal
+	<div class="codeBlock"># verify the location of qm<br />
+	# should output /usr/sbin/qm<br />
+	which qm<br />
+	# list the configured vms<br />
+	qm list</div>
+	</li>
+	<li>Note the VMID of the target VM(s)</li>
+	<li>Determine the startup and shutdown schedule requirements for each target VM</li>
+	<li>Convert the startup and shutdown schedules to cron format, <a href="https://crontab.guru/" style="font-size: inherit; vertical-align: unset;" target="_blank">https://crontab.guru/</a> is a great utility to visualize them</li>
+	<li>Continue with the following commands in the terminal
+	<div class="codeBlock"># edit the cron table file<br />
+	crontab -e<br />
+	# if prompted, select nano from the list of editors</div>
+	</li>
+	<li>At the bottom of the file, add an entry for the start and stop of each target VM in the following format
+	<p>&lt;%cron schedule%&gt; /usr/sbin/qm &lt;%start|shutdown%&gt; &lt;%VMID%&gt;<br />
+	55 6 * * * /usr/sbin/qm start 100<br />
+	5 23 * * * /usr/sbin/qm shutdown 100</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes and close nano</li>
+	<li>In the example above, VM 100 will be started at 6:55 AM and shutdown at 11:05 PM everyday</li>
+	<li>Cron schedules can be extremely flexible with some creativity, some examples:
+	<p><a href="https://crontab.guru/#55_6_*_*_1-5" style="font-size: inherit;" target="_blank">6:55 AM only on weekdays</a><br />
+	55 6 * * 1-5 /usr/sbin/qm start 100<br />
+	<a href="https://crontab.guru/#0_9_*_*_6,0" style="font-size: inherit;" target="_blank">9:00 AM only on weekends</a><br />
+	0 9 * * 6,0 /usr/sbin/qm start 100<br />
+	<a href="https://crontab.guru/#0_7_*_*_1,3,5" style="font-size: inherit;" target="_blank">7:00 AM only on Monday, Wednesday and Friday</a><br />
+	0 7 * * 1,3,5 /usr/sbin/qm start 100</p>
+	</li>
+	<li>Linux Containers (lxc) can be controlled via the pct command
+	<p>55 6 * * 1-5 /usr/sbin/pct start 103<br />
+	0 9 * * 6,0 /usr/sbin/pct start 103<br />
+	0 7 * * 1,3,5 /usr/sbin/pct start 103</p>
+	</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
