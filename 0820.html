@@ -1,0 +1,86 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Run InvoiceNinja - Invoice and Payment Manager - in Docker</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Docker Made Easy,Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Container,Containerization,Docker,Docker How To,Docker Installation Tutorial,Docker Simplified,Docker Tutorial,Linux,Homelab,Ubuntu,InvoiceNinja,Invoice Ninja,Invoice,Payment Manager,Invoicing Software,Expense Tracker,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Run InvoiceNinja - Invoice and Payment Manager - in Docker">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="02/15/2023 07:39:32 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Run InvoiceNinja - Invoice and Payment Manager - in Docker</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is InvoiceNinja?</h2>
+
+<blockquote><em>[InvoiceNinja is a] powerful suite of features to invoice clients, facilitate payment, track-time &amp; tasks, expenses, and more. -<a href="https://www.invoiceninja.com/invoicing-features/" target="_blank">https://www.invoiceninja.com/invoicing-features/</a></em></blockquote>
+
+<h2>Installing Docker</h2>
+
+<ol>
+	<li>Log into the Linux based device</li>
+	<li>Run the following commands in the terminal
+	<div class="codeBlock"># install prerequisites<br />
+	sudo apt install apt-transport-https ca-certificates curl software-properties-common gnupg-agent -y<br />
+	# add docker gpg key<br />
+	curl -fsSL https://download.docker.com/linux/$(awk -F&#39;=&#39; &#39;/^ID=/{ print $NF }&#39; /etc/os-release)/gpg | sudo apt-key add -<br />
+	# add docker software repository<br />
+	sudo add-apt-repository &quot;deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/$(awk -F&#39;=&#39; &#39;/^ID=/{ print $NF }&#39; /etc/os-release) $(lsb_release -cs) stable&quot;<br />
+	# install docker<br />
+	sudo apt install docker-ce docker-compose containerd.io -y<br />
+	# enable and start docker service<br />
+	sudo systemctl enable docker &amp;&amp; sudo systemctl start docker<br />
+	# add the current user to the docker group<br />
+	sudo usermod -aG docker $USER<br />
+	# reauthenticate for the new group membership to take effect<br />
+	su - $USER</div>
+	</li>
+</ol>
+
+<h2>Running the InvoiceNinja Container</h2>
+
+<ol>
+	<li>Now that Docker is installed, run the following commands to setup the InvoiceNinja Docker container and run it
+	<div class="codeBlock"># create working directories<br />
+	mkdir ~/docker/invoiceninja/{public,storage} -p &amp;&amp; mkdir ~/docker/mariadb -p &amp;&amp; mkdir ~/docker/nginx -p<br />
+	# download the invoiceninja nginx config<br />
+	wget -O ~/docker/nginx/invoiceninja.conf https://raw.githubusercontent.com/invoiceninja/dockerfiles/master/config/nginx/in-vhost.conf<br />
+	# update the config file with the invoiceninja container name<br />
+	sed -i &#39;s/fastcgi_pass app:9000;/fastcgi_pass invoiceninja:9000;/g&#39; ~/docker/nginx/invoiceninja.conf &amp;&amp; sed -i &#39;s/listen 80 default_server;/listen 80;/g&#39; ~/docker/nginx/invoiceninja.conf<br />
+	# set ownership on the working directories<br />
+	sudo chown &quot;$USER&quot;:&quot;$USER&quot; ~/docker -R<br />
+	# allow the container to write to files/ and settings.php<br />
+	sudo chmod a+rwx -R ~/docker/invoiceninja<br />
+	# run the mariadb docker container<br />
+	docker run -d --name mariadb -e MYSQL_ROOT_PASSWORD=r00tp@$$ -e MYSQL_USER=invoiceninja_rw -e MYSQL_PASSWORD=&#39;!nv0ic3Ninj@!&#39; -e MYSQL_DATABASE=invoiceninja -v ~/docker/mariadb:/var/lib/mysql -p 3306:3006 --restart=unless-stopped mariadb:latest<br />
+	# generate application key<br />
+	docker run --rm -it invoiceninja/invoiceninja php artisan key:generate --show<br />
+	# run the invoiceninja container<br />
+	# change the IN_USER_EMAIL and IN_PASSWORD variables to setup the default user<br />
+	# update the APP_KEY variable with the key generated earlier<br />
+	docker run -d --name=invoiceninja --link mariadb -p 8080:80 -v ~/docker/invoiceninja/public:/var/www/app/public -v ~/docker/invoiceninja/storage:/var/www/app/storage -e IN_USER_EMAIL=&#39;i12bretro@i12bretro.local&#39; -e IN_PASSWORD=&#39;SomethingSecure!&#39; -e REQUIRE_HTTPS=false -e APP_ENV=&#39;production&#39; -e APP_DEBUG=0 -e APP_URL=&#39;http://ubuntuserver.local:8080&#39; -e APP_KEY=&#39;&lt;%key generated earlier%&gt;&#39; -e APP_CIPHER=&#39;AES-256-CBC&#39; -e DB_TYPE=&#39;mysql&#39; -e DB_STRICT=&#39;false&#39; -e DB_HOST=&#39;mariadb&#39; -e DB_DATABASE=&#39;invoiceninja&#39; -e DB_USERNAME=&#39;invoiceninja_rw&#39; -e DB_PASSWORD=&#39;!nv0ic3Ninj@!&#39; --restart=unless-stopped invoiceninja/invoiceninja<br />
+	# run the nginx container<br />
+	docker run --name nginx --link invoiceninja -p 8081:80 -v ~/docker/invoiceninja/public:/var/www/app/public:ro -v ~/docker/nginx:/etc/nginx/conf.d:ro -d nginx</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP:8081</li>
+	<li>Login with the Email and Password setup in the InvoiceNinja container variables &gt; Click Login with email</li>
+	<li>On the Welcome dialog, enter a company name and select the Light or Dark theme &gt; Click Save</li>
+	<li>Welcome to InvoiceNinja</li>
+</ol>
+
+<p>Documentation: <a href="https://hub.docker.com/r/invoiceninja/invoiceninja" target="_blank">https://hub.docker.com/r/invoiceninja/invoiceninja</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
