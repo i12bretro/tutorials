@@ -1,0 +1,64 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install and Configure Powershell Web Access on Windows Server</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Remote Management,Microsoft,Free,Web Based Utilities,Windows,PowerShell,PowerShell Web Access,IIS,Internet Information Services,Microsoft Windows,Web Server,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install and Configure Powershell Web Access on Windows Server">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="12/28/2022 10:01:22 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install and Configure Powershell Web Access on Windows Server</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is PowerShell Web Access?</h2>
+
+<blockquote><em>Windows PowerShell&reg; Web Access, first introduced in Windows Server&reg; 2012, acts as a Windows PowerShell gateway, providing a web-based Windows PowerShell console that is targeted at a remote computer. It enables IT Pros to run Windows PowerShell commands and scripts from a Windows PowerShell console in a web browser, with no Windows PowerShell, remote management software, or browser plug-in installation necessary on the client device. -<a href="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/hh831611(v=ws.11)" target="_blank">https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/hh831611(v=ws.11)</a></em></blockquote>
+
+<h2>Install PowerShell Web Access</h2>
+
+<ol>
+	<li>Log into the Windows Server device</li>
+	<li>Run the following commands in PowerShell as administrator
+	<div class="codeBlock PS"># install IIS and powershell web access<br />
+	Add-WindowsFeature &ndash;name Web-Server,WindowsPowerShellWebAccess -IncludeManagementTools<br />
+	# configure powershell web access gateway<br />
+	Install-PswaWebApplication &ndash;webApplicationName powershell &ndash;useTestCertificate<br />
+	# grant PSWA access to current user on current server<br />
+	Add-PswaAuthorizationRule -UserName $ENV:UserDNSDomain\$ENV:UserName -ComputerName * -ConfigurationName *<br />
+	# or grant access to all users<br />
+	Add-PswaAuthorizationRule * * *</div>
+	</li>
+	<li>Open a web browser and navigate to https://DNSorIP/powershell</li>
+	<li>Login using the credentials authorized above
+	<p>User name: &lt;domain&gt;\&lt;username&gt;<br />
+	Password: &lt;user password&gt;<br />
+	Connection type: Computer Name<br />
+	Computer name: &lt;fully qualified server name&gt;<br />
+	<br />
+	User name: i12bretro.local\i12bretro<br />
+	Password: &lt;user password&gt;<br />
+	Connection type: Computer Name<br />
+	Computer name: i12bretrodc.i12bretro.local</p>
+	</li>
+	<li>Click Sign In</li>
+	<li>Welcome to Powershell Web Access</li>
+</ol>
+
+<p>Source: <a href="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/hh831611(v=ws.11)" target="_blank">https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/hh831611(v=ws.11)</a><br />
+More Info: <a href="https://docs.microsoft.com/en-us/previous-versions//hh918342(v=technet.10)?redirectedfrom=MSDN" target="_blank">https://docs.microsoft.com/en-us/previous-versions//hh918342(v=technet.10)?redirectedfrom=MSDN</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
