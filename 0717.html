@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Proxmox Email Notification Configuration">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="03/13/2022 09:13:02 PM" />
+        <meta name="revised" content="02/20/2023 03:19:03 PM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -42,7 +42,7 @@
 	<li>Expand Datacenter &gt; Select the node name &gt; Click Shell in the left navigation menus</li>
 	<li>Run the following commands in the terminal
 	<div class="codeBlock CMD"># send a basic test email<br />
-	echo &quot;Test email from Proxmox: $(hostname)&quot; | /usr/bin/pvemailforward<br />
+	echo &quot;Test email from Proxmox: $(hostname)&quot; | /usr/bin/proxmox-mail-forward<br />
 	# output the mail log<br />
 	cat /var/log/mail.log</div>
 	</li>
@@ -51,7 +51,7 @@
 
 <h2>Advanced Configuration via CLI</h2>
 
-<p>To make more advanced configuration changes, like using a gmail account, you need to edit the postfix settings via command line </p>
+<p>To make more advanced configuration changes, like using a gmail account, you need to edit the postfix settings via command line</p>
 
 <ol>
 	<li>Back in the Proxmox web shell, run the following commands in the terminal
@@ -78,7 +78,7 @@
 	nano /etc/postfix/sasl_passwd</div>
 	</li>
 	<li>Add a line to configure gmail authentication
-	<p>smtp.gmail.com:587    &lt;%youraccount%&gt;@gmail.com:&lt;%yourpassword%&gt;</p>
+	<p>smtp.gmail.com:587 &lt;%youraccount%&gt;@gmail.com:&lt;%yourpassword%&gt;</p>
 	</li>
 	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
 	<li>Continue with the following commands in the terminal
@@ -91,13 +91,12 @@
 	# test from postfix directly<br />
 	echo &quot;Test email from Proxmox: $(hostname)&quot; | mail -s &quot;Proxmox Testing&quot; &lt;%youraccount%&gt;@gmail.com<br />
 	# send a test from proxmox<br />
-	echo &quot;Test email from Proxmox: $(hostname)&quot; | /usr/bin/pvemailforward</div>
+	echo &quot;Test email from Proxmox: $(hostname)&quot; | /usr/bin/proxmox-mail-forward</div>
 	</li>
 </ol>
 
 <p>Sources: <a href="https://forum.proxmox.com/threads/get-postfix-to-send-notifications-email-externally.59940/" target="_blank">https://forum.proxmox.com/threads/get-postfix-to-send-notifications-email-externally.59940/</a>,<br />
-<a href="https://www.reddit.com/r/homelab/comments/5nzmm3/setting_up_the_proxmox_email_alerts/" target="_blank">https://www.reddit.com/r/homelab/comments/5nzmm3/setting_up_the_proxmox_email_alerts/</a></p>
-          </div>
+<a href="https://www.reddit.com/r/homelab/comments/5nzmm3/setting_up_the_proxmox_email_alerts/" target="_blank">https://www.reddit.com/r/homelab/comments/5nzmm3/setting_up_the_proxmox_email_alerts/</a></p>          </div>
         </div>
       </body>
     </html>
