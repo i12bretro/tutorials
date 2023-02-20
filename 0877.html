@@ -1,0 +1,70 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Running a Home Assistant Operating System [HAOS] VM in Proxmox VE</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Hypervisor,Install Guide,Self-Hosted,Web Based,Web Based Tools,Getting Started With Home Assistant,Home Assistant OS,Home Assistant OS Virtual Machine,Home Assistant OS Proxmox,Home Assistant Quick Start,Home Assistant Simplified,Home Assistant Tutorial,Home Assistant Proxmox Installation,Linux,Proxmox,Proxmox VE,Virtualization,Virtual Machine,VM,Proxmox Tutorial,Proxmox Step By Step,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Running a Home Assistant Operating System [HAOS] VM in Proxmox VE">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="02/10/2023 12:28:54 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Running a Home Assistant Operating System [HAOS] VM in Proxmox VE</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Log into the Proxmox web UI</li>
+	<li>Right click the Proxmox node name &gt; Create VM</li>
+	<li>Give the VM a unique ID (note the ID for later) and Name &gt; Next</li>
+	<li>On the OS tab, Select Do not use any media, leave the Type as Linux and the Version as 5.x - 2.6 Kernel &gt; Next</li>
+	<li>On the System tab, set the BIOS field to OVMF (UEFI), Check the Add EFI Disk checkbox, Uncheck the Pre-Enroll Keys checkbox &gt; Next</li>
+	<li>On the Hard Disk tab, delete the scsi0 virtual disk &gt; Next</li>
+	<li>On the CPU tab, set Cores to 2 or more and Type to host &gt; Next</li>
+	<li>On the Memory tab, set the Memory to 2048 &gt; Next</li>
+	<li>Leave the defaults on the Network tab &gt; Next</li>
+	<li>Verify the summary and click Finish</li>
+	<li>Click the Proxmox node name &gt; Select Shell from the left sub-navigation menu</li>
+	<li>Run the following commands in the web console
+	<div class="codeBlock"># install unxz<br />
+	apt update &amp;&amp; apt install xz-utils -y<br />
+	# lookup the latest HAOS release download URL<br />
+	regex=&#39;&quot;browser_download_url&quot;: &quot;(https:\/\/github.com\/home-assistant\/operating-system\/releases\/download\/[^/]*\/haos_ova-[^/]*\.qcow2\.xz)&quot;&#39; &amp;&amp; response=$(curl -s https://api.github.com/repos/home-assistant/operating-system/releases/latest) &amp;&amp; [[ $response =~ $regex ]] &amp;&amp; downloadURL=&quot;${BASH_REMATCH[1]}&quot;<br />
+	# download the qcow virtual disk<br />
+	wget -O /tmp/HAOS.qcow2.xz $downloadURL<br />
+	# extract the downloaded virtual disk<br />
+	unxz /tmp/HAOS.qcow2.xz -v<br />
+	# attach the disk to the HAOS VM<br />
+	# update the ID to match the ID of the HAOS VM created earlier<br />
+	# the last argument is the name of the storage device to import the disk to<br />
+	qm importdisk 104 /tmp/HAOS.qcow2 SSD_100GB</div>
+	</li>
+	<li>Back in the Proxmox web UI, select the HAOS VM &gt; Select Hardware from the left sub-navigation menu</li>
+	<li>Double click the Unused Disk &gt; Click Add</li>
+	<li>Click Options from the left sub-navigation menu</li>
+	<li>Double click Boot Order to edit it &gt; Check the Enabled box next to scsi0 and drag it above net0 &gt; Click OK</li>
+	<li>Click Start at the top right of the screen to start the VM</li>
+	<li>Click Console in the left sub-navigation menu</li>
+	<li>Welcome to Home Assistant Operating System</li>
+	<li>Open a web browser and navigate to http://DNSorIP:8123</li>
+	<li>Enter a Name, Username and Password to create a Home Assistant user account &gt; Click Create Account</li>
+	<li>Enter a Name for this Home Assistant installation (ie Home)</li>
+	<li>Click Detect to set the installation geolocation</li>
+	<li>Verify the Unit System and Currency &gt; Click Next</li>
+	<li>Select any anonymous data to share with the Home Assistant development team &gt; Click Next</li>
+	<li>Click Finish</li>
+	<li>Welcome to Home Assistant</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
