@@ -1,0 +1,66 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Fix Proxmox Windows VM Reporting Incorrect Memory Usage</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Hypervisor,Install Guide,Web Based,Web Based Tools,Microsoft,Proxmox,VM,Virtual Machine,Virtualization,Windows 11,Windows 10,Windows Server,Linux,Memory,RAM,Memory Monitor,Memory Reporting,Proxmox Step By Step,Proxmox Tutorial,Proxmox VE,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Fix Proxmox Windows VM Reporting Incorrect Memory Usage">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="12/18/2022 01:14:19 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Fix Proxmox Windows VM Reporting Incorrect Memory Usage</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What are VirtIO Drivers?</h2>
+
+<blockquote><em>VirtIO Drivers are paravirtualized drivers for kvm/Linux. In short, they enable direct (paravirtualized) access to devices and peripherals for virtual machines using them, instead of slower, emulated, ones. -<a href="https://pve.proxmox.com/wiki/Windows_VirtIO_Drivers" target="_blank">https://pve.proxmox.com/wiki/Windows_VirtIO_Drivers</a></em></blockquote>
+
+<h2>Configuring VM Settings</h2>
+
+<ol>
+	<li>Log into the Proxmox web UI</li>
+	<li>Select a storage from the left navigation pane to download an .iso file to</li>
+	<li>Select ISO Images in the left sub-navigation pane</li>
+	<li>If running ProxMox 6, download the VirtIO Windows .iso <a href="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/latest-virtio/virtio-win.iso" target="_blank">Download</a> and upload it to the ProxMox ISO image library</li>
+	<li>If on ProxMox 7, click Download from URL and paste the download URL from above &gt; Click Query URL &gt; Click Download</li>
+	<li>Expand the Proxmox node in the left navigation and select the Windows VM</li>
+	<li>Select Hardware from the left sub-navigation menu</li>
+	<li>Double click the CD/DVD drive &gt; Select the Storage with the VirtIO .iso &gt; Select the VirtIO .iso &gt; Click OK</li>
+	<li>Select Options from the left sub-navigation menu</li>
+	<li>Double click the QEMU Guest Agent option &gt; Check the Use QEMU Guest Agent box &gt; Click OK</li>
+	<li>Click Start to power on the VM</li>
+	<li>Click console in the left sub-navigation menu</li>
+</ol>
+
+<h2>Installing VirtIO Drivers and QEMU Guest Agent</h2>
+
+<ol>
+	<li>Log into Windows</li>
+	<li>Open File Explorer &gt; Navigate to the CD/DVD drive</li>
+	<li>Launch virtio-win-guest-tools.exe</li>
+	<li>Step through the VirtIO-Win installer accepting all the defaults</li>
+	<li>Restart the Windows VM</li>
+</ol>
+
+<h2>Troubleshooting</h2>
+
+<ol>
+	<li>If Proxmox still isn&#39;t reporting the correct memory usage, navigate to VM &gt; Hardware &gt; Memory</li>
+	<li>Check the Advanced option &gt; Make sure ballooning is enabled &gt; Click OK</li>
+	<li>Stop then Start the VM for the change to take effect</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
