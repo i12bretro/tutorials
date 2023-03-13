@@ -1,0 +1,115 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Running a Arch Linux VM in Proxmox VE</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Hypervisor,Install Guide,Self-Hosted,Arch Linux,VM,Virtual Machine,Virtualization,Linux,Proxmox,Proxmox Host,Proxmox VE,Proxmox Step By Step,Proxmox Tutorial,How To Install Arch Linux On Proxmox,How To Run Arch Linux On Proxmox VE,Arch Linux Virtual Machine,Arch Linux Proxmox VM,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Running a Arch Linux VM in Proxmox VE">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="02/12/2023 01:58:14 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Running a Arch Linux VM in Proxmox VE</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Download the Arch Linux iso <a href="https://archlinux.org/download/" style="font-size: inherit" target="_blank">Download</a> and upload it to the Proxmox ISO image library</li>
+	<li>Log into the Proxmox web UI</li>
+	<li>Select a storage from the left navigation pane to download the .iso to</li>
+	<li>Select ISO Images in the left sub-navigation pane</li>
+	<li>Right click the Proxmox node name &gt; Create VM</li>
+	<li>Give the VM a unique ID and Name &gt; Next</li>
+	<li>On the OS tab, Select the Arch Linux installation .iso file, leave the Type as Linux and the Version as 5.x - 2.6 Kernel &gt; Next</li>
+	<li>Leave the defaults on the System tab &gt; Next</li>
+	<li>On the Hard Disk tab, set the Disk size to 30 GiB or more &gt; Next</li>
+	<li>On the CPU tab, set Cores to 2 or more and Type to host &gt; Next</li>
+	<li>On the Memory tab, set the Memory to 4096 or more &gt; Next</li>
+	<li>Leave the defaults on the Network tab &gt; Next</li>
+	<li>Verify the summary and click Finish</li>
+	<li>Right click the Arch Linux VM in the left navigation pane &gt; Start</li>
+	<li>Click console in the left sub-navigation menu</li>
+	<li>At the Arch Linux menu, select Arch Linux install medium &gt; Press Enter</li>
+	<li>Run the following commands to install Arch Linux
+	<div class="codeBlock"># list disk drives, note the identifier for VBOX HARDDISK<br />
+	fdisk -l<br />
+	# partition the drive, change the identifier if needed<br />
+	fdisk /dev/sda<br />
+	# create a new partition<br />
+	n<br />
+	# set the partition type to primary<br />
+	p<br />
+	# default sector<br />
+	Press Enter to accept default<br />
+	# press enter to accept the default start sector<br />
+	2048<br />
+	# set the partition size, adjust to leave ~2GB for swap<br />
+	+14GB<br />
+	# create a swap partition<br />
+	n<br />
+	# set the partition type to primary<br />
+	p<br />
+	# default sector<br />
+	Press Enter to accept default<br />
+	# set the partition size<br />
+	Press Enter to accept default<br />
+	# write the partitions<br />
+	w<br />
+	# print out the partitions<br />
+	fdisk -l<br />
+	# create ext4 root partition<br />
+	mkfs.ext4 /dev/sda1<br />
+	# confirm proceeding with the change if prompted<br />
+	y<br />
+	# create swap partition<br />
+	mkswap /dev/sda2<br />
+	# confirm proceeding with the change if prompted<br />
+	y<br />
+	# mount the root partition<br />
+	mount /dev/sda1 /mnt<br />
+	# enable swap<br />
+	swapon /dev/sda2<br />
+	# run pacstrap installation<br />
+	pacstrap /mnt base linux linux-firmware<br />
+	# generate fstab file<br />
+	genfstab -U /mnt &gt;&gt; /mnt/etc/fstab<br />
+	# change root to the /mnt directory<br />
+	arch-chroot /mnt<br />
+	# set the hostname<br />
+	echo archlinux-vm &gt; /etc/hostname<br />
+	# install grub bootloader<br />
+	pacman -S grub<br />
+	grub-install /dev/sda<br />
+	# create grub config<br />
+	grub-mkconfig -o /boot/grub/grub.cfg<br />
+	# install gnome desktop environment<br />
+	pacman -S gnome networkmanager qemu-guest-agent<br />
+	# enable required services<br />
+	systemctl enable gdm.service<br />
+	systemctl enable NetworkManager.service<br />
+	# set root passwd<br />
+	passwd<br />
+	# shutdown<br />
+	exit<br />
+	shutdown now</div>
+	</li>
+	<li>In the Proxmox web UI, select Hardware from the left sub-navigation menu &gt; Double click the CD/DVD drive &gt; Select Do not use any media &gt; Click OK</li>
+	<li>Select Options from the left sub-navigation menu</li>
+	<li>Double click QEMU Guest Agent &gt; Check the Use QEMU Guest Agent box &gt; Click OK</li>
+	<li>Right click the Arch Linux VM in the left navigation pane &gt; Start</li>
+	<li>Click console in the left sub-navigation menu</li>
+	<li>Welcome to Arch Linux</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
