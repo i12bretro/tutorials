@@ -1,0 +1,54 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Installing Docker on MacOS</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Docker Made Easy,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Docker,Docker Host,Docker How To,Docker Install Script,Docker Installation Tutorial,Docker Setup Tutorial,Docker Simplified,Docker Tutorial,Getting Started With Docker,How To Install Docker On MacOS,How To Setup Docker On MacOS,Installation,MacOS,Brew,Container,Containerization,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Installing Docker on MacOS">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="09/30/2022 02:18:35 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Installing Docker on MacOS</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Start LaunchPad from the dock</li>
+	<li>Search terminal &gt; Click Terminal to launch it</li>
+	<li>Run the following commands in the terminal window
+	<div class="codeBlock CMD"># install command line tools<br />
+	xcode-select --install<br />
+	# if prompted, click install and agree to install command line tools<br />
+	# install homebrew<br />
+	/bin/bash -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&quot;<br />
+	# enter your password<br />
+	# press Enter to continue<br />
+	# install docker<br />
+	brew install --cask docker<br />
+	# enter your password when prompted</div>
+	</li>
+	<li>Once the Docker install completes, start LaunchPad from the dock &gt; Select Docker</li>
+	<li>Click Open to confirm opening the downloaded application</li>
+	<li>Check the I accept checkbox &gt; Click Accept</li>
+	<li>To run a basic Docker container, run the following command in the terminal
+	<div class="codeBlock CMD">sudo docker run hello-world</div>
+	</li>
+	<li>Docker will download the hello-world container and execute it, displaying following output:
+	<p>Hello from Docker!<br />
+	This message shows that your installation appears to be working correctly.</p>
+	</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
