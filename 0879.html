@@ -1,0 +1,92 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Run Microsoft SQL Server Containerized in Docker</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Docker Made Easy,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Docker,Docker Container,Docker Host,Docker Installation Tutorial,Docker Made Simple,Docker Setup Tutorial,Docker Simplified,Docker Tutorial,Linux,Container,Containerization,SQL Server,MSSQL,Microsoft,Microsoft SQL Server,SQL Server Docker Container,SQL Server Management Studio,SSMS,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Run Microsoft SQL Server Containerized in Docker">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="01/31/2023 12:08:44 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Run Microsoft SQL Server Containerized in Docker</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Installing Docker</h2>
+
+<ol>
+	<li>Log into the Linux host and run the following commands in a terminal window
+	<div class="codeBlock"># install prerequisites<br />
+	sudo apt install apt-transport-https ca-certificates curl software-properties-common gnupg-agent -y<br />
+	# add docker gpg key<br />
+	curl -fsSL https://download.docker.com/linux/$(awk -F&#39;=&#39; &#39;/^ID=/{ print $NF }&#39; /etc/os-release)/gpg | sudo apt-key add -<br />
+	# add docker software repository<br />
+	sudo add-apt-repository &quot;deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/$(awk -F&#39;=&#39; &#39;/^ID=/{ print $NF }&#39; /etc/os-release) $(lsb_release -cs) stable&quot;<br />
+	# install docker<br />
+	sudo apt install docker-ce docker-compose containerd.io -y<br />
+	# enable and start docker service<br />
+	sudo systemctl enable docker &amp;&amp; sudo systemctl start docker<br />
+	# add the current user to the docker group<br />
+	sudo usermod -aG docker $USER<br />
+	# reauthenticate for the new group membership to take effect<br />
+	su - $USER</div>
+	</li>
+</ol>
+
+<h2>Running MS SQL Server Container</h2>
+
+<ol>
+	<li>Continue with the following commands in a terminal window
+	<div class="codeBlock"># create working directory structure<br />
+	mkdir ~/docker/mssql -p<br />
+	# set owner of working directories<br />
+	sudo chown &quot;$USER&quot;:&quot;$USER&quot; ~/docker -R<br />
+	# allow the container to write to working directories<br />
+	sudo chmod a+rwx -R ~/docker/mssql<br />
+	# run the sql server docker container with persistent data<br />
+	docker run -d --name mssql -e ACCEPT_EULA=Y -e MSSQL_SA_PASSWORD=&#39;Something$ecur3!&#39; -v ~/docker/mssql:/var/opt/mssql -p 1433:1433 --restart unless-stopped mcr.microsoft.com/mssql/server</div>
+	</li>
+	<li>At this point the SQL Server instance is running and can be interacted with via the sqlcmd command line interface
+	<div class="codeBlock"># connect to the database via sqlcmd<br />
+	# authenticate with the sa password set in the docker run command<br />
+	docker exec -it mssql /opt/mssql-tools/bin/sqlcmd -U SA<br />
+	# output the SQL version<br />
+	select @@version;<br />
+	go</div>
+	</li>
+</ol>
+
+<h2>Installing SQL Server Management Studio (optional)</h2>
+
+<p><em>NOTE: SQL Server Management Studio (SSMS) is currently only available for Windows hosts</em></p>
+
+<ol>
+	<li>Log into a <span class="codeBlock">Microsoft</span> Windows host</li>
+	<li>Download SQL Server Management Studio (SSMS) <a href="https://aka.ms/ssmsfullsetup" target="_blank">Download</a></li>
+	<li>Navigate to the download directory and execute the downloaded SSMS Setup installer &gt; Click Install</li>
+	<li>Once the installation completes, click Close</li>
+	<li>Launch SSMS from the Start menu</li>
+	<li>Complete the Connect to Server form with the following
+	<p>Server type: Database Engine<br />
+	Server name: &lt;%Docker host DNS or IP%&gt;<br />
+	Authentication: SQL Server Authentication<br />
+	Login: sa<br />
+	Password: &lt;%MSSQL_SA_PASSWORD%&gt;</p>
+	</li>
+</ol>
+
+<p>Documentation: <span><span class="codeBlock"><a href="https://learn.microsoft.com/en-us/sql/linux/sql-server-linux-docker-container-deployment" target="_blank">https://learn.microsoft.com/en-us/sql/linux/sql-server-linux-docker-container-deployment</a></span></span></p>          </div>
+        </div>
+      </body>
+    </html>
+  
