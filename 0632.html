@@ -1,0 +1,56 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install aaPanel Powerful Web Server Dashboard on Debian</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Web Server,System Administration,Linux,Homelab,Debian,Apache HTTPD,Nginx,Web Server Administration,Web Server UI,Web Server Admin Panel,Apache HTTPD Admin Panel,Nginx Admin Panel,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install aaPanel Powerful Web Server Dashboard on Debian">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="05/01/2022 08:05:35 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install aaPanel Powerful Web Server Dashboard on Debian</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is aaPanel?</h2>
+
+<blockquote>
+<p>[aaPanel is] a simple but powerful control panel. Manage the web server through a web-base GUI (Graphical User Interface). aaPanel provides the one-click function such as one-click install LNMP/LAMP developing environment and software.<em>- <a href="https://www.aapanel.com/" target="_blank">https://www.aapanel.com/</a></em></p>
+</blockquote>
+
+<ol>
+	<li>Log into the Debian device</li>
+	<li>Run the following commands in a terminal window
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install prerequisites<br />
+	sudo apt install wget -y<br />
+	# download aapanel installation script<br />
+	wget -O aapanel-install.sh http://www.aapanel.com/script/install-ubuntu_6.0_en.sh<br />
+	# run aapanel install script<br />
+	sudo bash aapanel-install.sh 66959f96</div>
+	</li>
+	<li>Type Y and press Enter to confirm installing aaPanel</li>
+	<li>Wait for the installation script to complete and take note of the URL, username and password in the success message</li>
+	<li>Open a web browser and navigate to the URL displayed in the terminal</li>
+	<li>Login with the username and password displayed in the terminal</li>
+	<li>Select LNMP (Nginx) or LAMP (Apache) &gt; Click the One-click button</li>
+	<li>Wait while the selected packages are installed</li>
+	<li>Welcome to aaPanel</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
