@@ -1,0 +1,73 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Homebrew Channel and Apps on Dolphin Emulator</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Emulator,Emulation,Dolphin,Dolphin Emulator,Nintendo,Wii,Nintendo Wii,Wii Emulator,Wii Emulation,Homebrew,Homebrew Channel,Homebrew Channel On Dolphin,Run Homebrew Channel Emulator,Run Homebrew Channel On Dolphin,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Homebrew Channel and Apps on Dolphin Emulator">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="03/08/2023 09:01:55 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Homebrew Channel and Apps on Dolphin Emulator</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Preparing the Virtual SD Card</h2>
+
+<ol>
+	<li>Download 7-zip <a href="https://www.7-zip.org/" target="_blank">Download</a></li>
+	<li>Download Virtual SD Card Maker <a href="http://www.mediafire.com/file/cfr9q8542e9lsos/Virtual_SD_Card_Maker.zip/file" target="_blank">Download</a></li>
+	<li>Download ImDisk Virtual Disk Driver <a href="http://www.ltr-data.se/opencode.html/#ImDisk" target="_blank">Download</a></li>
+	<li>Install 7-zip by running the .exe</li>
+	<li>Extract the downloaded Virtual SD Card Maker .zip</li>
+	<li>Install the ImDisk Virtual Disk Driver</li>
+	<li>Navigate to the extracted Virtual SD Card Maker /Windows directory</li>
+	<li>Hold the SHIFT key and right click in the white space &gt; Open PowerShell window here...</li>
+	<li>Run the following command to create a new blank .raw SD card
+	<div class="codeBlock PS"># change the size as needed, 32GB (32768M) is the maximum usable size by Dolphin<br />
+	.\mksdcard 4096M .\sd.raw</div>
+	</li>
+</ol>
+
+<h2>Installing Homebrew Applications</h2>
+
+<ol>
+	<li>Back in File Explorer, right click the newly created sd.raw &gt; Mount as ImDisk Virtual Disk</li>
+	<li>In the ImDisk Virtual Disk dialog, set the drive letter and check the Removable media box &gt; Click OK</li>
+	<li>Open the newly mounted drive in File Explorer</li>
+	<li>Create a folder called apps</li>
+	<li>Copy Wii homebrew applications inside the apps folder, in this example WiiXplorer <a href="https://hbb1.oscwii.org/hbb/wiixplorer/wiixplorer.zip" target="_blank">Download</a></li>
+	<li>Once completed copying homebrew applications, right click the mounted virtual SD drive &gt; Eject</li>
+</ol>
+
+<h2>Using Homebrew Applications in Dolphin</h2>
+
+<ol>
+	<li>Download the Homebrew Channel <a href="https://github.com/FIX94/hbc/releases/download/1.1.4-1/Homebrew.Channel.-.OHBC.wad" target="_blank">Download</a></li>
+	<li>Download the Dolphin emulator <a href="https://dolphin-emu.org/download/" target="_blank">Download</a></li>
+	<li>Extract the downloaded Dolphin .7z file</li>
+	<li>Inside the extracted Dolphin directory, create a new file named portable.txt</li>
+	<li>Launch Dolphin.exe</li>
+	<li>Copy/cut the sd.raw created earlier to the extracted Dolphin /User/Wii directory</li>
+	<li>Back in Dolphin, select Tools &gt; Perform Online System Update &gt; United States</li>
+	<li>After the update completes, select Tools &gt; Install WAD...</li>
+	<li>Navigate and select the downloaded Homebrew Channel .wad file</li>
+	<li>Select Tools &gt; Load Wii System Menu</li>
+	<li>Completed the initial console setup</li>
+	<li>The familiar Wii launcher should display with Homebrew Channel installed</li>
+	<li>Select Homebrew Channel to see the homebrew apps installed on the virtual SD card</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
