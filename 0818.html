@@ -1,0 +1,147 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install InvoiceNinja - Invoice and Payment Manager - On Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Linux,Payment Manager,Invoicing Software,InvoiceNinja,Invoice Ninja,Invoice,Homelab,Expense Tracker,Debian,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install InvoiceNinja - Invoice and Payment Manager - On Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="02/15/2023 01:24:01 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install InvoiceNinja - Invoice and Payment Manager - On Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is InvoiceNinja?</h2>
+
+<blockquote><em>[InvoiceNinja is a] powerful suite of features to invoice clients, facilitate payment, track-time &amp; tasks, expenses, and more. -<a href="https://www.invoiceninja.com/invoicing-features/" target="_blank">https://www.invoiceninja.com/invoicing-features/</a></em></blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal window:
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install prerequisites<br />
+	sudo apt install curl wget zip lsb-release apt-transport-https ca-certificates git -y<br />
+	# add the php gpg key<br />
+	sudo wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg<br />
+	# add the php apt repository<br />
+	echo &quot;deb https://packages.sury.org/php/ $(lsb_release -sc) main&quot; | sudo tee /etc/apt/sources.list.d/php.list<br />
+	# update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install Apache HTTPD and MySQL<br />
+	sudo apt install apache2 mariadb-server mariadb-client -y<br />
+	# install PHP components<br />
+	sudo apt install php8.1 libapache2-mod-php php8.1-common php8.1-bcmath php8.1-gmp php8.1-fileinfo php8.1-gd php8.1-mbstring php8.1-pdo php8.1-xml php8.1-curl php8.1-zip php8.1-gmp php8.1-mysql php8.1-fpm -y<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type N and press Enter to not switch to unix socket authentication</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the InvoiceNinja database and database user
+	<div class="codeBlock">CREATE DATABASE invoiceninja;<br />
+	GRANT ALL ON invoiceninja.* to &#39;invoice_ninja_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;!nv0ic3Ninj@!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># lookup latest invoiceninja release URL<br />
+	regex=&#39;&quot;browser_download_url&quot;: &quot;(https:\/\/github.com\/invoiceninja\/invoiceninja\/releases\/download\/[^/]*\/invoiceninja\.zip)&quot;&#39; &amp;&amp; response=$(curl -H &quot;Accept: application/vnd.github.v3+json&quot; https://api.github.com/repos/invoiceninja/invoiceninja/releases/latest) &amp;&amp; &#91;&#91; $response =~ $regex &#93;&#93; &amp;&amp; downloadURL=&quot;${BASH_REMATCH[1]}&quot;<br />
+	# download the latest release<br />
+	wget -O ./invoiceninja.zip $downloadURL<br />
+	# extract the download .zip archive<br />
+	sudo unzip ./invoiceninja.zip -d /var/www/invoiceninja<br />
+	# change permissions on the storage directory<br />
+	sudo chmod 755 /var/www/invoiceninja/storage/ -R<br />
+	# copy sample .env file<br />
+	sudo cp /var/www/invoiceninja/.env.example /var/www/invoiceninja/.env<br />
+	# create/edit apache site configuration<br />
+	sudo nano /etc/apache2/sites-available/invoiceninja.conf</div>
+	</li>
+	<li>Paste the following configuration into the .conf file
+	<p>alias /invoiceninja /var/www/invoiceninja/public<br />
+	&lt;Directory /var/www/invoiceninja/public&gt;<br />
+	DirectoryIndex index.php<br />
+	Require all granted<br />
+	Options +FollowSymLinks<br />
+	AllowOverride All<br />
+	&lt;/Directory&gt;</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># edit .htaccess file<br />
+	sudo nano /var/www/invoiceninja/public/.htaccess</div>
+	</li>
+	<li>Scroll to the bottom of the file and find the following line
+	<p>RewriteRule ^ index.php [L]</p>
+	</li>
+	<li>Replace the line with the following
+	<p>RewriteRule ^ /invoiceninja/index.php [L]</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># set the owner of the invoiceninja directory<br />
+	sudo chown -R www-data:www-data /var/www/invoiceninja<br />
+	# enable mod_rewrite<br />
+	sudo a2enmod rewrite<br />
+	# enable invoiceninja site<br />
+	sudo a2ensite invoiceninja<br />
+	# restart apache2 service<br />
+	sudo systemctl restart apache2</div>
+	</li>
+</ol>
+
+<h2>InvoiceNinja Web Installer</h2>
+
+<ol>
+	<li>Open a web browser and navigate to http://DNSorIP/invoiceninja/setup</li>
+	<li>The InvoiceNinja web setup should be load</li>
+	<li>Enter the URL to use for the site (ie http://DNSorIP/invoiceninja)</li>
+	<li>Uncheck the Require HTTPS option &gt; Click Test PDF</li>
+	<li>Complete the Database Connection form as follows
+	<p>Host: localhost<br />
+	Port: 3306<br />
+	Database: invoiceninja<br />
+	Username: invoice_ninja_rw<br />
+	Password: !nv0ic3Ninj@!</p>
+	</li>
+	<li>Click the Test connection button</li>
+	<li>If you have an Email server, configure it under Email Settings, otherwise leave the driver as Log and click the Send test email button</li>
+	<li>Completed the User Details form by entering a First Name, Last Name, Email and Password</li>
+	<li>Check both I Agree checkboxes &gt; Click Submit</li>
+	<li>If the page redirects to http://localhost, navigate to http://localhost/invoiceninja/index.php</li>
+	<li>Login with the Email and Password setup earlier &gt; Click Login with email</li>
+	<li>On the Welcome dialog, enter a company name and select the Light or Dark theme &gt; Click Save</li>
+	<li>Welcome to InvoiceNinja</li>
+</ol>
+
+<p>Source: <a href="https://invoiceninja.github.io/docs/self-host-installation/" target="_blank">https://invoiceninja.github.io/docs/self-host-installation/</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
