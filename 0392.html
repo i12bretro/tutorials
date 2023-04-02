@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Install and Configure MongoDB with PHP on Windows">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="10/26/2022 10:50:49 AM" />
+        <meta name="revised" content="04/02/2023 11:57:40 AM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -22,22 +22,22 @@
           </div>
           <div></div>
           <div id="content">
-          <h2>Adding PHP Support for&nbsp;MongoDB</h2>
+          <h2>Adding PHP Support for MongoDB</h2>
 
 <ol>
 	<li>Open Windows Explorer and navigate to the PHP installation directory</li>
-	<li>Hold the SHIFT key and right click in the white space &gt; Open PowerShell window&nbsp;here...</li>
+	<li>Hold the SHIFT key and right click in the white space &gt; Open PowerShell window here...</li>
 	<li>Run the following command to output the PHP version information
 	<div class="codeBlock PS">.\php.exe -v</div>
 	</li>
 	<li>Note the architecture (x86 or x64) and the PHP version</li>
-	<li>Open a web browser and navigate to the&nbsp;MongoDB PHP driver page&nbsp;<a href="https://pecl.php.net/package/mongodb" target="_blank">Download</a></li>
+	<li>Open a web browser and navigate to the MongoDB PHP driver page <a href="https://pecl.php.net/package/mongodb" target="_blank">Download</a></li>
 	<li>Click the Windows DLL link</li>
 	<li>Select either the x86 or x64 to match the PHP installation. If using PHP with Apache or nginx download the Thread Safe version. If using PHP for IIS, download the Non-Thread Safe version</li>
 	<li>Extract the downloaded .zip file</li>
 	<li>Copy the .dll file from the extracted folder to the PHP installation /ext directory</li>
 	<li>Find php.ini inside the PHP installation directory and edit it in a text editor</li>
-	<li>Search for&nbsp;;extension=</li>
+	<li>Search for ;extension=</li>
 	<li>At the bottom of the list of extensions, add the following line
 	<p>extension=mongodb</p>
 	</li>
@@ -47,19 +47,9 @@
 <h2>Installing MongoDB on Windows</h2>
 
 <ol>
-	<li>Download MongoDB Community Server&nbsp;<a href="https://www.mongodb.com/try/download/community" target="_blank">Download</a></li>
-	<li>Extract the downloaded .zip file</li>
-	<li>Rename the bin folder inside the extracted folder MongoDB</li>
-	<li>Cut the MongoDB folder to the location where it will be running from</li>
-	<li>Once in place, navigate inside the MongoDB folder &gt;&nbsp;Hold the SHIFT key and right click in the white space &gt; Open PowerShell window&nbsp;here...</li>
-	<li>Run the following command to install MongoDB as a service
-	<div class="codeBlock PS">mkdir data<br />
-	.\mongod.exe --install --serviceName MongoDB --serviceDisplayName MongoDB --logpath ((Get-Item .).FullName+&quot;\mongo.log&quot;) --dbpath&nbsp;((Get-Item .).FullName+&quot;\data&quot;)<br />
-	net start MongoDB</div>
-	</li>
-</ol>
-
-<ol>
+	<li>Download MongoDB Community Server <a href="https://www.mongodb.com/try/download/community" target="_blank">Download</a></li>
+	<li>Navigate to the Downloads directory &gt; Launch the MongoDB .msi installer</li>
+	<li>Step through the installer accepting all the defaults</li>
 </ol>
 
 <h2>Testing PHP and MongoDB</h2>
@@ -82,7 +72,7 @@
 	<li>Once the application loads, click the green Connect button to connect to the locally running MongoDB instance</li>
 </ol>
 
-<p>For more information on MongoDB CRUD operations with PHP check out&nbsp;<a href="https://roytuts.com/mongodb-php-7-crud-example/" target="_blank">https://roytuts.com/mongodb-php-7-crud-example/</a></p>          </div>
+<p>For more information on MongoDB CRUD operations with PHP check out <a href="https://roytuts.com/mongodb-php-7-crud-example/" target="_blank">https://roytuts.com/mongodb-php-7-crud-example/</a></p>          </div>
         </div>
       </body>
     </html>
