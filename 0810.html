@@ -1,0 +1,64 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Installing WinGet Command Line Package Manager on Windows 11</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Install Guide,Application Manager,Microsoft,Microsoft Windows,Package Manager,PowerShell,Windows,Windows Based Application Manager,Windows Based Package Manager,WinGet,Command Line Package Manager,CLI Package Manager,How To Install WinGet On Windows,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Installing WinGet Command Line Package Manager on Windows 11">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="02/16/2023 06:59:35 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Installing WinGet Command Line Package Manager on Windows 11</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is WinGet?</h2>
+
+<blockquote><em>The Windows Package Manager is a tool designed to help you quickly and easily discover and install those packages that make your PC environment special. By using the Windows Package Manager, from one command, you can install your favorite packages. -<a href="https://github.com/microsoft/winget-cli" target="_blank">https://github.com/microsoft/winget-cli</a></em></blockquote>
+
+<ol>
+	<li>Log into the Windows device</li>
+	<li>Run the following commands in a PowerShell window
+	<div class="codeBlock PS"># change directory to user downloads<br />
+	cd $ENV:UserProfile\Downloads<br />
+	# download latest winget installer<br />
+	$ProgressPreference = &#39;SilentlyContinue&#39;; $t = Invoke-WebRequest &#39;https://api.github.com/repos/microsoft/winget-cli/releases/latest&#39; -UseBasicParsing; $null = ($t.content -Match &#39;,&quot;content_type&quot;:&quot;application/octet-stream&quot;,.*?&quot;browser_download_url&quot;:&quot;(.*\.msixbundle)&quot;&#39;); Invoke-WebRequest $Matches[1] -OutFile .\winget-latest.msixbundle;<br />
+	# lookup prerequisites<br />
+	$pre = Invoke-WebRequest &quot;https://store.rg-adguard.net/api/GetFiles&quot; -Method POST -Body @{type=&#39;CategoryId&#39;;url=&#39;f855810c-9f77-45ff-a0f5-cd0feaa945c6&#39;;ring=&#39;Retail&#39;;lang=&#39;en-US;q=0.6&#39;} -UseBasicParsing<br />
+	# download prerequisites<br />
+	# Microsoft.UI.Xaml<br />
+	$null = ($pre.content -Match &#39;&lt;td&gt;&lt;a href=&quot;(.*?)&quot; rel=&quot;noreferrer&quot;&gt;Microsoft\.UI\.Xaml\.2\.7_7\.2207\.21001\.0_x64__8wekyb3d8bbwe\.appx&lt;\/a&gt;&lt;\/td&gt;&#39;); Invoke-WebRequest $Matches[1] -OutFile .\Microsoft.UI.Xaml.appx;<br />
+	$null = ($pre.content -Match &#39;&lt;td&gt;&lt;a href=&quot;(.*?)&quot; rel=&quot;noreferrer&quot;&gt;Microsoft\.VCLibs\.140\.00\.UWPDesktop_14\.0\.30704\.0_x64__8wekyb3d8bbwe\.appx&lt;\/a&gt;&lt;\/td&gt;&#39;); Invoke-WebRequest $Matches[1] -OutFile .\Microsoft.VCLibs.appx;<br />
+	$null = ($pre.content -Match &#39;&lt;td&gt;&lt;a href=&quot;(.*?)&quot; rel=&quot;noreferrer&quot;&gt;Microsoft\.DesktopAppInstaller_2022\.728\.1939\.0_neutral_~_8wekyb3d8bbwe\.msixbundle&lt;\/a&gt;&lt;\/td&gt;&#39;); Invoke-WebRequest $Matches[1] -OutFile .\Microsoft.DesktopAppInstaller.msixbundle; $ProgressPreference = &#39;Continue&#39;;<br />
+	# install prerequisites<br />
+	Add-AppxPackage .\Microsoft.UI.Xaml.appx<br />
+	Add-AppxPackage .\Microsoft.VCLibs.appx<br />
+	Add-AppxPackage .\Microsoft.DesktopAppInstaller.msixbundle<br />
+	# install winget<br />
+	Add-AppxPackage .\winget-latest.msixbundle<br />
+	# list installed applications<br />
+	winget list</div>
+	</li>
+	<li>WinGet is now installed and ready to be used</li>
+	<li>To test WinGet, continue with the following commands in PowerShell
+	<div class="codeBlock PS"># search winget<br />
+	winget search notepad++<br />
+	# when prompted, type y and press enter<br />
+	# install notepad++<br />
+	winget install notepad++</div>
+	</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
