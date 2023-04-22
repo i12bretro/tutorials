@@ -1,0 +1,147 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Nextcloud on Windows with WSL2</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Apache,Apache HTTPD,Cloud Solution,Debian,Free Software,HTTPD,LAMP,Linux,MariaDB,MySQL,Nextcloud,PHP,PHP Application,PHP Software,Web Server,Windows,Linux On Windows,Subsystem,WSL,WSL Installation Guide,Windows Subsystem For Linux,How To Install WSL,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Nextcloud on Windows with WSL2">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="04/01/2023 10:20:42 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Nextcloud on Windows with WSL2</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Nextcloud?</h2>
+
+<blockquote><em>Nextcloud is an open source, self-hosted file share and communication platform. Access &amp; sync your files, contacts, calendars &amp; communicate and collaborate across your devices. You decide what happens with your data, where it is and who can access it! -<a href="https://docs.nextcloud.com/" target="_blank">https://docs.nextcloud.com/</a></em></blockquote>
+
+<h2>Installing WSL</h2>
+
+<ol>
+	<li>Launch Powershell as administrator</li>
+	<li>Run the following command
+	<div class="codeBlock PS"># enable WSL feature<br />
+	dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart<br />
+	# enable virtual machine platform<br />
+	dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all</div>
+	</li>
+	<li>Type Y to reboot the system</li>
+	<li>Launch Powershell as administrator and run the following additional commands to use WSL 2
+	<div class="codeBlock PS"># enable virtualization platform<br />
+	Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform<br />
+	# enable wsl2<br />
+	wsl --set-default-version 2<br />
+	# download the wsl kernel update<br />
+	$ProgressPreference = &#39;SilentlyContinue&#39;; Invoke-WebRequest https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi -OutFile .\wsl_update_x64.msi<br />
+	# reset progress preference<br />
+	$ProgressPreference = &#39;Continue&#39;<br />
+	# install the downloaded file<br />
+	.\wsl_update_x64.msi</div>
+	</li>
+	<li>Click the Start Button &gt; Search Microsoft Store &gt; Select Microsoft Store</li>
+	<li>Search for the Linux distribution to install (Debian, Ubuntu, etc), Debian in this example</li>
+	<li>Select the Linux distribution and click the Get button</li>
+	<li>After the Linux distribution downloads and installs, click Open or select the distribution from the Start menu to launch it</li>
+	<li>Input a username and password to be used in the Linux environment</li>
+</ol>
+
+<h2>Installing Nextcloud</h2>
+
+<ol>
+	<li>Continue with the following commands in WSL
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install software updates<br />
+	sudo apt upgrade -y<br />
+	# install prerequisite packages<br />
+	sudo apt install unzip wget -y<br />
+	# install Apache HTTPD and MySQL<br />
+	sudo apt install apache2 mariadb-server mariadb-client -y<br />
+	# install PHP components<br />
+	sudo apt install php7.4 libapache2-mod-php7.4 php7.4-mysql php-common php7.4-cli php7.4-common php7.4-json php7.4-opcache php7.4-readline php7.4-intl php7.4-json php7.4-gd php7.4-mbstring php7.4-mysql php7.4-xml php7.4-zip php7.4-curl -y<br />
+	# start the mariadb service<br />
+	sudo service mariadb start<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type N and press Enter to not switch to socket authentication</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the Nextcloud database and database user
+	<div class="codeBlock">CREATE DATABASE nextclouddb;<br />
+	GRANT ALL ON nextclouddb.* to &#39;nextcloud_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;N3xtCl0ud!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands to download and extract Nextcloud in the Apache webroot
+	<div class="codeBlock"># download latest nextcloud version<br />
+	wget -O /tmp/nextcloud.zip https://download.nextcloud.com/server/releases/latest.zip<br />
+	# extract downloaded nextcloud archive<br />
+	sudo unzip -q /tmp/nextcloud.zip -d /var/www<br />
+	# set the owner of the new nextcloud directory to www-data<br />
+	sudo chown -R www-data:www-data /var/www/nextcloud<br />
+	# create a new nextcloud.conf file to configure the site<br />
+	sudo nano /etc/apache2/sites-available/nextcloud.conf</div>
+	</li>
+	<li>Paste the following configuration into nextcloud.conf
+	<p>Alias /nextcloud &quot;/var/www/nextcloud/&quot;<br />
+	&lt;directory /var/www/html/nextcloud/&gt;<br />
+	Options +FollowSymlinks<br />
+	AllowOverride All<br />
+	Require all granted</p>
+
+	<p>Dav off</p>
+
+	<p>SetEnv HOME /var/www/nextcloud<br />
+	SetEnv HTTP_HOME /var/www/nextcloud<br />
+	&lt;/directory&gt;</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to nextcloud.conf</li>
+	<li>Continue with the following commands to enable the site and restart Apache:
+	<div class="codeBlock"># enable the nextcloud config<br />
+	sudo a2ensite nextcloud<br />
+	# enable required apache modules<br />
+	sudo a2enmod rewrite headers env dir mime dav<br />
+	# restart apache2 service for the changes to take effect<br />
+	sudo service apache2 restart</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP/nextcloud</li>
+	<li>The Nextcloud setup screen should be displayed</li>
+	<li>Enter a username and password</li>
+	<li>Click the storage &amp; database link to expand the section</li>
+	<li>Fill out the database connection information as follows
+	<p>username: nextcloud_rw<br />
+	password: N3xtCl0ud!<br />
+	database name: nextclouddb<br />
+	database host: localhost</p>
+	</li>
+	<li>Click Finish Setup</li>
+	<li>After a few moments of setup Nextcloud will be up and running</li>
+	<li>Choose to install recommended apps or skip</li>
+	<li>Welcome to Nextcloud running on WSL</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
