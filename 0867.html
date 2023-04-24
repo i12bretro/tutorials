@@ -1,0 +1,75 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Running a Linux Mint VM in ProxMox VE</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Hypervisor,Install Guide,Self-Hosted,Linux Mint,VM,Virtual Machine,Virtualization,Linux,Proxmox,Proxmox Host,Proxmox VE,Proxmox Step By Step,Proxmox Tutorial,How To Install Linux Mint On Proxmox,How To Run Linux Mint On Proxmox VE,Linux Mint Virtual Machine,Linux Mint Proxmox VM,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Running a Linux Mint VM in ProxMox VE">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="01/03/2023 02:55:38 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Running a Linux Mint VM in ProxMox VE</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Log into the Proxmox web UI</li>
+	<li>Select a storage from the left navigation pane to download the .iso to</li>
+	<li>Select ISO Images in the left sub-navigation pane</li>
+	<li>Download the Linux Mint iso <a href="https://linuxmint.com/download.php" style="font-size: inherit" target="_blank">Download</a> and upload it to the Proxmox ISO image library</li>
+	<li>Right click the Proxmox node name &gt; Create VM</li>
+	<li>Give the VM a unique ID and Name &gt; Next</li>
+	<li>On the OS tab, Select the Linux Mint installation .iso file, leave the Type as Linux and the Version as 5.x - 2.6 Kernel &gt; Next</li>
+	<li>Leave the defaults on the System tab &gt; Next</li>
+	<li>On the Hard Disk tab, set the Disk size to 30 GiB or more &gt; Next</li>
+	<li>On the CPU tab, set Cores to 2 or more and Type to host &gt; Next</li>
+	<li>On the Memory tab, set the Memory to 4096 &gt; Next</li>
+	<li>Leave the defaults on the Network tab &gt; Next</li>
+	<li>Verify the summary and click Finish</li>
+	<li>Right click the Linux Mint VM in the left navigation pane &gt; Start</li>
+	<li>Click console in the left sub-navigation menu</li>
+	<li>Press Enter to Start Linux Mint (or wait 10 seconds)</li>
+	<li>Double click the Install Linux Mint icon on the desktop</li>
+	<li>Select a language &gt; Click Continue</li>
+	<li>Select a keyboard layout &gt; Click Continue</li>
+	<li>Choose whether or not to install multimedia codecs &gt; Click Continue</li>
+	<li>Click Install Now then Continue to confirm the partitions</li>
+	<li>Select a Region &gt; Click continue</li>
+	<li>Enter a name, computer name, username and password &gt; Click Continue</li>
+	<li>Wait while Linux Mint copies files and installs</li>
+	<li>When prompted to Restart, click Restart Now to complete the installation, the VM will reboot</li>
+	<li>When prompted to remove the installation medium, select Hardware from the left sub-navigation menu &gt; Double click the CD/DVD drive &gt; Select Do not use any media &gt; Click OK</li>
+	<li>Select Options from the left sub-navigation menu</li>
+	<li>Double click QEMU Guest Agent &gt; Check the Use QEMU Guest Agent box &gt; Click OK</li>
+	<li>Right click the Linux Mint VM in the left navigation pane &gt; Start</li>
+	<li>Click console in the left sub-navigation menu</li>
+	<li>Press Enter at the remove installation medium prompt to continue the boot process</li>
+	<li>Login with the username and password created earlier in the process</li>
+	<li>Welcome to Linux Mint</li>
+</ol>
+
+<h2>Optional Steps</h2>
+
+<ol>
+	<li>Launch a terminal window</li>
+	<li>Run the following commands
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install qemu guest agent<br />
+	sudo apt install qemu-guest-agent -y</div>
+	</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
