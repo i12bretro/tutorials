@@ -1,0 +1,186 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Updated - Install Lemmy Self-Hosted Reddit Alternative on Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Lemmy,Link Aggregator,Linux,Reddit,Open Source,Install Lemmy On Linux,Install Lemmy On Debian,Self-hosted Reddit Alternative,Federated Reddit Alternative,Federated Link Aggregator,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Updated - Install Lemmy Self-Hosted Reddit Alternative on Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="12/19/2022 11:17:54 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Updated - Install Lemmy Self-Hosted Reddit Alternative on Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Lemmy?</h2>
+
+<p><em>Lemmy is an open-source, federated link aggregator similar to Reddit and built with Rust.</em> -<a href="https://lemmy.ml/" target="_blank">https://lemmy.ml/</a></p>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal window
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install prerequisites<br />
+	sudo apt install git build-essential gcc libssl-dev pkg-config libpq-dev curl gnupg2 espeak postgresql -y<br />
+	# enable the postgresql service and start it<br />
+	sudo systemctl enable postgresql --now<br />
+	# connect to postgresql<br />
+	sudo -u postgres psql postgres<br />
+	# create lemmy database user<br />
+	create user lemmy with password &#39;L3mmy&#39; superuser;<br />
+	# create lemmy database<br />
+	create database lemmy with owner lemmy;<br />
+	# close postgresql connection<br />
+	exit<br />
+	# add nodejs software repository<br />
+	curl -sL https://deb.nodesource.com/setup_16.x | sudo bash -<br />
+	# install nodejs<br />
+	sudo apt install nodejs -y<br />
+	# install yarn<br />
+	sudo npm install -g yarn<br />
+	# create lemmy user<br />
+	sudo useradd -m -d /opt/lemmy lemmy<br />
+	# install rust, enter 1 at the prompt<br />
+	curl https://sh.rustup.rs -sSf | sh<br />
+	# configure the shell<br />
+	source &quot;$HOME/.cargo/env&quot;<br />
+	# lookup the latest tagged release<br />
+	regex=&#39;\/([0-9|\.]*)&lt;\/id&gt;&#39; &amp;&amp; response=$(curl -s https://github.com/LemmyNet/lemmy/releases.atom) &amp;&amp; [[ $response =~ $regex ]] &amp;&amp; latestTag=&quot;${BASH_REMATCH[1]}&quot;<br />
+	# clone the lemmy git repository<br />
+	git clone https://github.com/LemmyNet/lemmy.git ./server<br />
+	# change directory to the source code<br />
+	cd server<br />
+	# checkout the latest tag<br />
+	git checkout $latestTag<br />
+	# update submodules <br />
+	git submodule update --init --recursive<br />
+	# generate a random 32 character string<br />
+	openssl rand -base64 32<br />
+	# edit the lemmy config file<br />
+	nano ./config/config.hjson</div>
+	</li>
+	<li>Set the following values in the conf file
+	<p>database: {<br />
+	&emsp;password: L3mmy<br />
+	}<br />
+	hostname: &lt;% DNS or IP of host %&gt;<br />
+	bind: &quot;127.0.0.1&quot;<br />
+	tls_enabled: false<br />
+	jwt_secret: &quot;&lt;% Random string from above %&gt;&quot;</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following commands
+	<div class="codeBlock"># set the database connection variable<br />
+	LEMMY_DATABASE_URL=postgres://lemmy:L3mmy@localhost:5432/lemmy<br />
+	# build lemmy<br />
+	cargo build --release<br />
+	# change directory out of lemmy server<br />
+	cd ..<br />
+	# write the version to .txt<br />
+	echo $latestTag &gt; /tmp/lemmy_version.txt<br />
+	# move lemmy to /opt/lemmy<br />
+	sudo mv ./server /opt/lemmy/<br />
+	# switch user to lemmy<br />
+	sudo su lemmy<br />
+	# change directory to lemmy home<br />
+	cd ~<br />
+	# print working directory, should output /opt/lemmy<br />
+	pwd<br />
+	# clone lemmy frontend<br />
+	git clone https://github.com/LemmyNet/lemmy-ui.git --recurse-submodules ./lemmy-ui<br />
+	# change directory to lemmy-ui<br />
+	cd lemmy-ui<br />
+	# checkout the latest tag<br />
+	git checkout $(cat /tmp/lemmy_version.txt)<br />
+	# update submodules <br />
+	git submodule update --init --recursive<br />
+	# install npm dependencies<br />
+	npm install --force<br />
+	# build lemmy-ui<br />
+	yarn build:prod<br />
+	# exit lemmy shell<br />
+	exit<br />
+	# set owner of /opt/lemmy<br />
+	sudo chown lemmy:lemmy /opt/lemmy/ -R<br />
+	# create lemmy service file<br />
+	sudo nano /etc/systemd/system/lemmy.service</div>
+	</li>
+	<li>Paste the following configuration into lemmy.service
+	<p>[Unit]<br />
+	Description=Lemmy</p>
+
+	<p>[Service]<br />
+	User=lemmy<br />
+	Group=lemmy<br />
+	Environment=LEMMY_DATABASE_URL=postgres://lemmy:L3mmy@localhost:5432/lemmy<br />
+	ExecStart=/opt/lemmy/server/target/release/lemmy_server<br />
+	WorkingDirectory=/opt/lemmy/server</p>
+
+	<p>[Install]<br />
+	WantedBy=multi-user.target</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following commands
+	<div class="codeBlock"># create lemmy-ui service bash file<br />
+	sudo nano /opt/lemmy/lemmy-ui/lemmy-ui.sh</div>
+	</li>
+	<li>Paste the following configuration into lemmy-ui.sh
+	<p>#!/usr/bin/bash<br />
+	/usr/bin/node /opt/lemmy/lemmy-ui/dist/js/server.js</p>
+	</li>
+	<li>Continue with the following commands
+	<div class="codeBlock"># make lemmy-ui.sh executable<br />
+	sudo chmod +x /opt/lemmy/lemmy-ui/lemmy-ui.sh<br />
+	# create lemmy service file<br />
+	sudo nano /etc/systemd/system/lemmy-ui.service</div>
+	</li>
+	<li>Paste the following configuration into lemmy-ui.service
+	<p>[Unit]<br />
+	Description=Lemmy-UI</p>
+
+	<p>[Service]<br />
+	ExecStart=/opt/lemmy/lemmy-ui/lemmy-ui.sh<br />
+	Restart=always<br />
+	User=lemmy<br />
+	Group=lemmy<br />
+	Environment=PATH=/usr/bin:/usr/local/bin<br />
+	Environment=NODE_ENV=production<br />
+	WorkingDirectory=/opt/lemmy/lemmy-ui</p>
+
+	<p>[Install]<br />
+	WantedBy=multi-user.target</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following commands
+	<div class="codeBlock"># reload systemd services<br />
+	sudo systemctl daemon-reload<br />
+	# start lemmy service on boot and now<br />
+	sudo systemctl enable lemmy --now<br />
+	# start lemmy-ui service on boot and now<br />
+	sudo systemctl enable lemmy-ui --now</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP:1234</li>
+	<li>Enter a username, email and password to create a site administrator account &gt; Click Sign Up</li>
+	<li>Enter a site name and any additional optional values &gt; Click Create</li>
+	<li>Welcome to Lemmy</li>
+</ol>
+
+<p>Sources: <a href="https://join-lemmy.org/docs/en/contributing/local_development.html" target="_blank">https://join-lemmy.org/docs/en/contributing/local_development.html</a>,<br />
+<a href="https://join-lemmy.org/docs/en/administration/from_scratch.html" target="_blank">https://join-lemmy.org/docs/en/administration/from_scratch.html</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
