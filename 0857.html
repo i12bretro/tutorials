@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Running a SteamOS VM in VirtualBox">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="12/19/2022 03:09:52 PM" />
+        <meta name="revised" content="05/01/2023 06:07:44 AM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -158,7 +158,20 @@
 	sudo pacman-key --init<br />
 	# add arch linux pacman keys<br />
 	sudo pacman-key --populate archlinux<br />
-	# update packages<br />
+	# edit the pacman config file<br />
+	sudo nano /etc/pacman.conf</div>
+	</li>
+	<li>Edit each repository name, adding -rel inside the square brackets
+	<p>[jupiter] =&gt; [jupiter-rel]<br />
+	[holo] =&gt; [holo-rel]<br />
+	[core] =&gt; [core-rel]<br />
+	[extra] =&gt; [extra-rel]<br />
+	[community] =&gt; [community-rel]<br />
+	[multilib] =&gt; [multilib-rel]</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following steps in the terminal
+	<div class="codeBlock"># update packages<br />
 	sudo pacman -Syu</div>
 	</li>
 	<li>From the VirtualBox menu, select Devices &gt; Insert Guest Additions CD image...</li>
@@ -168,7 +181,7 @@
 	sudo ./VBoxLinuxAdditions.run<br />
 	# start guest additions<br />
 	sudo /sbin/rcvboxadd quicksetup all<br />
-	# reboot <br />
+	# reboot<br />
 	sudo reboot now</div>
 	</li>
 	<li>The VM will reboot</li>
