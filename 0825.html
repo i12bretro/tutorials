@@ -1,0 +1,135 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Raspberry Pi OS on the Microsoft Surface RT Tablet</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Install Guide,Raspberry Pi Alternative,ARM Architecture,ARM CPU,ARM Processor,Linux,Raspberry Pi,Microsoft,Surface,Surface RT,Linux On Surface RT,Raspberry Pi OS On Surface RT,Portable Raspberry Pi Alternative,Raspian,Debian,Raspberry Pi OS,Microsoft Surface RT,Nvidia,Tegra 3,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Raspberry Pi OS on the Microsoft Surface RT Tablet">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="04/01/2023 01:32:51 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Raspberry Pi OS on the Microsoft Surface RT Tablet</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Disclaimer</h2>
+
+<blockquote><em>This process will overwrite the current Windows 8 RT operating system on the Surface RT tablet. I have tested these steps on my own device (as shown in this video), but I am not responsible if you damage or brick your device. Verify this process will work on your device before starting and make sure to backup any data you do not want to lose before proceeding.</em></blockquote>
+
+<h2>Things You Will Need</h2>
+
+<ul>
+	<li class="noCheckbox">A USB flash drive, at least 8 GB <a href="https://amzn.to/3wkR5ju" target="_blank">https://amzn.to/3wkR5ju</a> | <a href="https://amzn.to/3qkrJ1p" target="_blank">https://amzn.to/3qkrJ1p</a> | <a href="https://amzn.to/3Nhu9b9" target="_blank">https://amzn.to/3Nhu9b9</a></li>
+	<li class="noCheckbox">A USB hub</li>
+	<li class="noCheckbox">A USB keyboard</li>
+</ul>
+
+<h2>Disabling Secure Boot</h2>
+
+<p>NOTE: If you run into issues or errors disabling secure boot, see the troubleshooting steps <a href="https://jwa4.gitbook.io/windows/tools/surface-rt-and-surface-2-jailbreak-usb#troubleshooting" target="_blank">https://jwa4.gitbook.io/windows/tools/surface-rt-and-surface-2-jailbreak-usb#troubleshooting</a></p>
+
+<ol>
+	<li>Insert the USB flash drive into a PC</li>
+	<li>Download the Surface RT jailbreak files <a href="https://jwa4.gitbook.io/windows/tools/surface-rt-and-surface-2-jailbreak-usb#download" target="_blank">Download</a></li>
+	<li>Format the USB flash drive to FAT32
+	<p>⚠ <em>NOTE: This will delete all files on the drive. Make sure to backup any important files before continuing</em></p>
+
+	<ol start="1">
+		<li>Right Click Start &gt; File Explorer</li>
+		<li>Right Click the USB flash drive &gt; Format...</li>
+		<li>Select FAT32 from the File System dropdown</li>
+		<li>Name the drive EFI</li>
+		<li>Make sure Quick Format is checked</li>
+		<li>Click Start</li>
+	</ol>
+	</li>
+	<li>Extract the downloaded Surface RT jailbreak .zip file to the root of the USB flash drive</li>
+	<li>Safely remove the USB flash drive</li>
+	<li>Power off the Surface RT tablet if it is not already</li>
+	<li>Using the USB hub, connect the USB keyboard and the prepared USB flash drive to the Surface RT tablet</li>
+	<li>Hold Vol- and press the power button, releasing the Vol- when Surface logo appears</li>
+	<li>Select Install Golden Keys &gt; Press Enter</li>
+	<li>Select Accept and Install &gt; Press Enter</li>
+	<li>After the Golden Keys install completes, the tablet will reboot</li>
+	<li>Power off the Surface RT tablet</li>
+	<li>Hold Vol- and press the power button, releasing the Vol- when Surface logo appears</li>
+	<li>Select Install Yahallo &gt; Press Enter</li>
+	<li>After the Yahallo install completes, the tablet will reboot</li>
+	<li>Power off the Surface RT tablet</li>
+</ol>
+
+<h2>Preparing Raspberry Pi OS</h2>
+
+<ol>
+	<li>Insert the USB flash drive into a PC</li>
+	<li>Download Raspberry Pi OS <a href="https://downloads.raspberrypi.org/raspios_armhf/images/" target="_blank">Download</a></li>
+	<li>Download Balena Etcher <a href="https://www.balena.io/etcher/" target="_blank">Download</a></li>
+	<li>Download the latest Surface RT zImage, device tree (.dtb) and kernel modules <a href="https://files.open-rt.party/Linux-Kernel-Download/surface-rt/" target="_blank">Download</a></li>
+	<li>Download the EFI boot files <a href="https://openrt.gitbook.io/open-surfacert/surface-rt/linux/booting/uefi-boot#premade-zip" target="_blank">Download</a></li>
+	<li>Extract the downloaded EFI .zip archive</li>
+	<li>Run Balena Etcher</li>
+	<li>Write the Raspberry Pi OS image to USB flash drive</li>
+	<li>Once the write completes, open the readable partition on the USB flash drive</li>
+	<li>From the previous downloads, copy the EFI folder, startup.nsh, zImage and the device tree (.dtb) file to the readable partition on the USB flash drive</li>
+	<li>Open startup.nsh in a text editor</li>
+	<li>Replace the contents of the file with the following
+	<p>fs0:<br />
+	zImage dtb=tegra30-microsoft-surface-rt-efi.dtb root=/dev/sda2 rootwait console=tty0 cpuidle.off=1<br />
+	<br />
+	# shutdown if something went wrong<br />
+	reset -s</p>
+	</li>
+	<li>Save the changes to startup.nsh and close the editor</li>
+	<li>Safely remove the USB flash drive</li>
+	<li>Power off the Surface RT tablet if it is not already</li>
+	<li>Using the USB hub, connect the USB keyboard and the prepared USB flash drive to the Surface RT tablet</li>
+	<li>Hold Vol- and press the power button, releasing the Vol- when Surface logo appears</li>
+	<li>Raspberry Pi OS should boot from the USB flash drive</li>
+	<li>In Raspberry Pi OS, launch the file manager</li>
+	<li>Navigate to /boot &gt; Copy the sRT-modules- .tar.xz file to the current user&#39;s home directory</li>
+	<li>Extract the sRT-modules- .tar.xz inside the user&#39;s home directory</li>
+	<li>Copy the contents of the extracted folder to the corresponding location in the root Linux directory</li>
+	<li>Reboot the Surface RT tablet</li>
+	<li>At this point, you can continue running Raspberry Pi OS from the flash drive, or install it to the internal eMMC storage, replacing the stock Windows 8 RT operating system</li>
+</ol>
+
+<h2>Installing Raspberry Pi OS to eMMC Internal Storage</h2>
+
+<p>🚨 <em>WARNING: Continuing beyond this point will format the storage on the Surface RT tablet and all files and the Windows 8 RT operating system will be lost</em></p>
+
+<ol>
+	<li>While running Raspberry Pi OS from the USB flash drive, click the Applications menu &gt; Accessories &gt; SD Card Copier</li>
+	<li>Select the USB flash drive as the Copy From Device</li>
+	<li>Select the internal eMMC as the Copy To Device</li>
+	<li>Check the New Partition UUIDs box &gt; Click Start</li>
+	<li>Wait while the OS files are copied</li>
+	<li>Open file manager and select boot in the left navigation</li>
+	<li>Edit startup.nsh in text editor</li>
+	<li>Replace the root=/dev/sda2 with root=/dev/mmcblk0p2</li>
+	<li>Save the changes to startup.nsh and shutdown the tablet</li>
+	<li>After the tablet shuts down, remove the USB flash drive and power it back on normally</li>
+	<li>Raspberry Pi OS should boot from the internal eMMC storage</li>
+	<li>Launch a terminal and run the following command
+	<div class="codeBlock"># launch raspi config<br />
+	sudo raspi-config</div>
+	</li>
+	<li>In raspi-config, select Advanced Options &gt; Expand Filesystem</li>
+	<li>Once the filesystem has been expanded, close out of raspi-config</li>
+	<li>Welcome to Raspberry Pi OS running on the Microsoft Surface RT tablet</li>
+</ol>
+
+<p>Sources: <a href="https://openrt.gitbook.io/open-surfacert/surface-rt/linux/root-filesystem/distros/raspberry-pi-os" target="_blank">https://openrt.gitbook.io/open-surfacert/surface-rt/linux/root-filesystem/distros/raspberry-pi-os</a>, <a href="https://jwa4.gitbook.io/windows/tools/surface-rt-and-surface-2-jailbreak-usb" target="_blank">https://jwa4.gitbook.io/windows/tools/surface-rt-and-surface-2-jailbreak-usb</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
