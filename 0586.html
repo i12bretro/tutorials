@@ -1,0 +1,99 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install FreshRSS RSS Aggregator on Debian/Ubuntu Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Linux,Debian,Ubuntu,FreshRSS,RSS Aggregator,PHP,MariaDB,MySQL,RSS Feed Manager,How To Install FreshRSS On Linux,FressRSS Installation Tutorial,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install FreshRSS RSS Aggregator on Debian/Ubuntu Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="04/23/2023 12:45:53 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install FreshRSS RSS Aggregator on Debian/Ubuntu Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is FreshRSS?</h2>
+
+<blockquote>
+<p>FreshRSS is a self-hosted RSS feed aggregator like Leed or Kriss Feed. It is lightweight, easy to work with, powerful, and customizable. It is a multi-user application with an anonymous reading mode. It supports custom tags. There is an API for (mobile) clients, and a Command-Line Interface.<em> -<a href="https://github.com/FreshRSS/FreshRSS" target="_blank">https://github.com/FreshRSS/FreshRSS</a></em></p>
+</blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Log into the Linux based device</li>
+	<li>Run the following commands in the terminal
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install some dependencies<br />
+	sudo apt install git apt-transport-https ca-certificates curl -y<br />
+	# install Apache HTTPD and MySQL<br />
+	sudo apt install apache2 mariadb-server mariadb-client -y<br />
+	# install PHP components<br />
+	sudo apt install php php-curl php-gmp php-intl php-pdo-mysql php-mbstring php-xml php-zip php-ctype php-dom php-fileinfo php-iconv php-json php-simplexml php-xmlreader -y<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the FreshRSS database and database user
+	<div class="codeBlock">CREATE DATABASE freshrss DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;<br />
+	GRANT ALL ON freshrss.* TO &#39;freshrss_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;Fr3shRSS!!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands to download and extract FreshRSS in the Apache webroot
+	<div class="codeBlock"># download freshrss<br />
+	wget -O freshRSS.zip https://github.com/FreshRSS/FreshRSS/archive/master.zip<br />
+	# extract the zip file<br />
+	unzip freshRSS.zip<br />
+	# move the extracted folder to webroot<br />
+	sudo mv ./FreshRSS-master /var/www/html/freshrss<br />
+	# set permissions on the freshrss directory<br />
+	sudo chown -R www-data:www-data /var/www/html/freshrss</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP/freshrss</li>
+	<li>Select a Language &gt; Click Submit</li>
+	<li>Click the Go to the next step button</li>
+	<li>Complete the database configuration form as follows
+	<p>Type of database: MySQL<br />
+	Host: localhost<br />
+	Database username: freshrss_rw<br />
+	Database password: Fr3shRSS!!<br />
+	Database: freshrss<br />
+	Table prefix:</p>
+	</li>
+	<li>Click the Go to the next step button</li>
+	<li>Enter a username and password &gt; Click Submit</li>
+	<li>Click the Complete Installation button</li>
+	<li>Login with the username created earlier</li>
+	<li>Welcome to FreshRSS</li>
+</ol>
+
+<p>More Info: <a href="https://freshrss.org/" target="_blank">https://freshrss.org/</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
