@@ -1,0 +1,79 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Pi-Hole on Windows 11 Via WSL</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Install Guide,Raspberry Pi Alternative,Self-Hosted,Ad Blocker,Ad Blocking,Install Pi-Hole On WSL,Install Pi-Hole On Windows,Linux,Microsoft,Network Wide Ad Blocking,Pi Hole,Pi-Hole,WSL,Windows,Windows Subsystem For Linux,Windows 11,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Pi-Hole on Windows 11 Via WSL">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="03/25/2023 12:52:36 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Pi-Hole on Windows 11 Via WSL</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Installing WSL</h2>
+
+<ol>
+	<li>Log into the Windows 11 device</li>
+	<li>Launch PowerShell as administator by right clicking the Start button &gt; search power &gt; Right click on Windows PowerShell &gt; Run as Administrator</li>
+	<li>Run the following command to install WSL
+	<div class="codeBlock PS"># enable WSL feature<br />
+	dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart<br />
+	# enable virtual machine platform<br />
+	dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all</div>
+	</li>
+	<li>Type Y to reboot the system</li>
+	<li>Launch Powershell as administrator and run the following additional commands to use WSL 2
+	<div class="codeBlock PS"># enable virtualization platform<br />
+	Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform<br />
+	# enable wsl2<br />
+	wsl --set-default-version 2<br />
+	# download the wsl kernel update<br />
+	$ProgressPreference = &#39;SilentlyContinue&#39;; Invoke-WebRequest https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi -OutFile .\wsl_update_x64.msi<br />
+	# reset progress preference<br />
+	$ProgressPreference = &#39;Continue&#39;<br />
+	# install the downloaded file<br />
+	.\wsl_update_x64.msi</div>
+	</li>
+	<li>Download the PiHole for WSL installer script <a href="https://github.com/DesktopECHO/Pi-Hole-for-WSL1/raw/master/PH4WSL1.cmd" target="_blank">Download</a></li>
+	<li>Navigate to the Downloads directory &gt; Right click the downloaded .cmd file &gt; Run as Administrator</li>
+	<li>Press Enter to accept the default install location (C:\Program Files)</li>
+	<li>Press Enter to continue with the installation</li>
+	<li>If prompted, allow network access for lighttpd and sshd</li>
+	<li>When prompted, enter and confirm a Pi-Hole admin password</li>
+	<li>After the Pi-Hole installation script completes, right click the Start button &gt; run &gt; type cmd &gt; Press Enter</li>
+	<li>Run the following commands in command prompt
+	<div class="codeBlock"># enter wsl prompt<br />
+	wsl<br />
+	# edit resolv.conf<br />
+	sudo nano /etc/resolv.conf</div>
+	</li>
+	<li>Add the following line
+	<p>nameserver 127.0.0.1</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to resolv.conf</li>
+	<li>Run the following command to update the Pi-Hole blocklist
+	<div class="codeBlock"># update pihole<br />
+	sudo pihole -g</div>
+	</li>
+	<li>Open a web browser and navigate to http://localhost/admin</li>
+	<li>Click Login</li>
+	<li>Authenticate with the admin password set earlier</li>
+</ol>
+
+<p>Special thanks to the developer of this installation script <a href="https://github.com/DesktopECHO/Pi-Hole-for-WSL1" target="_blank">https://github.com/DesktopECHO/Pi-Hole-for-WSL1</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
