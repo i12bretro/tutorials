@@ -1,0 +1,118 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Update Microsoft Surface RT Tablet to Windows 10 [Unofficial Upgrade]</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Install Guide,Single Board Computer,SBC,ARM Architecture,ARM CPU,ARM Processor,Microsoft,Microsoft Surface RT,Nvidia,Surface,Surface RT,Tegra 3,Windows 10,Install Windows 10 On Surface RT,Surface RT Windows 10 Upgrade,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Update Microsoft Surface RT Tablet to Windows 10 [Unofficial Upgrade]">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="04/01/2023 01:50:04 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Update Microsoft Surface RT Tablet to Windows 10 [Unofficial Upgrade]</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Disclaimer</h2>
+
+<blockquote><em>Windows 10 Build 15035 is now [over] five years old and it should not be considered as suitable for daily use. In addition to being outdated, it has numerous bugs and other issues expected of an expired pre-release build. -<a href="https://jwa4.gitbook.io/windows/tools/windows-media-builder" target="_blank">https://jwa4.gitbook.io/windows/tools/windows-media-builder</a><br />
+<br />
+This process will overwrite the current Windows 8 RT operating system on the Surface RT tablet. I have tested these steps on my own device (as shown in this video), but I am not responsible if you damage or brick your device. Verify this process will work on your device before starting and make sure to backup any data you do not want to lose before proceeding.</em></blockquote>
+
+<h2>Things You Will Need</h2>
+
+<ul>
+	<li class="noCheckbox">A USB flash drive, at least 8 GB <a href="https://amzn.to/3wkR5ju" target="_blank">https://amzn.to/3wkR5ju</a> | <a href="https://amzn.to/3qkrJ1p" target="_blank">https://amzn.to/3qkrJ1p</a> | <a href="https://amzn.to/3Nhu9b9" target="_blank">https://amzn.to/3Nhu9b9</a></li>
+	<li class="noCheckbox">A x86/x64 PC with ~50 GB of free disk space to create the installation media</li>
+</ul>
+
+<h2>Creating the Installation Media</h2>
+
+<p>💡 <em>NOTE: These steps must be completed on a separate x86/x64 based PC and cannot be done from the Surface RT tablet</em></p>
+
+<ol>
+	<li>Insert the USB flash drive into the PC and note the drive letter assigned to it</li>
+	<li>Download the Windows 10 Media Builder <a href="https://jwa4.gitbook.io/windows/tools/windows-media-builder#download" target="_blank">Download</a></li>
+	<li>Extract the downloaded Windows 10 Media Builder .zip file to the root of the c:\ drive</li>
+	<li>Navigate into the extracted folder &gt; Right click Build.cmd &gt; Run as administrator</li>
+	<li>In the Windows Media Builder application, type the number that corresponds to the target hardware in the list &gt; Press Enter</li>
+	<li>Read the notes displayed &gt; type Y and press Enter to continue</li>
+	<li>Choose to install the app pack by entering Y or N &gt; Press Enter
+	<ol start="1" style="list-style-type: lower-alpha;">
+		<li>If the app pack is not being installed, Choose to uninstall provisioned apps by entering Y or N &gt; Press Enter</li>
+	</ol>
+	</li>
+	<li>Choose to uninstall BitLocker by entering Y or N &gt; Press Enter</li>
+	<li>Choose to uninstall Cortana by entering Y or N &gt; Press Enter</li>
+	<li>Choose to uninstall Windows Defender by entering Y or N &gt; Press Enter</li>
+	<li>Choose to set a product key and use KMS activation by entering Y or N &gt; Press Enter</li>
+	<li>Choose to install Microsoft Office 2013 RT Home &amp; Student Plus by entering Y or N &gt; Press Enter
+	<ol start="1" style="list-style-type: lower-alpha;">
+		<li>Choose if you need a language other than English for Microsoft Office 2013 RT by entering Y or N &gt; Press Enter</li>
+		<li>Choose an update level to include with Microsoft Office 2013 RT by enter 1, 2 or 3 &gt; Press Enter </li>
+	</ol>
+	</li>
+	<li>Type 1 and press enter to use the default Windows setup mode</li>
+	<li>Type 1 to use the Windows Imaging Format (WIM) compression &gt; Press Enter</li>
+	<li>Review the displayed summary of selected options &gt; Type Y &gt; Press Enter to continue</li>
+	<li>Wait while the Windows 10 files are downloaded and prepared based on the selections made above</li>
+	<li>When prompted, type Y to create USB installation media &gt; Press Enter</li>
+	<li>Enter the target USB drive letter to write the installation files to and Press Enter
+	<p>⚠ <em>Double check the drive letter entered, as the drive will be formatted and all data on the drive will be lost</em></p>
+	</li>
+	<li>Type Y and press Enter to confirm formatting the selected flash drive</li>
+	<li>Type N and press Enter when prompted to create an ISO image</li>
+	<li>Press any key to close out of the Windows Media Builder application</li>
+</ol>
+
+<h2>Installing Windows 10</h2>
+
+<p>🚨 <em>WARNING: Continuing beyond this point will format the storage on the Surface RT tablet and all files and the Windows 8 RT operating system will be lost</em></p>
+
+<ol>
+	<li>Insert the prepared USB flash drive in the Surface RT tablet</li>
+	<li>Hold Vol- and press the power button, releasing the Vol- when Surface logo appears</li>
+	<li>Wait for Windows Setup to begin</li>
+	<li>Click Next</li>
+	<li>Check the I accept box &gt; Click Next</li>
+	<li>Click Custom: Install Windows only (advanced)</li>
+	<li>Delete the existing partitions by selecting each one and clicking Delete</li>
+	<li>Once all partitions have been deleted, click the Unallocated Space to select it &gt; Click Next</li>
+	<li>Wait while Windows 10 RT copies and installs files</li>
+	<li>Once the installation completes the tablet will reboot automatically</li>
+	<li>Complete the Windows 10 Out of Box Experience (OOBE)</li>
+</ol>
+
+<h2>Fixing Some Known Issues</h2>
+
+<ol>
+	<li>Open Notepad and paste the following into the new document
+	<p>Windows Registry Editor Version 5.00<br />
+	<br />
+	; DISABLE USER ACCESS CONTROL (UAC)<br />
+	[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System]<br />
+	&quot;EnableLUA&quot;=dword:00000000<br />
+	<br />
+	; FIX CAMERA DRIVERS<br />
+	[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Media Foundation\Platform]<br />
+	&quot;EnableFrameServerMode&quot;=dword:00000000</p>
+	</li>
+	<li>Save the file to the desktop and name it bugfix.reg</li>
+	<li>Double click bugfix.reg on the Desktop &gt; Click Yes to confirm the changes</li>
+	<li>Click OK to close out of the success popup</li>
+</ol>
+
+<p>Sources: <a href="https://jwa4.gitbook.io/windows/tools/windows-media-builder" target="_blank">https://jwa4.gitbook.io/windows/tools/windows-media-builder</a>, <a href="https://openrt.gitbook.io/open-surfacert/common/windows-10/known-issues" target="_blank">https://openrt.gitbook.io/open-surfacert/common/windows-10/known-issues</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
