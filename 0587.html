@@ -1,0 +1,106 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Kanboard Visual Todo and Tasks Management on Debian/Ubuntu Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Kanban,Kanboard,Linux,Task Management,Todo,Ubuntu,Debian,Visual Task Manager,Visual Task Organization,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Kanboard Visual Todo and Tasks Management on Debian/Ubuntu Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="04/01/2023 07:02:54 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Kanboard Visual Todo and Tasks Management on Debian/Ubuntu Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Kanboard?</h2>
+
+<blockquote>
+<p><em>Kanboard is project management software that focuses on the Kanban methodology. -<a href="https://github.com/kanboard/kanboard" target="_blank">https://github.com/kanboard/kanboard</a></em></p>
+</blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Log into the Linux based device</li>
+	<li>Run the following commands in the terminal
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install some dependencies<br />
+	sudo apt install apt-transport-https ca-certificates curl -y<br />
+	# install Apache HTTPD and MySQL<br />
+	sudo apt install apache2 mariadb-server mariadb-client -y<br />
+	# install PHP components<br />
+	sudo apt install libapache2-mod-php php-cli php-mbstring php-opcache php-json php-ldap php-gd php-xml php-mysql* php-curl php-zip -y<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the Kanboard database and database user
+	<div class="codeBlock">CREATE DATABASE kanboard DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;<br />
+	GRANT ALL ON kanboard.* TO &#39;kanboard_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;K@nb0r4!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands to download and extract Kanboard in the Apache webroot
+	<div class="codeBlock"># download kanboard<br />
+	wget -O kanboard.tar.gz https://github.com/kanboard/kanboard/archive/v1.2.20.tar.gz<br />
+	# extract kanboard.tar.gz<br />
+	sudo tar xzvf kanboard.tar.gz -C /var/www/html/<br />
+	# rename the extracted folder to kanboard<br />
+	sudo mv /var/www/html/kanboard* /var/www/html/kanboard<br />
+	# set permissions on the kanboard directory<br />
+	sudo chown -R www-data:www-data /var/www/html/kanboard<br />
+	# make a copy of config template<br />
+	sudo cp /var/www/html/kanboard/config.default.php /var/www/html/kanboard/config.php<br />
+	# edit config.php<br />
+	sudo nano /var/www/html/kanboard/config.php</div>
+	</li>
+	<li>Press CTRL + W and search for DB_DRIVER</li>
+	<li>Set the DB_DRIVER value to mysql</li>
+	<li>Set the DB_USERNAME value to kanboard_rw</li>
+	<li>Set the DB_PASSWORD value to K@nb0r4!</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following command
+	<div class="codeBlock"># setup the database schema, authenticate with the root password set earlier<br />
+	sudo mysql -u root -p kanboard &lt; /var/www/html/kanboard/app/Schema/Sql/mysql.sql</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP/kanboard</li>
+	<li>Login with the username admin and password admin</li>
+	<li>Click the options carrot in the top right corner &gt; My profile</li>
+	<li>Click Edit profile from the left navigation</li>
+	<li>Change the username and set a name and email as needed &gt; Click Save</li>
+	<li>Click Change password from the left navigation</li>
+	<li>Enter admin as the Current password and enter and confirm a new secure password &gt; Click Save</li>
+	<li>Click the options carrot in the top right corner &gt; Logout</li>
+	<li>Log back in with the updated credentials</li>
+	<li>Welcome to Kanboard</li>
+</ol>
+
+<p>More Info: <a href="https://kanboard.org" target="_blank">https://kanboard.org</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
