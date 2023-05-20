@@ -1,0 +1,58 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Homebrew Package Manager on Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Install Guide,Application Manager,CLI Package Manager,Command Line Package Manager,How To Install Homebrew On Linux,Package Manager,Linux,Debian,Hombrew,Brew,Install Homebrew Package Manager,Homebrew Package Manager,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Homebrew Package Manager on Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="04/17/2023 08:48:10 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Homebrew Package Manager on Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Homebrew?</h2>
+
+<blockquote><em>[Homebrew is a] package manager for macOS or Linux. -<a href="https://brew.sh/" target="_blank">https://brew.sh/</a></em></blockquote>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install prerequisite packages<br />
+	sudo apt install build-essential procps curl file git -y<br />
+	# download and execute the brew installer<br />
+	/bin/bash -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&quot;<br />
+	# press enter when prompted to continue<br />
+	# copy homebrew to system path<br />
+	test -d ~/.linuxbrew &amp;&amp; eval &quot;$(~/.linuxbrew/bin/brew shellenv)&quot;<br />
+	test -d /home/linuxbrew/.linuxbrew &amp;&amp; eval &quot;$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)&quot;<br />
+	test -r ~/.bash_profile &amp;&amp; echo &quot;eval \&quot;\$($(brew --prefix)/bin/brew shellenv)\&quot;&quot; &gt;&gt; ~/.bash_profile<br />
+	echo &quot;eval \&quot;\$($(brew --prefix)/bin/brew shellenv)\&quot;&quot; &gt;&gt; ~/.profile</div>
+	</li>
+	<li>Homebrew is now installed and ready to be used</li>
+	<li>To test Homebrew, continue with the following commands in the terminal
+	<div class="codeBlock"># install the hello formulae<br />
+	brew install hello<br />
+	# run hello<br />
+	hello</div>
+	</li>
+</ol>
+
+<p>Source: <a href="https://docs.brew.sh/Homebrew-on-Linux" target="_blank">https://docs.brew.sh/Homebrew-on-Linux</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
