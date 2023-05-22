@@ -1,0 +1,77 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Running a MX Linux VM in Proxmox VE</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Hypervisor,Install Guide,Self-Hosted,MX Linux,VM,Virtual Machine,Virtualization,Linux,Proxmox,Proxmox Host,Proxmox VE,Proxmox Step By Step,Proxmox Tutorial,How To Install MX Linux On Proxmox,How To Run MX Linux On Proxmox VE,MX Linux Virtual Machine,MX Linux Proxmox VM,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Running a MX Linux VM in Proxmox VE">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="04/23/2023 11:23:21 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Running a MX Linux VM in Proxmox VE</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Download the MX Linux iso <a href="https://mxlinux.org/download-links/" style="font-size: inherit" target="_blank">Download</a></li>
+	<li>Log into the Proxmox web UI</li>
+	<li>Select a storage from the left navigation pane to download the .iso to</li>
+	<li>Select ISO Images in the left sub-navigation pane</li>
+	<li>Upload the MX Linux installation iso to the Proxmox ISO image library</li>
+	<li>Right click the Proxmox node name &gt; Create VM</li>
+	<li>Give the VM a unique ID and Name &gt; Next</li>
+	<li>On the OS tab, Select the MX Linux installation .iso file, leave the Type as Linux and the Version as 5.x - 2.6 Kernel &gt; Next</li>
+	<li>Leave the defaults on the System tab &gt; Next</li>
+	<li>On the Hard Disk tab, set the Storage device and Disk size to 30 GiB or more &gt; Next</li>
+	<li>On the CPU tab, set Cores to 2 or more and Type to host &gt; Next</li>
+	<li>On the Memory tab, set the Memory to 4096 &gt; Next</li>
+	<li>Leave the defaults on the Network tab &gt; Next</li>
+	<li>Verify the summary and click Finish</li>
+	<li>Right click the MX Linux VM in the left navigation pane &gt; Start</li>
+	<li>Click console in the left sub-navigation menu</li>
+	<li>Press Enter to load MX Linux</li>
+	<li>Click Install MX Linux on the MX Welcome dialog box</li>
+	<li>Press Escape to cancel checking the installation media</li>
+	<li>Click Change Keyboard Settings if needed &gt; Click Next</li>
+	<li>Click Next and then Yes to confirm the partition selection</li>
+	<li>Enter a computer name, domain and workgroup &gt; Click Next</li>
+	<li>Select a Locale and Timezone &gt; Click Next</li>
+	<li>Enter a username, user password and root password &gt; Click Next</li>
+	<li>Wait while MX Linux copies files and installs</li>
+	<li>Click Finish, the VM will reboot</li>
+	<li>When prompted to remove the installation media, navigate back to the Proxmox web UI and stop the VM</li>
+	<li>Select Hardware from the left sub-navigation menu &gt; Double click the CD/DVD drive &gt; Select Do not use any media &gt; Click OK</li>
+	<li>Select Options from the left sub-navigation menu</li>
+	<li>Double click QEMU Guest Agent &gt; Check the Use QEMU Guest Agent box &gt; Click OK</li>
+	<li>Right click the MX Linux VM in the left navigation pane &gt; Start</li>
+	<li>Click console in the left sub-navigation menu</li>
+	<li>Login with the username and password set during the installation</li>
+	<li>Welcome to MX Linux</li>
+</ol>
+
+<h2>Optional Steps</h2>
+
+<ol>
+	<li>Launch a terminal window</li>
+	<li>Run the following commands
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install qemu guest agent<br />
+	sudo apt install qemu-guest-agent -y</div>
+	</li>
+	<li>A subsequent reboot is required to complete installing the QEMU Guest Agent</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
