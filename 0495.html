@@ -1,0 +1,55 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Host Your Own GitHub Alternative with GitLab</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="GitHub Alternatives,Git,GitLab,Debian,Home Lab,How To Install GitLab,Install Guide,Intall GitLab On Debian,Browser Based,Home Lab Ideas,Self-Hosted,Web Based,Web Based Tools,Linux,Source Control,Self-Hosted GitHub Alternative,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Host Your Own GitHub Alternative with GitLab">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="04/01/2023 06:54:17 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Host Your Own GitHub Alternative with GitLab</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is GitLab?</h2>
+
+<p><em>GitLab is an open source end-to-end software development platform with built-in version control, issue tracking, code review, CI/CD, and more. Self-host GitLab on your own servers, in a container, or on a cloud provider.</em> -<a href="https://gitlab.com/gitlab-org/gitlab" target="_blank">https://gitlab.com/gitlab-org/gitlab</a></p>
+
+<h2>Installing GitLab</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal:
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install software updates<br />
+	sudo apt upgrade -y<br />
+	# install preprequisites<br />
+	sudo apt install curl openssh-server ca-certificates perl -y<br />
+	# add gitlab software repository<br />
+	curl -sS https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | sudo bash<br />
+	# install gitlab, change the URL in the script below to match the DNS name of the host server<br />
+	sudo EXTERNAL_URL=&quot;http://DNSofHOST&quot; apt install gitlab-ce</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP</li>
+	<li>Enter and confirm a new password</li>
+	<li>Login with the username root and the password created in the previous step</li>
+	<li>Welcome to GitLab</li>
+</ol>
+
+<p>Source: <a href="https://about.gitlab.com/" target="_blank">https://about.gitlab.com/</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
