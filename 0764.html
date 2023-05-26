@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Running a MacOS 13 Ventura VM in VMware">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="09/22/2022 06:27:29 AM" />
+        <meta name="revised" content="05/26/2023 06:07:33 AM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -60,19 +60,7 @@
 	hw.model.reflectHost = &quot;FALSE&quot;<br />
 	hw.model = &quot;MacBookPro19,1&quot;<br />
 	serialNumber.reflectHost = &quot;FALSE&quot;<br />
-	serialNumber = &quot;C01234567890&quot;</p>
-	<em>NOTE: If running an AMD processor, add the following additional options to the bottom of the file</em>
-
-	<p>smc.version = &quot;0&quot;<br />
-	cpuid.0.eax = &quot;0000:0000:0000:0000:0000:0000:0000:1011&quot;<br />
-	cpuid.0.ebx = &quot;0111:0101:0110:1110:0110:0101:0100:0111&quot;<br />
-	cpuid.0.ecx = &quot;0110:1100:0110:0101:0111:0100:0110:1110&quot;<br />
-	cpuid.0.edx = &quot;0100:1001:0110:0101:0110:1110:0110:1001&quot;<br />
-	cpuid.1.eax = &quot;0000:0000:0000:0001:0000:0110:0111:0001&quot;<br />
-	cpuid.1.ebx = &quot;0000:0010:0000:0001:0000:1000:0000:0000&quot;<br />
-	cpuid.1.ecx = &quot;1000:0010:1001:1000:0010:0010:0000:0011&quot;<br />
-	cpuid.1.edx = &quot;0000:0111:1000:1011:1111:1011:1111:1111&quot;<br />
-	smbios.reflectHost = &quot;TRUE&quot;</p>
+	serialNumber = &quot;C01234567890</p>
 	</li>
 	<li>Right click on the MacOS13 VM &gt; Power On</li>
 </ol>
