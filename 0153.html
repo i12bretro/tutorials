@@ -1,0 +1,148 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install ownCloud on Windows with WSL2</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based Tools,Web Based,Apache,Cloud Solution,HowTo,Linux,OwnCloud,PHP,Windows,Microsoft Windows,WSL,Microsoft,Windows Subsystem For Linux,Install OwnCloud On Windows,How To Install WSL,LAMP,Linux On Windows,MariaDB,MySQL,PHP Application,PHP Software,Subsystem,WSL Installation Guide,Web Server,HTTPD,Free Software,Debian,Apache HTTPD,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install ownCloud on Windows with WSL2">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="04/17/2023 08:15:31 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install ownCloud on Windows with WSL2</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is OwnCloud?</h2>
+
+<blockquote><em>OwnCloud is a suite of client-server software for creating file hosting services and using them. OwnCloud is functionally very similar to the widely used Dropbox, with the primary functional difference being that OwnCloud is free and open-source, and thereby allowing anyone to install and operate it without charge on a private server. -<a href="https://en.wikipedia.org/wiki/OwnCloud" target="_blank">https://en.wikipedia.org/wiki/OwnCloud</a></em></blockquote>
+
+<h2>Installing WSL</h2>
+
+<ol>
+	<li>Launch Powershell as administrator</li>
+	<li>Run the following command
+	<div class="codeBlock PS"># enable WSL feature<br />
+	dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart<br />
+	# enable virtual machine platform<br />
+	dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all</div>
+	</li>
+	<li>Type Y to reboot the system</li>
+	<li>Launch Powershell as administrator and run the following additional commands to use WSL 2
+	<div class="codeBlock PS"># enable virtualization platform<br />
+	Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform<br />
+	# enable wsl2<br />
+	wsl --set-default-version 2<br />
+	# download the wsl kernel update<br />
+	$ProgressPreference = &#39;SilentlyContinue&#39;; Invoke-WebRequest https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi -OutFile .\wsl_update_x64.msi<br />
+	# reset progress preference<br />
+	$ProgressPreference = &#39;Continue&#39;<br />
+	# install the downloaded file<br />
+	.\wsl_update_x64.msi</div>
+	</li>
+	<li>Click the Start Button &gt; Search Microsoft Store &gt; Select Microsoft Store</li>
+	<li>Search for the Linux distribution to install (Debian, Ubuntu, etc), Debian in this example</li>
+	<li>Select the Linux distribution and click the Get button</li>
+	<li>After the Linux distribution downloads and installs, click Open or select the distribution from the Start menu to launch it</li>
+	<li>Input a username and password to be used in the Linux environment</li>
+</ol>
+
+<h2>Installing ownCloud</h2>
+
+<ol>
+	<li>Continue with the following commands in WSL
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install software updates<br />
+	sudo apt upgrade -y<br />
+	# install prerequisite <span class="codeBlock">package(s)</span><br />
+	sudo apt install wget -y<br />
+	# install Apache HTTPD and MySQL<br />
+	sudo apt install apache2 mariadb-server mariadb-client -y<br />
+	# install PHP components<br />
+	sudo apt install php7.4 libapache2-mod-php7.4 php7.4-mysql php-common php7.4-cli php7.4-common php7.4-json php7.4-opcache php7.4-readline php7.4-intl php7.4-json php7.4-gd php7.4-mbstring php7.4-mysql php7.4-xml php7.4-zip php7.4-curl -y<br />
+	# start the mariadb service<br />
+	sudo service mariadb start<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type N and press Enter to not switch to socket authentication</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the ownCloud database and database user
+	<div class="codeBlock">CREATE DATABASE ownclouddb;<br />
+	GRANT ALL ON ownclouddb.* to &#39;owncloud_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;ownCl0ud!!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands to download and extract ownCloud in the Apache webroot
+	<div class="codeBlock"># download latest owncloud version<br />
+	sudo wget -O /tmp/owncloud.tar.bz2 https://download.owncloud.com/server/stable/owncloud-latest.tar.bz2<br />
+	# extract owncloud-latest.tar.bz2<br />
+	sudo tar -xf /tmp/owncloud.tar.bz2 --directory /var/www<br />
+	# set the owner of the new owncloud directory to www-data<br />
+	sudo chown -R www-data:www-data /var/www/owncloud<br />
+	# create a new owncloud.conf file to configure the site<br />
+	<span class="codeBlock">sudo nano /etc/apache2/sites-available/owncloud.conf</span></div>
+	</li>
+	<li>Paste the following configuration into owncloud.conf
+	<p><span class="codeBlock">Alias /owncloud &quot;/var/www/owncloud/&quot;<br />
+	&lt;Directory /var/www/owncloud/&gt;<br />
+	Options +FollowSymlinks<br />
+	AllowOverride All</span></p>
+
+	<p><span class="codeBlock">&lt;IfModule mod_dav.c&gt;<br />
+	Dav off<br />
+	&lt;/IfModule&gt;</span></p>
+
+	<p><span class="codeBlock">SetEnv HOME /var/www/owncloud<br />
+	SetEnv HTTP_HOME /var/www/owncloud<br />
+	&lt;/Directory&gt;</span></p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to owncloud.conf</li>
+	<li>Continue with the following commands to enable the site and restart Apache:
+	<div class="codeBlock"># enable the owncloud config<br />
+	<span class="codeBlock">sudo a2ensite owncloud</span><br />
+	# enable required apache modules<br />
+	<span class="codeBlock">sudo a2enmod rewrite headers env mime unique_id dav</span><br />
+	# restart apache2 service for the changes to take effect<br />
+	<span class="codeBlock">sudo service apache2 restart</span></div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP/owncloud</li>
+	<li>The ownCloud setup screen should be displayed</li>
+	<li>Enter a username and password</li>
+	<li>Click the storage &amp; database link to expand the section</li>
+	<li>Select MySQL and fill out the database connection information as follows
+	<p>username: <span class="codeBlock">owncloud_rw</span><br />
+	password: <span class="codeBlock">ownCl0ud!!</span><br />
+	database name: <span class="codeBlock">ownclouddb</span><br />
+	database host: localhost</p>
+	</li>
+	<li>Click Finish Setup</li>
+	<li>After a few <span style="display: none;"> </span>moments of setup ownCloud will be up and running</li>
+	<li>Login with the username and password set on the previous screen</li>
+	<li>Welcome to ownCloud running on WSL</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
