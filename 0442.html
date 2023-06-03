@@ -1,0 +1,72 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install AdGuard Home Cross-Platform Pi-Hole Alternative on OpenWRT Router</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="AdGuard,Alternative,DNS,Networking,Ad Blocker,Router,Install Guide,Linux,OpenWRT,OpenWRT Tutorial,Self-Hosted,Home Lab,Homelab,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install AdGuard Home Cross-Platform Pi-Hole Alternative on OpenWRT Router">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="06/03/2023 02:07:02 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install AdGuard Home Cross-Platform Pi-Hole Alternative on OpenWRT Router</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is AdGuard Home?</h2>
+
+<blockquote><em>AdGuard Home is a network-wide software for blocking ads and tracking. After you set it up, it&#39;ll cover ALL your home devices, and you don&#39;t need any client-side software for that.<br />
+<br />
+It operates as a DNS server that re-routes tracking domains to a &ldquo;black hole&rdquo;, thus preventing your devices from connecting to those servers. It&#39;s based on software we use for our public AdGuard DNS servers, and both share a lot of code. -<a href="https://github.com/AdguardTeam/AdguardHome" target="_blank">https://github.com/AdguardTeam/AdguardHome</a></em></blockquote>
+
+<h2>Installing AdGuard Home</h2>
+
+<ol>
+	<li>Open a web browser and navigate to the OpenWRT LuCI web UI</li>
+	<li>Log in</li>
+	<li>Select System &gt; Startup in the top navigation menu</li>
+	<li>Find dnsmasq and click the Stop button and click Enabled to disable the service on startup</li>
+	<li>Select System &gt; Software in the top navigation menu</li>
+	<li>Type cert in the search</li>
+	<li>Find ca-certificates and click the Install... button</li>
+	<li>Find ca-bundle and click the Install... button</li>
+	<li>Type libustream in the search</li>
+	<li>Find libustream-openssl and click the Install... button</li>
+	<li>Open another tab and navigate to https://github.com/AdguardTeam/AdGuardHome/wiki/Getting-Started#installation</li>
+	<li>Find the download for Linux on the architecture of the router (arm32, arm64, etc)</li>
+	<li>Right click the link and Copy shortcut / Copy link address</li>
+	<li>Connect to the OpenWRT device via SSH</li>
+	<li>Run the following commands
+	<div class="codeBlock"># download adguard home, pasting the download link copied above<br />
+	wget https://static.adguard.com/adguardhome/release/AdGuardHome_linux_amd64.tar.gz --no-check-certificate<br />
+	# extract the download tar.gz<br />
+	tar xfvz AdGuardHome_linux*<br />
+	# change directory into the extracted folder<br />
+	cd AdGuardHome<br />
+	# install AdGuardHome as a service<br />
+	./AdGuardHome -s install</div>
+	</li>
+	<li>Open a web browser and navigate to http://OpenWRTIP:3000</li>
+	<li>Click the Get Started button</li>
+	<li>Set the Admin Web Interface and DNS Server network interfaces and ports, note port 80 can&#39;t be used for the web interface &gt; Click Next</li>
+	<li>Enter an admin username and password &gt; Click Next</li>
+	<li>Click Next on page 4</li>
+	<li>Click Open Dashboard on the Congratutations page</li>
+	<li>Log in using the admin username and password created during the install</li>
+	<li>Welcome to AdGuardHome running on OpenWRT</li>
+</ol>
+
+<p>Source: <a href="https://github.com/AdguardTeam/AdGuardHome#getting-started" target="_blank">https://github.com/AdguardTeam/AdGuardHome#getting-started</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
