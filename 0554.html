@@ -1,0 +1,86 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Configure SSH Key-Based Authentication on a Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Home Networking,Ubuntu,SSH,Public Key Infrastructure,PKI,Linux,Authentication,Administration,Certificates,Debian,Secure Shell,How To Setup Linux Key Based Authentication,Key Based Authentication,Key-Based Authentication,SSH Key-Based Authentication,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Configure SSH Key-Based Authentication on a Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="05/20/2022 03:10:48 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Configure SSH Key-Based Authentication on a Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Connecting from a Linux Host</h2>
+
+<ol>
+	<li>Log into the source Linux host</li>
+	<li>Run the following command in a terminal window
+	<div class="codeBlock"># generate a new ssh key pair<br />
+	ssh-keygen -t rsa</div>
+	</li>
+	<li>Press enter to accept the default location</li>
+	<li>Optionally, set a password for the key pair<br />
+	<em>NOTE: If you don&#39;t provide a password, anyone with the key and access to the target host can connect using the key. Proceed with caution</em></li>
+	<li>Continue with the following command
+	<div class="codeBlock"># output the public key<br />
+	cat ~/.ssh/id_rsa.pub</div>
+	</li>
+	<li>Copy the output ssh-rsa public key to the clipboard</li>
+	<li>Log into the target Linux machine</li>
+	<li>Run the following command in a terminal window
+	<div class="codeBlock"># create .ssh directory<br />
+	mkdir ~/.ssh -p<br />
+	# edit the authorized_keys file<br />
+	nano ~/.ssh/authorized_keys</div>
+	</li>
+	<li>Paste the copied public key to the bottom of the file</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Back on the source Linux device, connect to the Linux target using ssh (ie ssh username@hostname)</li>
+	<li>Type yes and press Enter the first time connecting with a new public key to accept the connection</li>
+</ol>
+
+<h2>Connecting from a Windows Host</h2>
+
+<ol>
+	<li>Log into the Windows host</li>
+	<li>Right click the Start menu &gt; Run &gt; Type cmd &gt; Press Enter</li>
+	<li>Run the following command in the command prompt
+	<div class="codeBlock CMD"># generate a new ssh key pair<br />
+	ssh-keygen -t rsa</div>
+	</li>
+	<li>Press enter to accept the default location</li>
+	<li>Optionally, set a password for the key pair<br />
+	<em>NOTE: If you don&#39;t provide a password, anyone with the public key and access to the target host can connect using the key</em></li>
+	<li>Continue with the following command
+	<div class="codeBlock CMD"># output the public key<br />
+	type %userprofile%\.ssh\id_rsa.pub</div>
+	</li>
+	<li>Copy the output ssh-rsa public key to the clipboard</li>
+	<li>Log into the target Linux machine</li>
+	<li>Run the following command in a terminal window
+	<div class="codeBlock CMD"># create .ssh directory<br />
+	mkdir ~/.ssh -p<br />
+	# edit the authorized_keys file<br />
+	nano ~/.ssh/authorized_keys</div>
+	</li>
+	<li>Paste the copied public key to the bottom of the file</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Back on the Windows device, connect to the Linux target using ssh (ie ssh username@hostname)</li>
+	<li>Type yes and press Enter the first time connecting with a new public key to accept the connection</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
