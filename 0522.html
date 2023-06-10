@@ -1,0 +1,111 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Roll Your Own Google Analytics Alternative with Umami</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Debian,Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Ubuntu,Umami,Umami Analytics,Analytics,Web Traffic,Google Analytics,Google Analytics Alternative,Open Source,FOSS,NodeJS,Alternative To Google Analytics,Self-hosted Web Analytics,Web Analytics,Web Based,Web Based Tools,MySQL,MariaDB,Linux,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Roll Your Own Google Analytics Alternative with Umami">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="05/31/2023 09:56:41 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Roll Your Own Google Analytics Alternative with Umami</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Umami</h2>
+
+<p><em>Umami is a simple, fast, website analytics alternative to Google Analytics.</em> -<a href="https://github.com/mikecao/umami" target="_blank">https://github.com/mikecao/umami</a></p>
+
+<h2>Installing NodeJS</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal window
+	<div class="codeBlock"># download nodejs<br />
+	wget -O nodejs.tar.xz https://nodejs.org/dist/v14.17.0/node-v14.17.0-linux-x64.tar.xz<br />
+	# extract nodejs.tar.xz<br />
+	tar -xJf nodejs.tar.xz<br />
+	# change directory to extracted folder<br />
+	cd node-v14.17.0-linux-x64<br />
+	# copy node binaries to /usr/local<br />
+	sudo cp -R * /usr/local/<br />
+	# test node is working<br />
+	node -v<br />
+	# test npm is working<br />
+	npm -v</div>
+	</li>
+</ol>
+
+<h2>Running Umami</h2>
+
+<ol>
+	<li>Run the following commands in a terminal window
+	<div class="codeBlock"># install MySQL<br />
+	sudo apt install mariadb-server -y<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the database and database user
+	<div class="codeBlock">CREATE DATABASE umami DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;<br />
+	GRANT ALL ON umami.* TO &#39;umami_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;um@m1!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># install git<br />
+	sudo apt install git -y<br />
+	# cd back to home<br />
+	cd ~<br />
+	# clone umami github repo<br />
+	git clone https://github.com/mikecao/umami.git<br />
+	# cd into git clone<br />
+	cd umami<br />
+	# import database structure<br />
+	mysql -u umami_rw -p umami &lt; sql/schema.mysql.sql<br />
+	# install dependencies<br />
+	npm install<br />
+	# create and edit .env<br />
+	nano ./.env</div>
+	</li>
+	<li>Paste the following into .env
+	<p>DATABASE_URL=mysql://umami_rw:um@m1!@localhost:3306/umami<br />
+	HASH_SALT=SomethingSecure</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to .env</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># build umami<br />
+	npm run build<br />
+	# run umami<br />
+	npm start</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP:3000</li>
+	<li>Login with the username admin and password umami</li>
+	<li>Navigate to Settings &gt; Profile and click the Change Password button</li>
+	<li>Enter the current password (umami) and enter and confirm the new password &gt; Click save</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
