@@ -1,0 +1,56 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install GitLab -- GitHub Alternative on Raspberry Pi</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="GitHub Alternatives,Source Control,Git,Browser Based,Home Lab,Home Lab Ideas,Install Guide,Raspberry Pi,SBC,Single Board Computer,Linux,Debian,GitLab,How To Install GitLab,Intall GitLab On Raspberry Pi,Self-hosted GitHub Alternative,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install GitLab -- GitHub Alternative on Raspberry Pi">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="04/01/2023 06:34:17 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install GitLab -- GitHub Alternative on Raspberry Pi</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is GitLab?</h2>
+
+<p><em>GitLab is an open source end-to-end software development platform with built-in version control, issue tracking, code review, CI/CD, and more. Self-host GitLab on your own servers, in a container, or on a cloud provider.</em> -<a href="https://gitlab.com/gitlab-org/gitlab" target="_blank">https://gitlab.com/gitlab-org/gitlab</a></p>
+
+<h2>Installing GitLab</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal:
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install software updates<br />
+	sudo apt upgrade -y<br />
+	# install preprequisites<br />
+	sudo apt install curl openssh-server ca-certificates apt-transport-https perl -y<br />
+	# add gitlab gpg key<br />
+	curl https://packages.gitlab.com/gpg.key | sudo apt-key add -<br />
+	# add gitlab software repository<br />
+	sudo curl -sS https://packages.gitlab.com/install/repositories/gitlab/raspberry-pi2/script.deb.sh | sudo bash<br />
+	# install gitlab, change the URL in the script below to match the DNS name of the host server<br />
+	sudo GITLAB_ROOT_PASSWORD=&quot;SomethingSecure&quot; EXTERNAL_URL=&quot;http://DNSofHOST&quot; apt install gitlab-ce</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP</li>
+	<li>Login with the username root and the password set during the installation</li>
+	<li>Welcome to GitLab</li>
+</ol>
+
+<p>Source: <a href="https://about.gitlab.com/" target="_blank">https://about.gitlab.com/</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
