@@ -1,0 +1,74 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Control Local Docker Containers From a Web Browser with Yacht</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Docker Made Easy,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Containerization,Docker,Docker Management,Homelab,Yacht,Docker Made Simple,Docker Simplified,Linux,Container,Containerize,Docker Container,Docker How To,Docker Tutorial,Docker Installation Tutorial,Getting Started With Docker,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Control Local Docker Containers From a Web Browser with Yacht">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="05/31/2023 09:05:41 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Control Local Docker Containers From a Web Browser with Yacht</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Yacht?</h2>
+
+<blockquote cite="https://portainer.io"><em>Yacht is a web interface for managing docker containers with an emphasis on templating to provide one-click deployments of dockerized applications. Think of it like a decentralized app store for servers that anyone can make packages for. -<a href="https://yacht.sh/docs/" target="_blank">https://yacht.sh/docs/</a></em></blockquote>
+
+<h2>Installing Docker</h2>
+
+<ol>
+	<li>Log into the Linux based device</li>
+	<li>Run the following commands in the terminal
+	<div class="codeBlock"># install prerequisites<br />
+	sudo apt install apt-transport-https ca-certificates curl software-properties-common gnupg-agent -y<br />
+	# add docker gpg key<br />
+	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -<br />
+	# add docker software repository<br />
+	sudo add-apt-repository &quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable&quot;<br />
+	# install docker<br />
+	sudo apt install docker-ce docker-compose containerd.io -y<br />
+	# enable and start docker service<br />
+	sudo systemctl enable docker &amp;&amp; sudo systemctl start docker<br />
+	# add the current user to the docker group<br />
+	sudo usermod -aG docker $USER<br />
+	# reauthenticate for the new group membership to take effect<br />
+	su - $USER</div>
+	</li>
+</ol>
+
+<h2>Running Yacht</h2>
+
+<ol>
+	<li>Now that Docker is installed, run the following commands to setup the Yacht Docker container and run it
+	<div class="codeBlock"># create working directories<br />
+	mkdir ~/docker/yacht -p<br />
+	# run the yacht docker container<br />
+	docker run -d -p 8000:8000 -v /var/run/docker.sock:/var/run/docker.sock -v ~/docker/yacht:/config --restart unless-stopped selfhostedpro/yacht</div>
+	</li>
+	<li>Once the Yacht container is downloaded and running, open a web browser and navigate to http://DNSorIP:8000</li>
+	<li>Login with the username admin@yacht.local and password pass</li>
+	<li>Click Admin &gt; User in the top right corner</li>
+	<li>Select Change Password from the top navigation menu</li>
+	<li>Enter and confirm a new password</li>
+	<li>Optionally, change the username</li>
+	<li>Click the Change User Info button to apply the changes</li>
+	<li>Welcome to Yacht, Docker container management from a web browser</li>
+</ol>
+
+<p>Documentation: <a href="https://github.com/SelfhostedPro/Yacht" target="_blank">https://github.com/SelfhostedPro/Yacht</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
