@@ -1,0 +1,122 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Host Your Own GitHub Alternative with Gitea</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="GitHub Alternatives,Git,Gitea,Gitea Tutorial,Source Control,Install Guide,Home Lab,Home Lab Ideas,Self-Hosted,Web Based,Web Based Tools,Browser Based,Linux,Debian,How To Install Gitea,Intall Gitea On Debian,Self-Hosted GitHub Alternative,How To Install Gitea On Linux,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Host Your Own GitHub Alternative with Gitea">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="05/31/2023 09:40:43 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Host Your Own GitHub Alternative with Gitea</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Gitea</h2>
+
+<blockquote><em>Gitea is a community managed lightweight code hosting solution written in Go. -<a href="https://gitea.io/" target="_blank">https://gitea.io/</a></em></blockquote>
+
+<h2>Installing Gitea</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal:
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install software updates<br />
+	sudo apt upgrade -y<br />
+	# install preprequisites<br />
+	sudo apt install git mariadb-server -y<br />
+	# create gitea user<br />
+	sudo adduser --system --shell /bin/bash --gecos &#39;Git Version Control&#39; --group --disabled-password --home /home/gitea gitea<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the Gitea database and database user
+	<div class="codeBlock">CREATE DATABASE gitea CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;<br />
+	CREATE USER &#39;gitea_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;G1te@!&#39;;<br />
+	GRANT ALL PRIVILEGES ON gitea.* TO &#39;gitea_rw&#39;@&#39;localhost&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># download the Gitea binary<br />
+	wget -O ./gitea https://github.com/go-gitea/gitea/releases/download/v1.14.2/gitea-1.14.2-linux-amd64<br />
+	# make gitea executable<br />
+	sudo chmod +x gitea<br />
+	# move gitea to /usr/local/bin<br />
+	sudo mv ./gitea /usr/local/bin/<br />
+	# verify gitea can be found<br />
+	gitea --version<br />
+	# create required directory structures<br />
+	sudo mkdir -p /etc/gitea /var/lib/gitea/{custom,data,indexers,public,log}<br />
+	sudo chown gitea:gitea /var/lib/gitea/{data,indexers,log}<br />
+	sudo chmod 750 /var/lib/gitea/{data,indexers,log}<br />
+	sudo chown root:gitea /etc/gitea<br />
+	sudo chmod 770 /etc/gitea<br />
+	# create gitea service<br />
+	sudo nano /etc/systemd/system/gitea.service</div>
+	</li>
+	<li>Paste the following into gitea.service
+	<p>[Unit]<br />
+	Description=Gitea<br />
+	After=syslog.target<br />
+	After=network.target<br />
+	After=mysql.service</p>
+
+	<p>[Service]<br />
+	LimitMEMLOCK=infinity<br />
+	LimitNOFILE=65535<br />
+	RestartSec=2s<br />
+	Type=simple<br />
+	User=gitea<br />
+	Group=gitea<br />
+	WorkingDirectory=/var/lib/gitea/<br />
+	ExecStart=/usr/local/bin/gitea web -c /etc/gitea/app.ini<br />
+	Restart=always<br />
+	Environment=USER=git HOME=/home/gitea GITEA_WORK_DIR=/var/lib/gitea</p>
+
+	<p>[Install]<br />
+	WantedBy=multi-user.target</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to gitea.service</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># reload services<br />
+	sudo systemctl daemon-reload<br />
+	# enable gitea to run on boot and start now<br />
+	sudo systemctl enable --now gitea</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP:3000</li>
+	<li>Complete the database settings on the Initial Configuration screen &gt; Click the Install Gitea button</li>
+	<li>Click the Register Now link</li>
+	<li>Enter a username, email and password &gt; Click the Register Account button</li>
+	<li>Welcome to Gitea</li>
+</ol>
+
+<p>Source: <a href="https://about.gitlab.com/" target="_blank">https://about.gitlab.com/</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
