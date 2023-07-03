@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Running a MacOS Ventura VM in ProxMox VE">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="02/10/2023 10:31:15 AM" />
+        <meta name="revised" content="07/03/2023 03:41:52 PM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -22,8 +22,10 @@
           </div>
           <div></div>
           <div id="content">
-          <ol>
-	<li>Download a MacOS Ventura .iso <a href="https://archive.org/search.php?query=MacOS%20collection&amp;and[]=mediatype%3A%22software%22" target="_blank">Download</a></li>
+          <p>💡 <em>NOTE: MacOS higher than version 12 requires a CPU with AVX2 instruction support</em></p>
+
+<ol>
+	<li>Download a MacOS Ventura .iso <a href="https://archive.org/search.php?query=MacOS%20collection&amp;and[]=mediatype%3A%22software%22" target="_blank">Download</a> OR create your own <a href="https://youtu.be/JFMvUpdCMwo" target="_blank">https://youtu.be/JFMvUpdCMwo</a></li>
 	<li>Download KVM OpenCore bootloader <a href="https://github.com/thenickdude/KVM-Opencore/releases" target="_blank">Download</a></li>
 	<li>Extract the downloaded KVM OpenCore bootloader .gz file</li>
 	<li>Upload the Ventura and KVM OpenCore .iso files to the Proxmox ISO library</li>
