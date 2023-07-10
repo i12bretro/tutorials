@@ -1,0 +1,63 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>In-Place Upgrade Proxmox VE from 7 to 8</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Hypervisor,Install Guide,Self-Hosted,In Place Upgrade,Proxmox,Update,Upgrade,VM Host,Virtual Machine Host,Virtual Machine Hypervisor,Debian,Debian 11,Debian 12,Debian Bullseye,Debian Bookworm,Update Proxmox 7 To 8,In-Place Linux Upgrade,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="In-Place Upgrade Proxmox VE from 7 to 8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="06/29/2023 07:44:17 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>In-Place Upgrade Proxmox VE from 7 to 8</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <p>💡 <em>NOTE: These steps are for a single standalone Proxmox server. They have not been tested in a clustered environment</em></p>
+
+<p>🚨 <em>WARNING: Make sure to create external backups of all important VMs and CTs just in case something goes wrong. You&#39;ve been warned.</em></p>
+
+<ol>
+	<li>Log into Proxmox VE, either at the console or the web UI and launch the web shell</li>
+	<li>Stop all running VMs and CTs</li>
+	<li>Run the following commands to make sure Proxmox VE is running the latest 7 updates
+	<div class="codeBlock"># disable proxmox commmercial repo<br />
+	sed -i &quot;s/^deb/\#deb/&quot; /etc/apt/sources.list.d/pve-enterprise.list<br />
+	# add the proxmox community repo<br />
+	echo &quot;deb http://download.proxmox.com/debian/pve $(grep &quot;VERSION=&quot; /etc/os-release | sed -n &#39;s/.*(\(.*\)).*/\1/p&#39;) pve-no-subscription&quot; &gt; /etc/apt/sources.list.d/pve-community.list<br />
+	# update software repositories<br />
+	apt update<br />
+	# install software updates<br />
+	apt dist-upgrade -y<br />
+	# clean apt cache<br />
+	apt clean<br />
+	# run the upgrade checklist utility, resolve any issues reported before continuing<br />
+	pve7to8 --full<br />
+	# update apt repositories to bullseye<br />
+	sed -i &#39;s/bullseye/bookworm/g&#39; /etc/apt/sources.list &amp;&amp; sed -i &#39;s/bullseye/bookworm/g&#39; /etc/apt/sources.list.d/pve-community.list &amp;&amp; sed -i &#39;s/bullseye/bookworm/g&#39; /etc/apt/sources.list.d/pve-enterprise.list<br />
+	# update software repositories<br />
+	apt update<br />
+	# install software updates<br />
+	apt dist-upgrade -y<br />
+	# clean apt cache<br />
+	apt clean<br />
+	# reboot<br />
+	reboot now</div>
+	</li>
+	<li>That&#39;s it, Proxmox VE has now been updated to the latest v8.x</li>
+</ol>
+
+<p>Source and Additional Info: <a href="https://pve.proxmox.com/wiki/Upgrade_from_7_to_8" target="_blank">https://pve.proxmox.com/wiki/Upgrade_from_7_to_8</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
