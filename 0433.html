@@ -1,0 +1,67 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Pi-Hole on Android TV Box Running Armbian</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Install Guide,Raspberry Pi Alternative,Self-Hosted,SBC,Single Board Computer,Ad Blocker,Ad Blocking,DNS,Install Pi-Hole On Armbian,Linux,Network Wide Ad Blocking,Pi Hole,Pi-Hole,Amlogic,Allwinner,Rockchip,Armbian,Networking,Amlogic S912,Amlogic S905x,Amlogic S905w,DNS Ad Blocking,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Pi-Hole on Android TV Box Running Armbian">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="05/31/2023 09:15:11 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Pi-Hole on Android TV Box Running Armbian</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Installing Pi-Hole</h2>
+
+<ol>
+	<li>Log into the Armbian device</li>
+	<li>Run the following commands in a terminal window
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# clean up downloaded apt files<br />
+	sudo apt clean<br />
+	# install pi-hole<br />
+	curl -sSL https://install.pi-hole.net | bash</div>
+	</li>
+	<li>Press Enter until the DNS selection is displayed</li>
+	<li>Select a DNS provider and press Enter</li>
+	<li>Press Enter through the rest of the Pi-Hole installer, selecting the defaults</li>
+	<li>Copy the randomly generated admin password (just in case)</li>
+	<li>Press Enter to complete the installation</li>
+	<li>Run the following command to change the Pi-Hole admin password
+	<div class="codeBlock">sudo pihole -a -p</div>
+	</li>
+	<li>Enter and confirm the new password</li>
+	<li>Open a web browser and navigate to http://localhost/admin to view the i-hole admin interface</li>
+</ol>
+
+<h2>Testing Pi-Hole</h2>
+
+<ol>
+	<li>Back in the terminal, run the following commands to use the local pi-hole instance for DNS
+	<div class="codeBlock">sudo nano /etc/resolv.conf</div>
+	</li>
+	<li>Add the following line at the top of the other nameservers
+	<p>nameserver 127.0.0.1</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to resolv.conf</li>
+	<li>Back in the web browser, open a new tab and navigate to a site that contains ads, like https://yahoo.com</li>
+	<li>Watch the Pi-Hole interface to see the ads being blocked</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
