@@ -1,0 +1,50 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>In Place Upgrade Debian 11 Bullseye to 12 Bookworm</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="In Place Upgrade,Update,Upgrade,Debian,Home Lab,Home Lab Ideas,Bullseye,Bookworm,Update Debian 11 To Debian 12,Debian 11,Debian 11 Bullseye,Debian 12,Debian 12 Bookworm,Linux,In-Place Upgrade,Upgrading Debian In Place,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="In Place Upgrade Debian 11 Bullseye to 12 Bookworm">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="06/29/2023 02:17:28 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>In Place Upgrade Debian 11 Bullseye to 12 Bookworm</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Log into the Debian 11 device</li>
+	<li>Run the following commands in a terminal window
+	<div class="codeBlock"># clean apt cache<br />
+	sudo apt clean<br />
+	# update apt repositories from bullseye to bookworm<br />
+	find /etc/apt -type f -name &quot;*.list&quot; -print0 | xargs -0 sudo sed -i.bak &quot;s/bullseye/bookworm/g&quot;<br />
+	# add optional non-free repos<br />
+	echo &quot;deb https://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware&quot; | sudo tee /etc/apt/sources.list<br />
+	# update software repositories<br />
+	sudo apt update<br />
+	# install software updates<br />
+	sudo apt dist-upgrade -y<br />
+	# remove unnecessary packages<br />
+	sudo apt autoremove -y<br />
+	# clean apt cache<br />
+	sudo apt clean<br />
+	# reboot<br />
+	sudo reboot now</div>
+	</li>
+	<li>That&#39;s it, Debian 11 Bullseye has been updated in place to Debian 12 Bookworm</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
