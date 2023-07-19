@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Running Firefly III on Linux [PHP Based Personal Finance Manager]">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="12/11/2022 09:59:05 AM" />
+        <meta name="revised" content="07/18/2023 03:21:28 PM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -99,21 +99,20 @@
 	php artisan migrate:refresh --seed<br />
 	php artisan firefly-iii:upgrade-database<br />
 	php artisan passport:install<br />
-	# create uvdesk apache configuration<br />
+	# create firefly apache configuration<br />
 	sudo nano /etc/apache2/sites-available/firefly.conf</div>
 	</li>
 	<li>Paste the following configuration into firefly.conf
 	<p>Alias /firefly &quot;/var/www/firefly/public/&quot;<br />
-	&lt;Directory /var/www/firefly/public&gt;<br />
+	<directory firefly="" public="" var="" www=""><br />
 	Options FollowSymlinks Includes ExecCGI<br />
 	AllowOverride All<br />
 	Require all granted<br />
 	Order allow,deny<br />
-	allow from all<br />
-	&lt;/Directory&gt;</p>
+	allow from all</directory></p>
 	</li>
 	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
-	<li>Run the following command to enable the UVdesk site
+	<li>Run the following command to enable the Firefly site
 	<div class="codeBlock"># enable rewrite module<br />
 	sudo a2enmod rewrite<br />
 	# enable the firefly site<br />
