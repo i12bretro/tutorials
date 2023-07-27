@@ -1,0 +1,117 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Running OpenFire XMPP Server in Docker on Ubuntu Server</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Chat Server,Chat,Home Lab,Home Lab Ideas,Install Guide,IM,Instant Messager,Host Your Own IM Server,OpenFire,OpenFire Server,Pidgin,Instant Messaging,Run OpenFire In Docker,Linux,Self-Hosted,Container,Containerization,XMPP,Containerize,Docker,Docker Container,Docker How To,Docker Installation Tutorial,Docker Made Easy,Docker Made Simple,Docker Simplified,Docker Tutorial,Getting Started With Docker,Homelab,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Running OpenFire XMPP Server in Docker on Ubuntu Server">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="05/31/2023 10:20:43 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Running OpenFire XMPP Server in Docker on Ubuntu Server</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is OpenFire</h2>
+
+<blockquote><em>Openfire is a real time collaboration (RTC) server licensed under the Open Source Apache License. It uses the only widely adopted open protocol for instant messaging, XMPP Openfire is incredibly easy to setup and administer, but offers rock-solid security and performance. -<a href="https://igniterealtime.org/projects/openfire/" target="_blank">https://igniterealtime.org/projects/openfire/</a></em></blockquote>
+
+<h2>Installing Docker</h2>
+
+<ol>
+	<li>Log into the Linux based device</li>
+	<li>Run the following commands in the terminal
+	<div class="codeBlock"># install prerequisites<br />
+	sudo apt install apt-transport-https ca-certificates curl software-properties-common gnupg-agent -y<br />
+	# add docker gpg key<br />
+	curl -fsSL https://download.docker.com/linux/$(awk -F&#39;=&#39; &#39;/^ID=/{ print $NF }&#39; /etc/os-release)/gpg | sudo apt-key add -<br />
+	# add docker software repository<br />
+	sudo add-apt-repository &quot;deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/$(awk -F&#39;=&#39; &#39;/^ID=/{ print $NF }&#39; /etc/os-release) $(lsb_release -cs) stable&quot;<br />
+	# install docker<br />
+	sudo apt install docker-ce docker-compose containerd.io -y<br />
+	# enable and start docker service<br />
+	sudo systemctl enable docker &amp;&amp; sudo systemctl start docker<br />
+	# add the current user to the docker group<br />
+	sudo usermod -aG docker $USER<br />
+	# reauthenticate for the new group membership to take effect<br />
+	su - $USER</div>
+	</li>
+</ol>
+
+<h2>Running OpenFire</h2>
+
+<ol>
+	<li>Now that Docker is installed, run the following commands to setup the OpenFire Docker container and run it
+	<div class="codeBlock"># create a working directory<br />
+	mkdir /home/$USER/docker/openfire/db -p<br />
+	# run the OpenFire docker container<br />
+	docker run --name openfire -d -p 9090:9090 -p 5222:5222 -p 5269:5269 -p 5223:5223 -p 7443:7443 -p 7777:7777 -p 7070:7070 -p 5229:5229 -p 5275:5275 -v /home/$USER/docker/openfire/db:/var/lib/openfire/embedded-db --restart=unless-stopped quantumobject/docker-openfire</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP:9090</li>
+	<li>Select a language &gt; Click Continue</li>
+	<li>Set the XMPP Domain Name and Server Host Name (FQDN) to local &gt; Click Continue</li>
+	<li>Select Embedded Database &gt; Click Continue</li>
+	<li>Select Default on the Profile Settings page &gt; Click Continue</li>
+	<li>Input an admin email address and password &gt; Click Continue</li>
+	<li>Click the Login to the admin console button</li>
+	<li>Login with username admin and the password created previously</li>
+	<li>Click the Users/Groups tab</li>
+	<li>Click Create New User in the left navigation menu</li>
+	<li>Create a username and password for the new user</li>
+	<li>Follow the steps to create as many users as needed, at least 2 are needed for testing</li>
+</ol>
+
+<h2>Making the Configuration Persistent</h2>
+
+<ol>
+	<li>With OpenFire now configured, run the following commands to copy the configuration files to a persistent volume and re-run the docker container
+	<div class="codeBlock"># create working directory for conf<br />
+	mkdir /home/$USER/docker/openfire/conf -p<br />
+	# copy the configuration from the running docker container<br />
+	sudo docker cp openfire:/usr/share/openfire/conf/ /home/$USER/docker/openfire<br />
+	# set owner of working directories<br />
+	sudo chown &quot;$USER&quot;:&quot;$USER&quot; /home/&quot;$USER&quot;/docker -R<br />
+	# stop and remove the running OpenFire container<br />
+	docker rm openfire --force<br />
+	# re-run the OpenFire docker container with new conf volume<br />
+	docker run --name openfire -d -p 9090:9090 -p 5222:5222 -p 5269:5269 -p 5223:5223 -p 7443:7443 -p 7777:7777 -p 7070:7070 -p 5229:5229 -p 5275:5275 -v /home/$USER/docker/openfire/db:/var/lib/openfire/embedded-db -v /home/$USER/docker/openfire/conf:/usr/share/openfire/conf --restart=unless-stopped quantumobject/docker-openfire</div>
+	</li>
+</ol>
+
+<h2>Setting Up A XMPP Client</h2>
+
+<ol>
+	<li>Download Pidgin Portable <a href="https://portableapps.com/apps/internet/pidgin_portable" target="_blank">Download</a></li>
+	<li>Run the Pidgin Portable installer</li>
+	<li>Launch Pidgin Portable</li>
+	<li>Click Add...</li>
+	<li>Select XMPP from the protocol dropdown</li>
+	<li>Input the first username created above along with the XMPP domain setup in OpenFire and the user&#39;s password</li>
+	<li>Click the Advanced tab &gt; Select Use encryption if available from the Connection security dropdown</li>
+	<li>Enter the OpenFire DNS name or IP in the server field</li>
+	<li>Click the Add button</li>
+	<li>Click Accept on the self-signed certificate popup</li>
+	<li>Copy the extracted Pidgin Portable folder to another device</li>
+	<li>Launch Pidgin Portable on the second device</li>
+	<li>Select Modify Account</li>
+	<li>Update the username and password to be a different account from the previous device</li>
+	<li>From one of the devices, select Buddies &gt; Add Buddy</li>
+	<li>Input the opposite devices&#39;s username</li>
+	<li>On the second device accept the message request and the two devices should be able to send and receive instant messages using the OpenFire XMPP server</li>
+</ol>
+
+<p>Documentation: <a href="https://github.com/QuantumObject/docker-openfire" target="_blank">https://github.com/QuantumObject/docker-openfire</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
