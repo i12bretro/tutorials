@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Self-Hosted ACME (Automated Certificate Management Environment) Server with Step-CA on Linux">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="05/06/2022 12:46:52 PM" />
+        <meta name="revised" content="08/11/2023 04:10:24 PM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -35,16 +35,20 @@
 	sudo apt update<br />
 	# install available software updates<br />
 	sudo apt upgrade -y<br />
+	# install prerequisites<br />
+	sudo apt install curl wget -y<br />
 	# clean up downloaded apt files<br />
 	sudo apt clean<br />
 	# lookup latest steps-ca release URL<br />
-	regex=&#39;&quot;browser_download_url&quot;: &quot;(https:\/\/github.com\/smallstep\/certificates\/releases\/download\/[^/]*\/step-ca_[^/]*amd64\.deb)&quot;&#39; &amp;&amp; response=$(curl -H &quot;Accept: application/vnd.github.v3+json&quot; https://api.github.com/repos/smallstep/certificates/releases/latest) &amp;&amp; [[ $response =~ $regex ]] &amp;&amp; downloadURL=&quot;${BASH_REMATCH[1]}&quot;<br />
+	regex=&#39;&quot;browser_download_url&quot;: &quot;(https:\/\/github.com\/smallstep\/cli\/releases\/download\/[^/]*\/step-cli_[^/]*amd64\.deb)&quot;&#39; &amp;&amp; response=$(curl -H &quot;Accept: application/vnd.github.v3+json&quot; https://api.github.com/repos/smallstep/cli/releases/latest) &amp;&amp; [[ $response =~ $regex ]] &amp;&amp; downloadURL=&quot;${BASH_REMATCH[1]}&quot;<br />
 	# download steps-ca server<br />
 	wget -O ./steps-ca.deb $downloadURL<br />
 	# install steps-ca server<br />
 	sudo dpkg -i ./steps-ca.deb<br />
 	# lookup latest steps-cli release URL<br />
-	regex=&#39;&quot;browser_download_url&quot;: &quot;(https:\/\/github.com\/smallstep\/cli\/releases\/download\/[^/]*\/step-cli_[^/]*amd64\.deb)&quot;&#39; &amp;&amp; response=$(curl -H &quot;Accept: application/vnd.github.v3+json&quot; https://api.github.com/repos/smallstep/cli/releases/latest) &amp;&amp; [[ $response =~ $regex ]] &amp;&amp; downloadURL=&quot;${BASH_REMATCH[1]}&quot;<br />
+	regex=&#39;&quot;browser_download_url&quot;: &quot;(https:\/\/github.com\/smallstep\/cli\/releases\/download\/[^/]*\/step-cli_[^/]*amd64\.deb)&quot;&#39; &amp;&amp; response=$(curl -H &quot;Accept: application/vnd.github.v3+json&quot; https://api.github.com/repos/smallstep/cli/releases/latest) &amp;&amp;
+	
+	&amp;&amp; downloadURL=&quot;${BASH_REMATCH[1]}&quot;<br />
 	# download steps-cli client<br />
 	wget -O ./steps-cli.deb $downloadURL<br />
 	# install steps-cli client<br />
@@ -98,8 +102,8 @@
 	</li>
 	<li>By default, step-ca certificates are only valid for 24 hours. To adjust this, paste the following inside each of the provisioners sections of the ca.json configuration file and adjust the values as needed<span style="display: none;"> </span>
 	<p>&quot;claims&quot;: {<br />
-	 &quot;maxTLSCertDuration&quot;:&quot;26280h&quot;,<br />
-	 &quot;defaultTLSCertDuration&quot;:&quot;8760h&quot;<br />
+	&quot;maxTLSCertDuration&quot;:&quot;26280h&quot;,<br />
+	&quot;defaultTLSCertDuration&quot;:&quot;8760h&quot;<br />
 	},</p>
 	</li>
 	<li>Press CTRL+O, Enter, CTRL+X to write the changes and close nano</li>
