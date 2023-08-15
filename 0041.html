@@ -1,0 +1,56 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Nmon - Terminal System Monitor for Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Install Guide,Nmon,Command Line,CLI,Command Line Utility,Linux,Debian,Ubuntu,Terminal,System Monitor,Terminal System Monitor,Terminal System Usage,System Usage CLI,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Nmon - Terminal System Monitor for Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="08/06/2023 09:12:17 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Nmon - Terminal System Monitor for Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is nmon?</h2>
+
+<blockquote><em>nmon is a systems administrator, tuner, benchmark tool. It can display the CPU, memory, network, disks (mini graphs or numbers), file systems, NFS, top processes, resources (Linux version &amp; processors) and on Power micro-partition information. -<a href="https://packages.debian.org/bullseye/nmon" target="_blank">https://packages.debian.org/bullseye/nmon</a></em></blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal window:
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install software updates<br />
+	sudo apt upgrade -y<br />
+	# install nmon<br />
+	sudo apt install nmon -y<br />
+	# launch nmon<br />
+	nmon</div>
+	</li>
+	<li>Use the different keyboard shortcuts to show/hide various monitors
+	<p>c = CPU monitor<br />
+	m = memory monitor<br />
+	d = disk monitor<br />
+	n = network monitor<br />
+	t = process monitor<br />
+	+ = slower update interval<br />
+	- = faster update interval</p>
+	</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
