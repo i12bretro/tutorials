@@ -1,0 +1,51 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Backup ProxMox VE Node Configuration with Simple Script</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Virtualization,Virtual Machine,VM,Self-Hosted,Home Lab,Home Lab Ideas,Hypervisor,Backing Up Proxmox Config,Backups,Debian,Linux,Proxmox,Proxmox Backup Configuration,Proxmox Host,Proxmox Node,Proxmox Step By Step,Proxmox Tutorial,Proxmox VE,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Backup ProxMox VE Node Configuration with Simple Script">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="08/06/2023 10:00:23 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Backup ProxMox VE Node Configuration with Simple Script</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <p>NOTE: By default, backup files will be located at /mnt/backups/proxmox. Override this default by setting running<br />
+export BACK_DIR=&quot;/path/to/save/to/&quot; prior to executing the script. The backup path must exist before executing the script or it will fail</p>
+
+<ol>
+	<li>Log into ProxMox VE, either at the console or the web UI and launch the web shell</li>
+	<li>Run the following commands
+	<div class="codeBlock"># download the backup script from github<br />
+	wget https://raw.githubusercontent.com/DerDanilo/proxmox-stuff/master/prox_config_backup.sh<br />
+	# make the downloaded file executable<br />
+	chmod +x ./prox_config_backup.sh<br />
+	# optionally, create a backup directory<br />
+	# change the directory below before executing<br />
+	mkdir /mnt/pve/ISOs/config_bkup -p<br />
+	# optionally, set the backup location<br />
+	# change the directory below before executing<br />
+	export BACK_DIR=/mnt/pve/ISOs/config_bkup<br />
+	# run the file<br />
+	./prox_config_backup.sh</div>
+	</li>
+	<li>Press CTRL+C to abort or Enter to continue with the backup</li>
+</ol>
+
+<p>Source: <a href="https://github.com/DerDanilo/proxmox-stuff" target="_blank">https://github.com/DerDanilo/proxmox-stuff</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
