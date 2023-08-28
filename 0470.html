@@ -1,0 +1,58 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Running Virtual Machines on Debian/Ubuntu using QEMU, libvirt and Virt Manager</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="VM,Virtual Machines,Installation,Hypervisor,Home Lab,Home Lab Ideas,Install Guide,Linux,Debian,Ubuntu,QEMU,VirtMan,LibVirt,VMs,Virtual Machine Host,VM Host,Run Virtual Machines On Linux,Run Virtual Machines On Debian,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Running Virtual Machines on Debian/Ubuntu using QEMU, libvirt and Virt Manager">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="08/06/2023 09:50:53 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Running Virtual Machines on Debian/Ubuntu using QEMU, libvirt and Virt Manager</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal window
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install qemu<br />
+	sudo apt install qemu qemu-kvm qemu-system qemu-utils -y<br />
+	# install libvirt<br />
+	sudo apt install libvirt-clients libvirt-daemon-system virtinst -y<br />
+	# install virt-manager UI<br />
+	sudo apt install virt-manager -y</div>
+	</li>
+	<li>Launch Virt-Manager from the applications menu</li>
+	<li>When prompted, enter the sudo password</li>
+	<li>Click the Create VM button</li>
+	<li>Select an installation method, Local install media in the example</li>
+	<li>Click the Forward button</li>
+	<li>Browse to the installation media</li>
+	<li>If the operating system is not found automatically, uncheck the Automatically detect checkbox and use the search box to manually set the OS</li>
+	<li>Click the Forward button</li>
+	<li>Set the amount of memory and number of CPUs for the VM</li>
+	<li>Click the Forward button</li>
+	<li>Enter the size of the virtual disk to be created for the VM</li>
+	<li>Click the Forward button</li>
+	<li>Enter a name for the VM</li>
+	<li>Click the Finish button</li>
+	<li>If prompted, select Yes to start the virtual network interface</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
