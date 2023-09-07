@@ -1,74 +1,17 @@
-    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <!DOCTYPE html>
     <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
       <head>
         <title>Installing Joomla! on Windows</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-								<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-				        <script type="text/javascript">
-          $(function(){
-            $('textarea').each(function(i,e){
-              theTextarea = $(this);
-              theTextarea.height((theTextarea[0].scrollHeight-5) +'px');
-            });
-
-            $('li').each(function(i,e){
-							if(!$(this).hasClass('noCheckbox')){
-								var uuid = 'li_' + Math.floor(Math.random() * Math.floor(1000000)).toString() + '_' + i.toString();
-								$(this).contents().wrap('<span id="'+ uuid +'"><label for="cb_'+ uuid +'"></label></span>');
-								$(this).prepend('<input type="checkbox" class="completeBox" id="cb_' + uuid +'" rel="'+ uuid +'" />')
-							}
-            });
-
-            $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
-              theElement = $(this);
-              var lines = theElement.html().split("\n");
-              theElement.empty();
-              for(l=0;l<lines.length;l++){
-                if($.trim(lines[l]) != '' && $.trim(lines[l]).substr(0,1) != '#' && $.trim(lines[l]).indexOf(' #') == -1 && lines[l].substr(0, 4).toUpperCase() != 'REM '){
-									                  theElement.append('<input type="image" src="images/clipboard.png" value="" class="copy-text" rel="copy_'+ i +'_'+ l +'" data-clipboard-text="'+ $.trim(lines[l].replace(/"/g, '&quot;')) +'" /><span id="copy_'+ i +'_'+ l +'">'+ lines[l] +'</span>');
-									                } else {
-                  theElement.append(lines[l]);
-                }
-              }
-            });
-
-            $(document).on('click','input.copy-text',function(){
-              theButton = $(this);
-														$('input.copy-text').attr('src','images/clipboard.png');
-							              $('span.copy-animation,span.copy-animation-ps').removeClass('copy-animation copy-animation-ps');
-              try {
-                if($('#'+ theButton.attr('rel')).parent('div').hasClass('PS')){
-                  $('#'+ theButton.attr('rel')).addClass('copy-animation-ps');
-								} else if($('#'+ theButton.attr('rel')).parent('div').hasClass('CMD')){
-									$('#'+ theButton.attr('rel')).addClass('copy-animation-cmd');
-                } else {
-                  $('#'+ theButton.attr('rel')).addClass('copy-animation');
-                }
-                navigator.clipboard.writeText(theButton.data('clipboard-text').replace(/<[^>]*>?/gm, ''));
-																theButton.attr('src','images/clipboard_active.png');
-								              } catch(err) {
-              }
-              return false;
-            });
-
-            $(document).on('click','input.completeBox',function(){
-              theBox = $(this);
-              $('#'+ theBox.attr('rel')).addClass('strikethrough');
-              theBox.prop('disabled',true);
-              theBox.parent('li').prevAll().each(function(i,e){
-                theLI = $(this);
-                if(theLI.find('input[type=checkbox]').not(':checked')){
-                  $('#'+ theLI.find('input[type=checkbox]').attr('rel')).addClass('strikethrough');
-                  theLI.find('input[type=checkbox]').prop('checked',true).prop('disabled',true);
-                }
-              });
-            });
-
-            if(window.self !== window.top){
-															window.parent.$('iframe.stepsFrame').height((this['scrollingElement']['scrollHeight']+20) +'px');
-							            }
-          });
-        </script>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,CMS,Joomla,Linux,PHP,MySQL,MariaDB,Install Joomla On Windows,Windows,Microsoft Windows,XAMPP,Running Joomla On Windows,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Installing Joomla! on Windows">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="08/20/2023 08:28:36 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
         <link href="css/steps.css" rel="stylesheet" type="text/css" />
       </head>
       <body>
@@ -79,15 +22,19 @@
           </div>
           <div></div>
           <div id="content">
-          <ol>
+          <h2>What is Joomla?</h2>
+
+<blockquote><em>Joomla! is a free and open-source content management system (CMS) for publishing web content. Over the years Joomla! has won several awards. It is built on a model&ndash;view&ndash;controller web application framework that can be used independently of the CMS that allows you to build powerful online applications.</em> -<a href="https://www.joomla.org/about-joomla.html" target="_blank">https://www.joomla.org/about-joomla.html</a></blockquote>
+
+<ol>
 	<li>Download XAMPP <a href="https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/" target="_blank">Download</a></li>
-	<li>Download Joomla!&nbsp;<a href="https://downloads.joomla.org/cms/joomla3/3-9-24/Joomla_3-9-24-Stable-Full_Package.zip?format=zip" target="_blank">Download</a></li>
-	<li><label for="cb_li_917989_0">Download Microsoft Visual C++&nbsp;</label><label for="cb_li_917989_0"><a href="https://aka.ms/vs/16/release/vc_redist.x64.exe" target="_blank">Download</a></label></li>
-	<li>Install&nbsp;Microsoft Visual C++</li>
-	<li>Right click the downloaded&nbsp;XAMPP file &gt;&nbsp;Extract All...</li>
-	<li>Right click the downloaded&nbsp;Joomla! .zip file &gt; Extract All...</li>
+	<li>Download Joomla! <a href="https://downloads.joomla.org/cms/joomla3/3-9-24/Joomla_3-9-24-Stable-Full_Package.zip?format=zip" target="_blank">Download</a></li>
+	<li><label for="cb_li_917989_0">Download Microsoft Visual C++ </label><label for="cb_li_917989_0"><a href="https://aka.ms/vs/16/release/vc_redist.x64.exe" target="_blank">Download</a></label></li>
+	<li>Install Microsoft Visual C++</li>
+	<li>Right click the downloaded XAMPP file &gt; Extract All...</li>
+	<li>Right click the downloaded Joomla! .zip file &gt; Extract All...</li>
 	<li>Rename the extracted folder joomla</li>
-	<li>Cut&nbsp;the joomla folder inside the XAMPP/htdocs directory</li>
+	<li>Cut the joomla folder inside the XAMPP/htdocs directory</li>
 	<li>Copy the extracted XAMPP directory to a safe location to run from, C:\Program Files for example</li>
 	<li>Run XAMPP/setup_xampp.bat to update the configuration files with the new server location</li>
 	<li>Run XAMPP/xampp-control.exe</li>
@@ -118,8 +65,7 @@
 	<li><label for="cb_li_676045_27">When the installation completes, click the yellow Remove &quot;installation&quot; folder button</label></li>
 	<li><label for="cb_li_676045_27">Click on the Site button</label></li>
 	<li><label for="cb_li_194715_28">Welcome to your very own, self-hosted Joomla! installation</label></li>
-</ol>
-          </div>
+</ol>          </div>
         </div>
       </body>
     </html>
