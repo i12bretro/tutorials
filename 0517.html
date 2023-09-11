@@ -1,0 +1,125 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install AirSonic on Debian/Ubuntu</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Airsonic,Airsonic Music Streaming Server,Homelab,Linux,Media Server,Media Streamer,Music,Music Streamer,Music Streaming,Streaming,Subsonic,Tomcat,Debian,Ubuntu,MP3,MP3 Streamer,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install AirSonic on Debian/Ubuntu">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="08/20/2023 08:01:29 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install AirSonic on Debian/Ubuntu</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is AirSonic</h2>
+
+<blockquote><em>Airsonic is a free, web-based media streamer, providing ubiquitous access to your music. Use it to share your music with friends, or to listen to your own music while at work. You can stream to multiple players simultaneously, for instance to one player in your kitchen and another in your living room. -<a href="https://airsonic.github.io/" target="_blank">https://airsonic.github.io/</a></em></blockquote>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal window:
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install openjdk<br />
+	sudo apt install default-jdk -y<br />
+	# set java-home<br />
+	sudo update-alternatives --config java<br />
+	# create tomcat group and user<br />
+	sudo mkdir /var/lib/tomcat9<br />
+	sudo groupadd tomcat<br />
+	sudo useradd -s /bin/false -g tomcat -d /var/lib/tomcat9 tomcat<br />
+	# lookup the latest tomcat 9 release<br />
+	  regex=&#39;&lt;a href=&quot;v[^/]*\/&quot;&gt;v([^/]*)\/&lt;\/a&gt;&#39; &amp;&amp; response=$(curl -s https://downloads.apache.org/tomcat/tomcat-9/?C=M;O=D) &amp;&amp; [[ $response =~ $regex ]] &amp;&amp; downloadURL=&quot;${BASH_REMATCH[1]}&quot;<br />
+	# download tomcat 9<br />
+	curl -O https://downloads.apache.org/tomcat/tomcat-9/v$downloadURL/bin/apache-tomcat-$downloadURL.tar.gz<br />
+	# extract tomcat 9<br />
+	sudo tar xzvf apache-tomcat-9*tar.gz -C /var/lib/tomcat9 --strip-components=1<br />
+	# create directories and set permissions<br />
+	sudo mkdir /var/airsonic/<br />
+	sudo chown -R tomcat:tomcat /var/airsonic/<br />
+	cd /var/lib/tomcat9<br />
+	sudo chgrp -R tomcat /var/lib/tomcat9<br />
+	sudo chmod -R g+r conf<br />
+	sudo chmod g+x conf<br />
+	sudo chown -R tomcat webapps/ work/ temp/ logs/<br />
+	# run tomcat as a service<br />
+	sudo update-java-alternatives -l<br />
+	sudo nano /etc/systemd/system/tomcat.service</a></div>
+	<a href="v[^/]*\/"> </a></li>
+	<li><a href="v[^/]*\/">Paste the following configuration into tomcat.service </a>
+	<p><a href="v[^/]*\/">[Unit]<br />
+	Description=Apache Tomcat<br />
+	After=network.target</a></p>
+	<a href="v[^/]*\/"> </a>
+
+	<p><a href="v[^/]*\/">[Service]<br />
+	ReadWritePaths=/var/airsonic/<br />
+	Type=forking</a></p>
+	<a href="v[^/]*\/"> </a>
+
+	<p><a href="v[^/]*\/">Environment=JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64<br />
+	Environment=CATALINA_PID=/var/lib/tomcat9/temp/tomcat.pid<br />
+	Environment=CATALINA_HOME=/var/lib/tomcat9<br />
+	Environment=CATALINA_BASE=/var/lib/tomcat9<br />
+	Environment=&#39;CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC&#39;<br />
+	Environment=&#39;JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom&#39;</a></p>
+	<a href="v[^/]*\/"> </a>
+
+	<p><a href="v[^/]*\/">ExecStart=/var/lib/tomcat9/bin/startup.sh<br />
+	ExecStop=/var/lib/tomcat9/bin/shutdown.sh</a></p>
+	<a href="v[^/]*\/"> </a>
+
+	<p><a href="v[^/]*\/">User=tomcat<br />
+	Group=tomcat<br />
+	UMask=0007<br />
+	RestartSec=10<br />
+	Restart=always</a></p>
+	<a href="v[^/]*\/"> </a>
+
+	<p><a href="v[^/]*\/">[Install]<br />
+	WantedBy=multi-user.target</a></p>
+	<a href="v[^/]*\/"> </a></li>
+	<li><a href="v[^/]*\/">Continue with the following commands in terminal: </a>
+	<div class="codeBlock"><a href="v[^/]*\/"># reload services<br />
+	sudo systemctl daemon-reload<br />
+	# set tomcat to start on boot<br />
+	sudo systemctl enable tomcat<br />
+	# stop tomcat service<br />
+	sudo systemctl stop tomcat</a></div>
+	<a href="v[^/]*\/"> </a></li>
+</ol>
+
+<h2><a href="v[^/]*\/">Install AirSonic</a></h2>
+
+<ol>
+	<li><a href="v[^/]*\/">Continue with the following commands in terminal: </a>
+
+	<div class="codeBlock"><a href="v[^/]*\/"># download airsonic<br />
+	sudo wget -O /var/lib/tomcat9/webapps/airsonic.war https://github.com/airsonic/airsonic/releases/download/v10.6.2/airsonic.war<br />
+	# start tomcat service<br />
+	sudo systemctl start tomcat.service</a></div>
+	<a href="v[^/]*\/"> </a></li>
+	<li><a href="v[^/]*\/">Back in the web browser, navigate to http://DNSorIP:8080/airsonic</a></li>
+	<li><a href="v[^/]*\/">Login to AirSonic with username admin and password admin</a></li>
+	<li><a href="v[^/]*\/">Welcome to AirSonic</a></li>
+	<li><a href="v[^/]*\/">Click the Change administrator password link</a></li>
+	<li><a href="v[^/]*\/">Check the Change password box</a></li>
+	<li><a href="v[^/]*\/">Input the new password twice and click the Save button</a></li>
+</ol>
+
+<p><a href="v[^/]*\/">Source: </a><a href="https://airsonic.github.io/docs/install/war-tomcat/" target="_blank">https://airsonic.github.io/docs/install/war-tomcat/</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
