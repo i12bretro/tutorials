@@ -1,0 +1,170 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Installing Ajenti Web Administration Panel</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Administration,Browser Based SSH,Browser Based Tools,Debian,Free Software,Freeware,Linux,Server Administration,System Administration,System Administrator,Ubuntu,Web Tools,Ajenti,Ajenti Web Panel,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Installing Ajenti Web Administration Panel">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="08/20/2023 06:50:38 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Installing Ajenti Web Administration Panel</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Ajenti?</h2>
+
+<blockquote><em>[Ajenti is] an admin&#39;s tool for a more civilized age, providing you with a fast and secure way to manage a remote Linux box at any time using everyday tools like a web terminal, text editor, file manager and others.-<a href="https://ajenti.org/" target="_blank">https://ajenti.org/</a></em></blockquote>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal:
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install software updates<br />
+	sudo apt upgrade -y<br />
+	# install pre-requisites<br />
+	sudo apt install build-essential python3-pip python3-dev python3-lxml python3-dbus python3-augeas libssl-dev python3-apt ntpdate -y<br />
+	# upgrade pip<br />
+	sudo pip3 install setuptools pip wheel -U<br />
+	# install ajenti<br />
+	sudo pip3 install ajenti-panel ajenti.plugin.ace ajenti.plugin.augeas ajenti.plugin.auth-users ajenti.plugin.core ajenti.plugin.dashboard ajenti.plugin.datetime ajenti.plugin.filemanager ajenti.plugin.filesystem ajenti.plugin.network ajenti.plugin.notepad ajenti.plugin.packages ajenti.plugin.passwd ajenti.plugin.plugins ajenti.plugin.power ajenti.plugin.services ajenti.plugin.settings ajenti.plugin.terminal<br />
+	# create and edit ajenti.service<br />
+	sudo nano /lib/systemd/system/ajenti.service</div>
+	</li>
+	<li>Paste the following configuration into the service file
+	<p>[Unit]<br />
+	Description=Ajenti panel<br />
+	After=network.target<br />
+	<br />
+	[Service]<br />
+	Type=forking<br />
+	PIDFile=/var/run/ajenti.pid<br />
+	ExecStart=/usr/bin/python3 /usr/local/bin/ajenti-panel -d<br />
+	ExecStartPost=/bin/sleep 5<br />
+	<br />
+	[Install]<br />
+	WantedBy=multi-user.target</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># reload daemons<br />
+	sudo systemctl daemon-reload<br />
+	# enable and start ajenti service<br />
+	sudo systemctl enable ajenti --now<br />
+	# set the PANEL variable<br />
+	PANEL=$(which ajenti-panel)<br />
+	# create and edit the initscript<br />
+	sudo nano /etc/init.d/ajenti</div>
+	</li>
+	<li>Paste the following into the init file
+	<p>#!/bin/sh<br />
+	<br />
+	### BEGIN INIT INFO<br />
+	# Provides:          ajenti<br />
+	# Required-Start:    $network $syslog $local_fs<br />
+	# Required-Stop:     $network $syslog $local_fs<br />
+	# Should-Start:      $local_fs<br />
+	# Should-Stop:       $local_fs<br />
+	# Default-Start:     2 3 4 5<br />
+	# Default-Stop:      0 1 6<br />
+	# Short-Description: Ajenti<br />
+	# Description:       Ajenti administration frontend<br />
+	### END INIT INFO<br />
+	<br />
+	if [ -e /lib/lsb/init-functions ]; then<br />
+	    . /lib/lsb/init-functions<br />
+	<br />
+	    log_success() {<br />
+	        log_success_msg &quot;\$1&quot;<br />
+	    }<br />
+	<br />
+	    log_failure() {<br />
+	        log_failure_msg &quot;\$1&quot;<br />
+	    }<br />
+	else<br />
+	    . /etc/rc.d/init.d/functions<br />
+	<br />
+	    log_success() {<br />
+	        echo_success<br />
+	        echo &quot;\$1&quot;<br />
+	    }<br />
+	<br />
+	    log_failure() {<br />
+	        echo_failure<br />
+	        echo &quot;\$1&quot;<br />
+	    }<br />
+	fi<br />
+	<br />
+	NAME=Ajenti<br />
+	PIDFILE=/var/run/ajenti.pid<br />
+	<br />
+	case &quot;\$1&quot; in<br />
+	    start)<br />
+	        echo &quot;Starting \$NAME:&quot;<br />
+	        export LC_CTYPE=en_US.UTF8<br />
+	<br />
+	        if pidofproc -p \$PIDFILE \$PANEL &gt; /dev/null; then<br />
+	            log_failure &quot;already running&quot;<br />
+	            exit 1<br />
+	        fi<br />
+	        if \$DAEMON -d ; then<br />
+	            log_success &quot;started&quot;<br />
+	        else<br />
+	            log_failure &quot;failed&quot;<br />
+	        fi<br />
+	        ;;<br />
+	    stop)<br />
+	        echo &quot;Stopping \$NAME:&quot;<br />
+	        if pidofproc -p \$PIDFILE \$PANEL &gt; /dev/null; then<br />
+	            killproc -p \$PIDFILE \$PANEL<br />
+	            /bin/rm -rf \$PIDFILE<br />
+	            log_success &quot;stopped&quot;<br />
+	        else<br />
+	           log_failure &quot;not running&quot;<br />
+	        fi<br />
+	        ;;<br />
+	    restart)<br />
+	        \$0 stop &amp;&amp; sleep 2 &amp;&amp; \$0 start<br />
+	        ;;<br />
+	    status)<br />
+	        if pidofproc -p \$PIDFILE \$PANEL &gt; /dev/null; then<br />
+	            log_success &quot;\$NAME is running&quot;<br />
+	        else<br />
+	            log_success &quot;\$NAME is not running&quot;<br />
+	        fi<br />
+	        ;;<br />
+	    *)<br />
+	        echo &quot;Usage: \$0 {start|stop|restart|status}&quot;<br />
+	        exit 1<br />
+	esac<br />
+	<br />
+	exit 0</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># make the init script executable<br />
+	sudo chmod +x /etc/init.d/ajenti<br />
+	# run the init script<br />
+	sudo /etc/init.d/ajenti start</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP:8000</li>
+	<li>Login with the username root and the root Linux password</li>
+	<li>Welcome to Ajenti</li>
+</ol>
+
+<p>Source: <a href="http://docs.ajenti.org/en/latest/man/install.html" target="_blank">http://docs.ajenti.org/en/latest/man/install.html</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
