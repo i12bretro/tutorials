@@ -1,5 +1,7 @@
 $(function(){
+	$('#content').css('font-size','100%');
   stepCount = 0;
+
   console.log('%ci12bretro', 'font-weight: 900; font-size: 40px; color: #f00; text-shadow: 3px 3px 0 #000, 4px 4px 0 #fff; border-bottom: 8px double #f00; padding: 0 8px;');
   console.log('%chttps://youtube.com/c/i12bretro', 'font-size: 9px; margin-left: 60px;');
   stepsText = [];
@@ -19,7 +21,7 @@ $(function(){
     stepCount = pi;
   });
 
-  $('code,div.codeBlock,textarea.codeBlock').each(function(i,e){
+  $('code:not(.noCheckbox),div.codeBlock:not(.noCheckbox),textarea.codeBlock:not(.noCheckbox)').each(function(i,e){
     theElement = $(this);
     var lines = theElement.html().split("\n");
     theElement.empty();
@@ -67,11 +69,43 @@ $(function(){
     });
   });
 
-  $('#gridContainer').append('<div>&nbsp;</div><div id="footerLinks"></div>');
-  $.ajax({ url: './includes/sites.json', type: 'get', dataType: 'json', success: function(r){
-      $.each(r, function(k,v){
-        $('#footerLinks').append(`<a href="${r[k].url}" target="_blank"><img src="${r[k].icon}" alt="${r[k].text}" title="${r[k].text}" /></a>`);
-      });
-    }
+  if(window.location.hostname.toLowerCase() !== 'i12bretro.lan'){
+    $('#gridContainer').append('<div>&nbsp;</div><div id="footerLinks"></div>');
+    $.ajax({ url: './includes/sites.json', type: 'get', dataType: 'json', success: function(r){
+        $.each(r, function(k,v){
+          $('#footerLinks').append(`<a href="${r[k].url}" target="_blank"><img src="${r[k].icon}" alt="${r[k].text}" title="${r[k].text}" /></a>`);
+        });
+      }
+    });
+    $('body').prepend('<div style="position: fixed; top: 15px; right: 15px; z-index: 100;"><button id="fontSizeUp">&#9650;<span>A</span></button>&nbsp;&nbsp;<button id="fontSizeDown"><span>A</span>&#9660;</button></div>');
+  }
+	
+	fontAdjustment = 0;
+	fontSizeDir = '';
+
+	$(document).on('click','#fontSizeUp',function(){
+		if(fontSizeDir == 'down'){
+			fontAdjustment = 0;
+		}
+		fontAdjustment += 2;
+		fontSizeDir = 'up';
+		console.log(`Resized font ${fontSizeDir} ${fontAdjustment}%`);
+		$('#content *:not(input[type=checkbox]').each(function(){
+			fontSize = $(this).css('font-size');
+			$(this).css('font-size', `calc(${fontSize} + ${fontAdjustment}%)`);
+		});
+  });
+	
+	$(document).on('click','#fontSizeDown',function(){
+		if(fontSizeDir == 'up'){
+			fontAdjustment = 0;
+		}
+		fontAdjustment -= 2;
+		fontSizeDir = 'down';
+		console.log(`Resized font ${fontSizeDir} ${fontAdjustment}%`);
+		$('#content *:not(input[type=checkbox]').each(function(){
+			fontSize = $(this).css('font-size');
+			$(this).css('font-size', `calc(${fontSize} + ${fontAdjustment}%)`);
+		});
   });
 });
