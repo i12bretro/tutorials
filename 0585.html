@@ -1,0 +1,58 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Zulip Self-Hosted Discord Alternative on Debian/Ubuntu Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Alternative,Zulip,Open Source,Discord Alternative,Linux,Debian,Ubunut,Browser Based,Self-Hosted Discord Alternative,Install Zulip On Debian,Zulip Installation Guide,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Zulip Self-Hosted Discord Alternative on Debian/Ubuntu Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="10/01/2023 10:00:51 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Zulip Self-Hosted Discord Alternative on Debian/Ubuntu Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Zulip?</h2>
+
+<blockquote>Zulip is a powerful, open source group chat application that combines the immediacy of real-time chat with the productivity benefits of threaded conversations. Zulip is used by open source projects, Fortune 500 companies, large standards bodies, and others who need a real-time chat system that allows users to easily process hundreds or thousands of messages a day<em>. -<a href="https://github.com/zulip/zulip" target="_blank">https://github.com/zulip/zulip</a></em></blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Log into the Linux based device</li>
+	<li>Run the following commands in the terminal
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# create a working directory and change to it<br />
+	mkdir ./zulip &amp;&amp; cd ./zulip<br />
+	# download zulip<br />
+	wget https://www.zulip.org/dist/releases/zulip-server-latest.tar.gz<br />
+	# extract the tar.gz<br />
+	tar -xf zulip-server-latest.tar.gz<br />
+	# run the zulip installer, replace hostname and email values<br />
+	sudo -s ./zulip-server-*/scripts/setup/install --self-signed --hostname=debian.i12bretro.local --email=i12bretro@i12bretro.local</div>
+	</li>
+	<li>After the installation completes, copy the URL provided</li>
+	<li>Open a web browser and paste the copied URL</li>
+	<li>Enter an email address &gt; Click Create organization</li>
+	<li>Enter an Organization name, Full name and a password &gt; Click Sign up</li>
+	<li>Welcome to Zulip</li>
+</ol>
+
+<p>More Info: <a href="https://zulip.com/" target="_blank">https://zulip.com/</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
