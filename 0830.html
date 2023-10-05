@@ -1,0 +1,121 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Akaunting - Open Source Accounting Software - On Windows</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Accounting,Accounting Software,Akaunting,Browser Based,Expense Tracker,Expense Tracking,Homelab,Income Tracking,Invoice,Invoicing Software,Payment Manager,Windows,Microsoft Windows,PHP,XAMPP,PHP Based Application,WA,WAMP,MySQL,MariaDB,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Akaunting - Open Source Accounting Software - On Windows">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="10/01/2023 10:19:44 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Akaunting - Open Source Accounting Software - On Windows</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Akaunting?</h2>
+
+<blockquote><em>Akaunting is a free, open source and online accounting software designed for small businesses and freelancers. -<a href="https://github.com/akaunting/akaunting" target="_blank">https://github.com/akaunting/akaunting</a></em></blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Download XAMPP <a href="https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/" target="_blank">Download</a></li>
+	<li>Download Akaunting <a href="https://github.com/akaunting/akaunting/releases/latest" target="_blank">Download</a></li>
+	<li><label for="cb_li_917989_0">Download Microsoft Visual C++ </label><label for="cb_li_917989_0"><a href="https://aka.ms/vs/16/release/vc_redist.x64.exe" target="_blank">Download</a></label></li>
+	<li>Install Microsoft Visual C++</li>
+	<li>Right click the downloaded XAMPP .zip file &gt; Extract All...</li>
+	<li>Right click the downloaded Akaunting .zip file &gt; Extract All...</li>
+	<li>Rename the extacted folder to akaunting</li>
+	<li>Cut the akaunting folder inside the XAMPP/htdocs directory</li>
+	<li>Navigate into the akaunting folder &gt; Create a copy of .env.example</li>
+	<li>Rename the copy .env</li>
+	<li>Edit the .env file in a text editor</li>
+	<li>Edit the values in .env as follows
+	<p>APP_URL=http://DNSorIP/akaunting<br />
+	LOCALE=en-US<br />
+	<br />
+	DB_HOST=localhost<br />
+	DB_PORT=3306<br />
+	<br />
+	DB_NAME=akaunting<br />
+	DB_USERNAME=akaunting_rw<br />
+	DB_PASSWORD=@kaunt1ng!</p>
+
+	<p>DB_PREFIX=</p>
+	</li>
+	<li>Save the changes to .env and close the text editor</li>
+	<li>Navigate back to the Downloads directory and cut the extracted XAMPP directory to a safe location to run from, C:\Program Files for example</li>
+	<li>Run XAMPP/setup_xampp.bat to update the configuration files with the new server location</li>
+	<li>Navigate into XAMPP/PHP and edit php.ini in a text editor</li>
+	<li>Find the list of extensions and make sure the following are enabled by removing the ; at the start of the line
+	<p>extension=gd<br />
+	extension=intl</p>
+	</li>
+	<li>Save the changes to php.ini and close the text editor</li>
+	<li>Right click the Start button &gt; Settings &gt; About</li>
+	<li>Click the Advanced system settings option</li>
+	<li>Click the Environment Variables...</li>
+	<li>Edit the System Path variable</li>
+	<li>Click the New button</li>
+	<li>Add the PHP installation directory (ie C:\Program Files\xampp\PHP\)</li>
+	<li>Click OK to all open dialog windows</li>
+	<li>Back in File Explorer, run XAMPP/xampp-control.exe</li>
+	<li>Click the Start buttons next to Apache and MySQL</li>
+	<li>Navigate to XAMPP/mysql/bin</li>
+	<li>Hold the SHIFT key and right click in the white space &gt; Open PowerShell window here...</li>
+	<li>Run the following commands in the PowerShell window to setup the database
+	<div class="codeBlock PS"># connect to mysql<br />
+	.\mysql -u root<br />
+	# create the database<br />
+	CREATE DATABASE akaunting;<br />
+	# create the service account<br />
+	GRANT ALL ON akaunting.* to &#39;akaunting_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;@kaunt1ng!&#39;;<br />
+	# flush privileges<br />
+	FLUSH PRIVILEGES;<br />
+	# close mysql connection<br />
+	EXIT;<br />
+	# change directory to the akaunting folder<br />
+	cd ..\..\htdocs\akaunting<br />
+	# generate an app key<br />
+	php artisan key:generate<br />
+	# exit powershell<br />
+	exit</div>
+	</li>
+</ol>
+
+<h2>Akaunting Web Installer</h2>
+
+<ol>
+	<li>Open a web browser and navigate to http://DNSorIP/akaunting</li>
+	<li>Select a Language &gt; Click Next</li>
+	<li>Complete the Database form as shown below
+	<p>Hostname: localhost<br />
+	Username: akaunting_rw<br />
+	Password: @kaunt1ng!<br />
+	Database: akaunting</p>
+	</li>
+	<li>Click Next</li>
+	<li>Complete the Admin form by entering a Company Name, Company Email, Admin Email and Admin Password &gt; Click Next</li>
+	<li>Log in with the Admin username and password</li>
+	<li>On the Company tab, scroll to the bottom of the form and click Skip this step</li>
+	<li>Select/add the desired currencies &gt; Click Next</li>
+	<li>Click Next on the Taxes tab</li>
+	<li>Click the Create your first invoice link</li>
+	<li>Welcome to Akaunting</li>
+</ol>
+
+<p>Source: <a href="https://akaunting.com/docs/installation" target="_blank">https://akaunting.com/docs/installation</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
