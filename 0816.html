@@ -1,0 +1,95 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Invoice Plane - Invoice and Payment Manager - On Windows</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Browser Based,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Accounting,Accounting Software,Income Tracking,Homelab,Invoice,Invoicing Software,MariaDB,Microsoft Windows,MySQL,PHP,PHP Based Application,Payment Manager,WAMP,Windows,XAMPP,Invoice Plane,How To Install Invoice Plane On Windows,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Invoice Plane - Invoice and Payment Manager - On Windows">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="10/01/2023 02:23:32 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Invoice Plane - Invoice and Payment Manager - On Windows</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Invoice Plane?</h2>
+
+<blockquote>
+<p><em>[Invoice Plane is a] self-hosted open source application for managing your invoices, clients and payments.-<a href="https://www.invoiceplane.com/" target="_blank">https://www.invoiceplane.com/</a></em></p>
+</blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Download XAMPP <a href="https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/" target="_blank">Download</a></li>
+	<li>Download Invoice Plane <a href="https://github.com/InvoicePlane/InvoicePlane/releases/latest" target="_blank">Download</a></li>
+	<li><label for="cb_li_917989_0">Download Microsoft Visual C++ </label><label for="cb_li_917989_0"><a href="https://aka.ms/vs/16/release/vc_redist.x64.exe" target="_blank">Download</a></label></li>
+	<li>Install Microsoft Visual C++</li>
+	<li>Right click the downloaded XAMPP file &gt; Extract All...</li>
+	<li>Right click the downloaded Invoice Plane .zip file &gt; Extract All...</li>
+	<li>Rename the extracted folder invoiceplane</li>
+	<li>Cut the invoiceplane folder inside the XAMPP/htdocs directory</li>
+	<li>Copy the extracted XAMPP directory to a safe location to run from, C:\Program Files for example</li>
+	<li>Navigate into the XAMPP/htdocs/invoiceplane folder</li>
+	<li>Make a copy of the ipconfig.php.example and rename it ipconfig.php</li>
+	<li>Edit ipconfig.php in a text editor</li>
+	<li>Set the IP_URL value to http://DNSorIP/invoiceplane
+	<p>IP_URL=http://localhost/invoiceplane</p>
+	</li>
+	<li>Save the changes to ipconfig.php and close the text editor</li>
+	<li>Run XAMPP/setup_xampp.bat to update the configuration files with the new server location</li>
+	<li>Run XAMPP/xampp-control.exe</li>
+	<li>Click the Start button next to Apache and MySQL</li>
+	<li>Navigate to XAMPP/mysql/bin</li>
+	<li>Hold the SHIFT key and right click in the white space &gt; Open PowerShell windows here...</li>
+	<li>Type the following in the PowerShell window to setup the database
+	<div class="codeBlock PS">.\mysql -u root<br />
+	CREATE DATABASE invoice_plane;<br />
+	CREATE USER &#39;invoice_plane_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;Inv0!c3Pl@n3!&#39;;<br />
+	GRANT ALL ON invoice_plane.* TO &#39;invoice_plane_rw&#39;@&#39;localhost&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	exit;<br />
+	exit</div>
+	</li>
+</ol>
+
+<h2>Invoice Plane Web Installer</h2>
+
+<ol>
+	<li>Open a web browser and navigate to http://DNSorIP/invoiceplane</li>
+	<li>The Invoice Plane Installation web installer should be load</li>
+	<li>Click the Setup button</li>
+	<li>Select a Language &gt; Click Continue</li>
+	<li>Click Continue on the Prerequisites page</li>
+	<li>Complete the Database Details form as follows
+	<p>Hostname: localhost<br />
+	Port: 3306<br />
+	Username: invoice_plane_rw<br />
+	Password: Inv0!c3Pl@n3!<br />
+	Database: invoice_plane</p>
+	</li>
+	<li>Click the Try Again button then click Continue</li>
+	<li>Complete the Create User Account form &gt; Click Continue</li>
+	<li>Back in File Explorer, navigate to XAMPP/htdocs/invoiceplane and edit ipconfig.php</li>
+	<li>Find the DISABLE_SETUP setting and change the value to true</li>
+	<li>Save the changes to ipconfig.php and close the text editor</li>
+	<li>Back in the browser, click the Login button</li>
+	<li>Login with the Email and Password setup during the installation</li>
+	<li>Welcome to Invoice Plane</li>
+</ol>
+
+<p>Source: <a href="https://wiki.invoiceplane.com/en/1.0/getting-started/installation" target="_blank">https://wiki.invoiceplane.com/en/1.0/getting-started/installation</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
