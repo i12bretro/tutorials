@@ -1,0 +1,118 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Akaunting - Open Source Accounting Software - On Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Accounting,Accounting Software,Akaunting,Expense Tracker,Expense Tracking,Homelab,Income Tracking,Invoice,Invoicing Software,Linux,Payment Manager,Ubuntu,Debian,PHP,MariaDB,MySQL,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Akaunting - Open Source Accounting Software - On Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="10/09/2023 12:20:47 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Akaunting - Open Source Accounting Software - On Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Akaunting?</h2>
+
+<blockquote><em>Akaunting is a free, open source and online accounting software designed for small businesses and freelancers. -<a href="https://github.com/akaunting/akaunting" target="_blank">https://github.com/akaunting/akaunting</a></em></blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal window:
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install prerequisites<br />
+	sudo apt install curl wget zip lsb-release apt-transport-https ca-certificates -y<br />
+	# add the php gpg key<br />
+	sudo wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg<br />
+	# add the php apt repository<br />
+	echo &quot;deb https://packages.sury.org/php/ $(lsb_release -sc) main&quot; | sudo tee /etc/apt/sources.list.d/php.list<br />
+	# update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install Apache HTTPD and MySQL<br />
+	sudo apt install apache2 mariadb-server mariadb-client -y<br />
+	# install PHP components<br />
+	sudo apt install php8.0 libapache2-mod-php8.0 php8.0-common php8.0-xml php8.0-bcmath php8.0-gd php8.0-mbstring php8.0-curl php8.0-zip php8.0-gmp php8.0-mysql php8.0-intl -y<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type N and press Enter to not switch to unix socket authentication</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the database and database user
+	<div class="codeBlock">CREATE DATABASE akaunting;<br />
+	GRANT ALL ON akaunting.* to &#39;akaunting_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;@kaunt1ng!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># lookup latest akaunting release URL<br />
+	regex=&#39;&quot;browser_download_url&quot;: &quot;(https:\/\/github.com\/akaunting\/akaunting\/releases\/download\/[^/]*\/[^/]*\.zip)&quot;&#39; &amp;&amp; response=$(curl -H &quot;Accept: application/vnd.github.v3+json&quot; https://api.github.com/repos/akaunting/akaunting/releases/latest) &amp;&amp; [[ $response =~ $regex ]] &amp;&amp; downloadURL=&quot;${BASH_REMATCH[1]}&quot;<br />
+	# download the latest release<br />
+	wget -O /tmp/akaunting.zip $downloadURL<br />
+	# extract the download .zip archive<br />
+	sudo unzip /tmp/akaunting.zip -d /var/www/html/akaunting<br />
+	# copy sample .env file<br />
+	sudo cp /var/www/html/akaunting/.env.example /var/www/html/akaunting/.env<br />
+	# generate application key<br />
+	# if prompted, answer yes<br />
+	sudo php /var/www/html/akaunting/artisan key:generate<br />
+	# set the owner of the akaunting directory<br />
+	sudo chown -R www-data:www-data /var/www/html/akaunting<br />
+	# enable mod_rewrite<br />
+	sudo a2enmod rewrite<br />
+	# restart apache2 service<br />
+	sudo systemctl restart apache2</div>
+	</li>
+</ol>
+
+<h2>Akaunting Web Installer</h2>
+
+<ol>
+	<li>Open a web browser and navigate to http://DNSorIP/akaunting/index.php</li>
+	<li>Select a Language &gt; Click Next</li>
+	<li>Complete the Database form as shown below
+	<p>Hostname: localhost<br />
+	Username: akaunting_rw<br />
+	Password: @kaunt1ng!<br />
+	Database: akaunting</p>
+	</li>
+	<li>Click Next</li>
+	<li>Complete the Admin form by entering a Company Name, Company Email, Admin Email and Admin Password &gt; Click Next</li>
+	<li>Log in with the Admin username and password</li>
+	<li>On the Company tab, scroll to the bottom of the form and click Skip this step</li>
+	<li>Select/add the desired currencies &gt; Click Next</li>
+	<li>Click Next on the Taxes tab</li>
+	<li>Click the Create your first invoice link</li>
+	<li>Welcome to Akaunting</li>
+</ol>
+
+<p>Source: <a href="https://akaunting.com/docs/installation" target="_blank">https://akaunting.com/docs/installation</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
