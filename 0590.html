@@ -1,0 +1,75 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Homer Application Dashboard on Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Linux,Debian,Application Dashboard,Homer,Homer Application Dashboard,NodeJS,Homelab Dashboard,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Homer Application Dashboard on Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="10/14/2023 02:45:44 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Homer Application Dashboard on Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Homer?</h2>
+
+<blockquote>
+<p><em>A dead simple static HOMepage for your servER to keep your services on hand, from a simple yaml configuration file. -<a href="https://github.com/bastienwirtz/homer" target="_blank">https://github.com/bastienwirtz/homer</a></em></p>
+</blockquote>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal window
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install prerequisites<br />
+	sudo apt install git curl apache2 -y<br />
+	# add nodejs software repository<br />
+	curl -sL https://deb.nodesource.com/setup_16.x | sudo bash -<br />
+	# install nodejs<br />
+	sudo apt install nodejs -y<br />
+	# clone the homer git repository<br />
+	git clone https://github.com/bastienwirtz/homer.git ./homer<br />
+	# change directory to the source code<br />
+	cd homer<br />
+	# checkout the latest version<br />
+	git checkout &quot;$(git tag --sort=v:refname | tail -n1)&quot;<br />
+	# clean npm cache<br />
+	npm cache clean --force<br />
+	# install npm dependencies<br />
+	npm install<br />
+	# fix npm vulnerabilities<br />
+	npm audit fix<br />
+	# build homer<br />
+	npm run build<br />
+	# copy the sample config.yml<br />
+	sudo cp ./dist/assets/config.yml.dist ./dist/assets/config.yml<br />
+	# copy the dist directory to web root<br />
+	sudo cp ./dist /var/www/html/homer -r</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP/homer</li>
+	<li>Welcome to Homer</li>
+	<li>To make changes to the dashboard, edit the config.yml file with the following command
+	<div class="codeBlock"># edit homer config.yml<br />
+	sudo nano /var/www/html/homer/assets/config.yml</div>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Back in the web browser, refresh the page to view the changes</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
