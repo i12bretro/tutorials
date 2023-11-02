@@ -1,0 +1,80 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Organizr - A Homelab Services Organizer/Dashboard - on Windows</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Application Dashboard,Homelab Dashboard,Organizr Application Dashboard,Windows,Microsoft Windows,XAMPP,PHP,MySQL,Organizr,Organizr V2,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Organizr - A Homelab Services Organizer/Dashboard - on Windows">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="10/15/2023 09:15:50 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Organizr - A Homelab Services Organizer/Dashboard - on Windows</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Organizr?</h2>
+
+<blockquote><em>ORGANIZR aims to be your one stop shop for your Servers Frontend. Do you have quite a bit of services running on your computer or server? Do you have a lot of bookmarks or have to memorize a bunch of ip&rsquo;s and ports? Well, Organizr is here to help with that... -<a href="https://organizr.app/" target="_blank">https://organizr.app/</a></em></blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Download XAMPP <a href="https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/" target="_blank">Download</a></li>
+	<li>Download Organizr <a href="https://github.com/causefx/Organizr" target="_blank">Download</a></li>
+	<li><label for="cb_li_917989_0">Download Microsoft Visual C++ </label><label for="cb_li_917989_0"><a href="https://aka.ms/vs/16/release/vc_redist.x64.exe" target="_blank">Download</a></label></li>
+	<li>Install Microsoft Visual C++</li>
+	<li>Right click the downloaded XAMPP file &gt; Extract All...</li>
+	<li>Right click the downloaded Organizr .zip file &gt; Extract All...</li>
+	<li>Rename the extracted folder organizr</li>
+	<li>Cut the organizr folder inside the XAMPP/htdocs directory</li>
+	<li>Copy the extracted XAMPP directory to a safe location to run from, C:\Program Files for example</li>
+	<li>Navigate into XAMPP/PHP and edit php.ini in a text editor</li>
+	<li>Find the list of extensions and make sure the following are enabled by removing the ; at the start of the line
+	<p>extension=pdo_sqlite<br />
+	extension=curl<br />
+	extension=sqlite3</p>
+	</li>
+	<li>Save the changes to php.ini</li>
+	<li>Navigate into XAMPP/Apache/conf and edit httpd.conf in a text editor</li>
+	<li>Search the file for <directory></directory></li>
+	<li>Overwrite the existing values with the following
+	<p>Options Indexes FollowSymLinks<br />
+	AllowOverride All<br />
+	Require all granted<br />
+	RewriteEngine On<br />
+	RewriteCond %{REQUEST_FILENAME} !-f<br />
+	RewriteCond %{REQUEST_FILENAME} !-d<br />
+	RewriteRule ^ /organizr/api/v2/index.php [QSA,L]</p>
+	</li>
+	<li>Run XAMPP/setup_xampp.bat to update the configuration files with the new server location</li>
+	<li>Run XAMPP/xampp-control.exe</li>
+	<li>Click the Start button next to Apache</li>
+	<li>Back in File Explorer, while holding Shift, right click in the whitespace &gt; Open PowerShell window here</li>
+	<li>Run the following command in the open PowerShell window to generate a random string
+	<div class="codeBlock PS">[Convert]::ToBase64String((1..20|%{[byte](Get-Random -Max 256)}))</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP/organizr</li>
+	<li>Set the Installation Type to Personal &gt; Click Next</li>
+	<li>Complete the registration form by entering a username, email address and password &gt; Click Next</li>
+	<li>Copy the randomly generated string from PowerShell and paste it in the Hash Key field</li>
+	<li>Enter a Registration Password &gt; Click Next</li>
+	<li>Enter organizr.db as the Database Name and C:\Program Files\xampp\htdocs\organizr\data\ as the Database Path &gt; Click Test / Create Path &gt; Click Next</li>
+	<li>Review the summary &gt; Click Finish</li>
+	<li>Welcome to Organizr</li>
+</ol>
+
+<p>Source: <a href="https://docs.organizr.app/installation/prerequisites/installing-php" target="_blank">https://docs.organizr.app/installation/prerequisites/installing-php</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
