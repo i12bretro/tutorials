@@ -1,0 +1,63 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Setup GoAccess Web Log Analyzer on Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Debian,Ubuntu,Linux,Web Analyzer,Open Source,GoAccess,Web Server Monitoring,Apache HTTPD,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Setup GoAccess Web Log Analyzer on Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="10/27/2023 01:48:45 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Setup GoAccess Web Log Analyzer on Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is GoAccess?</h2>
+
+<p><em>GoAccess is an open source real-time web log analyzer and interactive viewer that runs in a terminal in *nix systems or through your browser. It provides fast and valuable HTTP statistics for system administrators that require a visual server report on the fly.</em> - <a href="https://goaccess.io/" target="_blank">https://goaccess.io/</a></p>
+
+<h2>Installing GoAccess</h2>
+
+<ol>
+	<li>Log into the Linux host</li>
+	<li>Run the following commands in a terminal window:
+	<div class="codeBlock"># update software respositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install prerequesities<br />
+	sudo apt install gnupg2 -y<br />
+	# add goaccess gpg key<br />
+	wget -O - https://deb.goaccess.io/gnugpg.key | sudo apt-key add -<br />
+	# add goaccess apt repository<br />
+	echo &quot;deb http://deb.goaccess.io/ $(lsb_release -cs) main&quot; | sudo tee -a /etc/apt/sources.list.d/goaccess.list<br />
+	# update software repositories again<br />
+	sudo apt update<br />
+	# install goaccess<br />
+	sudo apt install goaccess -y<br />
+	# install apache2<br />
+	sudo apt install apache2 -y<br />
+	# enable the real-time dashboard<br />
+	sudo goaccess /var/log/apache2/access.log --log-format=COMBINED -a -o /var/www/html/monitor.html --real-time-html</div>
+	</li>
+</ol>
+
+<h2>View GoAccess Web Dashboard</h2>
+
+<ol>
+	<li>Open a web browser and navigate to http://DNSorIP/monitor.html</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
