@@ -1,0 +1,151 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Flashing H310/H710 RAID Controllers to LSI IT Mode</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Install Guide,LSI,RAID Controller,H310,H710,RAID,Custom,Firmware,Custom Firmware,IT Mode,TrueNAS,Proxmox,VM,Linux,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Flashing H310/H710 RAID Controllers to LSI IT Mode">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="10/28/2023 01:16:46 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Flashing H310/H710 RAID Controllers to LSI IT Mode</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Background</h2>
+
+<p>I recently purchased a Dell Poweredge server with a H310 RAID controller. One of the purposes of the new server is to run TrueNAS Scale as a VM inside Proxmox. To get the best performance out of TrueNAS and ZFS, the H310 needs to be flashed to LSI IT mode so ZFS can have direct access to the drives. IT mode also improves the disk drive IOPS (Input/output operations per second) performance.</p>
+
+<h2>What is LSI IT Mode?</h2>
+
+<p>IT (Initiator Target) mode essentially disables the hardware RAID capabilities of the controller, allowing the operating system to see and interact with each disk drive directly.</p>
+
+<h2>Disclaimer</h2>
+
+<p>This process will overwrite the firmware on the RAID controller. If not done correctly, the process can damage and brick the RAID controller.</p>
+
+<h2>Things You Will Need</h2>
+
+<ul>
+	<li>A USB flash drive, at least 4 GB <a href="https://amzn.to/3wkR5ju" target="_blank">https://amzn.to/3wkR5ju</a> | <a href="https://amzn.to/3qkrJ1p" target="_blank">https://amzn.to/3qkrJ1p</a> | <a href="https://amzn.to/3Nhu9b9" target="_blank">https://amzn.to/3Nhu9b9</a></li>
+	<li>One of the following hardware RAID controllers
+	<ul>
+		<li class="noCheckbox">H310 Mini Mono (⇦ used in this tutorial)</li>
+		<li class="noCheckbox">H310 Full Size</li>
+		<li class="noCheckbox">H710 Mini Mono</li>
+		<li class="noCheckbox">H710P Mini Mono</li>
+		<li class="noCheckbox">H710 Full Size</li>
+		<li class="noCheckbox">H710P Full Size</li>
+		<li class="noCheckbox">H810 Full Size</li>
+	</ul>
+	</li>
+</ul>
+
+<h2>Before You Begin</h2>
+
+<ol>
+	<li>Remove the battery from the RAID controller</li>
+	<li>Disable the following technologies in the BIOS
+	<ul>
+		<li>Virtualization</li>
+		<li>SR-IOV</li>
+		<li>IOMMU</li>
+	</ul>
+	</li>
+	<li>Set the Boot Mode to BIOS/Legacy (not UEFI)</li>
+</ol>
+
+<h2>Preparing the Flash Utilities</h2>
+
+<p>Huge thanks to <a href="http://fohdeesha.com" target="_blank">fohdeesha.com</a> for compiling the software and steps to complete the flashing process into an easy to follow procedure.</p>
+
+<ol>
+	<li>Download the PERC flashing utilities <a href="https://fohdeesha.com/docs/store/perc/perc-crossflash-v2.2.zip" target="_blank">Download</a></li>
+	<li>Download the Ventoy installer <a href="https://www.ventoy.net/en/download.html" target="_blank">Download</a></li>
+	<li>Extract the downloaded perc-crossflash .zip file</li>
+	<li>Extract the downloaded Ventoy .zip file</li>
+	<li>Run Ventoy2Disk.exe</li>
+	<li>Plug in a USB flash drive at least 4 GB in size</li>
+	<li>Click the refresh icon</li>
+	<li>Select the flash drive from the device dropdown</li>
+	<li>Click the Install button</li>
+	<li>After the installation completes, copy the Linux and FreeDOS .iso files from the extracted perc-crossflash folder to the Ventoy partition</li>
+	<li>Safely remove the USB flash drive</li>
+	<li>Plug the flash drive into the target server</li>
+</ol>
+
+<h2>Collecting RAID Controller Information</h2>
+
+<ol>
+	<li>Power on the server hardware &gt; Boot to the flash drive</li>
+	<li>Select the FreeDOS .iso from the Ventoy menu</li>
+	<li>Once FreeDOS has booted, run the following command
+	<div class="codeBlock CMD">info</div>
+	</li>
+	<li>Take a photo of and/or carefully write down the SAS address from the output</li>
+	<li>Compare the output Product Name and ChipRevision (H310 Mini in this example) to the listing on https://fohdeesha.com/docs/perc.html#finding-your-card-revision; If there isn&#39;t an <em>EXACT MATCH </em>stop</li>
+	<li>Shutdown or reboot the server</li>
+</ol>
+
+<h2>Flashing to IT Mode</h2>
+
+<p><em>The steps below are specific to the H310 Mini RAID controller in my device (https://fohdeesha.com/docs/H310.html). Make sure to follow the steps for your target RAID controller model.</em></p>
+
+<ol>
+	<li>Power on the server hardware &gt; Boot to the flash drive</li>
+	<li>Select the Linux .iso from the Ventoy menu</li>
+	<li>Log into Linux using the username user and password live</li>
+	<li>If you plan to SSH into the device, run the following command to output the IP address and connect via SSH
+	<div class="codeBlock CMD">ipinfo</div>
+	</li>
+	<li>Continue with the following commands in Linux on the target server device
+	<div class="codeBlock CMD"># elevate to root shell<br />
+	sudo su -<br />
+	# output the SAS address<br />
+	# take a photo of and/or carefully write down the SAS address from the output<br />
+	# it will be required after the flashing process<br />
+	sas-mega<br />
+	# flash the raid controller firmware<br />
+	H310-Mini<br />
+	# once the flash completes without errors, reboot the server<br />
+	reboot now</div>
+	</li>
+	<li>Boot to the flash drive</li>
+	<li>Select the Linux .iso from the Ventoy menu
+	<p>NOTE: If you see kernel panic errors during startup, shutdown the server hardware and power it back on and boot back into Linux from Ventoy</p>
+	</li>
+	<li>Log back into Linux using the username user and password live</li>
+	<li>Continue with the following commands
+	<div class="codeBlock CMD"># elevate to root shell<br />
+	sudo su -<br />
+	# set the sas address<br />
+	setsas &lt;%sas address from output earlier%&gt;<br />
+	# output info about the new state of the controller<br />
+	info</div>
+	</li>
+	<li>If you&#39;ll be booting from drives attached to the RAID controller, continue with the following steps to flash the boot ROM images
+	<div class="codeBlock CMD"># flash bios/legacy boot rom<br />
+	flashboot /root/Bootloaders/mptsas2.rom<br />
+	# flash uefi boot rom<br />
+	flashboot /root/Bootloaders/x64sas2.rom<br />
+	# shutdown the system<br />
+	shutdown now</div>
+	</li>
+	<li>Re-enable any BIOS settings that were changed prior to completing the flashing process</li>
+</ol>
+
+<p>Source: <a href="https://fohdeesha.com/docs/perc.html" target="_blank">https://fohdeesha.com/docs/perc.html</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
