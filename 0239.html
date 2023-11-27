@@ -1,0 +1,108 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Matomo - Self-Hosted Google Analytics Alternative - on Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Alternative To Google Analytics,Analytics,FOSS,Google Analytics,Google Analytics Alternative,Homelab,Linux,MariaDB,Matomo,MySQL,Self-hosted Web Analytics,Web Analytics,Web Traffic,Debian,Ubuntu,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Matomo - Self-Hosted Google Analytics Alternative - on Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="10/28/2023 01:30:12 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Matomo - Self-Hosted Google Analytics Alternative - on Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Matomo?</h2>
+
+<p><em>Matomo is the ethical alternative where you won&#39;t make privacy sacrifices or compromise your site. Matomo&#39;s the Google Analytics alternative that protects your data and your customer&#39;s privacy. A powerful web analytics platform with 100% data ownership.</em> - <a href="https://matomo.org/" rel="noopener" target="_blank">https://matomo.org</a></p>
+
+<h2>Installing Matomo</h2>
+
+<ol>
+	<li>Log into the Debian device</li>
+	<li>Run the following commands in a terminal:
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available updates<br />
+	sudo apt upgrade -y<br />
+	# install Apache HTTPD and MySQL<br />
+	sudo apt install apache2 mariadb-server mariadb-client -y<br />
+	# install PHP components<br />
+	sudo apt install php php-curl php-gd php-cli php-mysql php-xml php-mbstring -y<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the Matomo database and database user
+	<div class="codeBlock">CREATE DATABASE analytics;<br />
+	GRANT ALL ON analytics.* to &#39;analytics&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;An@lyt1c$!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands to download and extract Matomo in the Apache webroot
+	<div class="codeBlock"># download latest matomo build<br />
+	wget https://builds.matomo.org/matomo.zip<br />
+	# extract downloaded zip<br />
+	sudo unzip matomo.zip -d /var/www/html<br />
+	# move to webroot<br />
+	sudo mv /var/www/html/matomo /var/www/html/analytics<br />
+	# set the owner of the new analytics directory to www-data<br />
+	sudo chown -R www-data:www-data /var/www/html/analytics</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP/analytics</li>
+	<li>Click the Next button on the Welcome screen</li>
+	<li>Click the Next button on the System Check screen</li>
+	<li>Fill in the database connection form as follows and click the Next button
+	<p>Database Server: 127.0.0.1<br />
+	Login: analytics<br />
+	Password: An@lyt1c$!<br />
+	Database Name: analytics<br />
+	Table Prefix: <br />
+	Adapter: MySQLI</p>
+	</li>
+	<li>Click the Next button</li>
+	<li>Create an administrative logon and set the password &gt; Click the Next button</li>
+	<li>Complete the form to add the first website to collect analytics on &gt; Click the Next button</li>
+	<li>Copy the generated code into the header of the application to monitor</li>
+	<li>Click Next &gt; Click Next on the Congratulations page</li>
+	<li>Login with the admin logon created earlier</li>
+	<li>Welcome to free self-hosted web analytics</li>
+</ol>
+
+<h2>Installing Dark Theme (Optional)</h2>
+
+<ol>
+	<li>Click the gear icon in the top right</li>
+	<li>Select Platform &gt; Marketplace from the left navigation menu</li>
+	<li>Change the Show dropdown to Themes and search for Dark Theme</li>
+	<li>Find Dark Theme and click the Install button</li>
+	<li>Type the admin password to confirm the installation</li>
+	<li>Click the Activate Theme button</li>
+</ol>
+
+<p>Source: <a href="https://matomo.org/docs/installation/#getting-started" target="_blank">https://matomo.org/docs/installation/#getting-started</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
