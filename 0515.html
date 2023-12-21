@@ -1,0 +1,60 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Running a Vanilla ChromiumOS VM in Virtualbox</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="ChromiumOS VirtualBox Tutorial,How To Virtualize ChromiumOS,VirtualBox,Virtual Machine,Virtual ChromeBox,Virtual ChromeBook,ChromiumOS,ChromeOS,ChromiumOS VirtualBox VM,Virtualize ChromiumOS,Can You Virtualize ChromiumOS,Virtualization,VM,Virtual ChromiumOS,Install Guide,Hypervisor,ChromiumOS VM,ChromiumOS Installation,Open Source,ChromeOS VirtualBox VM,ChromeOS VirtualBox,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Running a Vanilla ChromiumOS VM in Virtualbox">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="03/22/2022 02:52:46 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Running a Vanilla ChromiumOS VM in Virtualbox</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <p><em>NOTE: This method uses an older outdated version of ChromiumOS</em></p>
+
+<ol>
+	<li>Open a web browser and download the ChromiumOS .ova <a href="http://sourceforge.net/projects/archiveos/files/c/chromeos-vanilla/ChromeOS-Vanilla-4028.0.2013_04_20_1810-r706c4144-VirtualBox.zip/download" target="_blank">Download</a></li>
+	<li>Extract the downloaded .zip file</li>
+	<li>Launch VirtualBox</li>
+	<li>Create a New VM by selecting Machine &gt; New
+	<p>Name: ChromiumOS<br />
+	Machine Folder: C:\VMs<br />
+	Type: Linux<br />
+	Version: Other Linux (32-bit)<br />
+	Memory Size: 2048 MB<br />
+	Hard disk: Use an existing virtual hard disk now</p>
+	</li>
+	<li>Click the folder icon &gt; Browse to and select the extracted ChromeOS-Vanilla .vdi file</li>
+	<li>Click Create</li>
+	<li>Select the VM and Click Settings</li>
+	<li>Select System &gt; Processor</li>
+	<li>Check the Enable PAE/NX checkbox</li>
+	<li>Select Display</li>
+	<li>Slide the Video Memory to 128 MB</li>
+	<li>Select Network</li>
+	<li>Set the attached to dropdown to Bridged Adapter</li>
+	<li>Expand the Advanced options area</li>
+	<li>Set the Adapter Type to Intel PRO/1000 MT Desktop</li>
+	<li>Click OK</li>
+	<li>Make sure the ChromiumOS VM is selected and click Start &gt; Normal</li>
+	<li>Click Continue on the Welcome! screen</li>
+	<li>Press Escape to cancel checking for updates</li>
+	<li>Click the browse as guest link</li>
+	<li>Welcome to ChromiumOS</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
