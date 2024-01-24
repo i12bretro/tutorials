@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Running Snipe-IT in Docker on Ubuntu Server">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="11/30/2023 06:23:56 AM" />
+        <meta name="revised" content="01/23/2024 05:18:38 PM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -53,7 +53,7 @@
 <ol>
 	<li>Continue with the following commands in terminal to setup and run Snipe-IT
 	<div class="codeBlock"># create working directories<br />
-	sudo mkdir ~/docker/snipeit -p &amp;&amp; sudo mkdir ~/docker/mariadb -p<br />
+	sudo mkdir ~/docker/snipeit/{config,data} -p &amp;&amp; sudo mkdir ~/docker/mariadb -p<br />
 	# create snipeit network<br />
 	docker network create snipeit<br />
 	# download the base configuration<br />
@@ -69,7 +69,7 @@
 	# --------------------------------------------<br />
 	APP_ENV=production<br />
 	APP_DEBUG=false<br />
-	APP_KEY=&lt;PASTED APP_KEY&gt;<br />
+	APP_KEY=&lt;%PASTED APP_KEY%&gt;<br />
 	APP_URL=null<br />
 	APP_TIMEZONE=&#39;America/New_York&#39;<br />
 	APP_LOCALE=en<br />
@@ -109,13 +109,13 @@
 	<li>Press CTRL+O, Enter, CTRL+X to write the changes to .env</li>
 	<li>Continue with the following commands in terminal
 	<div class="codeBlock"># set owner of docker directory<br />
-	sudo chown &quot;$USER&quot;:&quot;$USER&quot; /home/&quot;$USER&quot;/docker -R<br />
+	sudo chown &quot;$USER&quot;:&quot;$USER&quot; ~/docker -R<br />
 	# set permissions on docker directory<br />
 	sudo chmod g+rwx &quot;$HOME/docker&quot; -R<br />
 	# run the mariadb docker container<br />
-	docker run -d --name mariadb --network snipeit --network-alias db -e MYSQL_ROOT_PASSWORD=r00tp@ss -e MYSQL_USER=snipe_it_rw -e MYSQL_PASSWORD=Snip3-IT! -e MYSQL_DATABASE=snipe_it -v /home/$USER/docker/mariadb:/var/lib/mysql --restart=unless-stopped mariadb:latest<br />
+	docker run -d --name mariadb --network snipeit --network-alias db -e MYSQL_ROOT_PASSWORD=r00tp@ss -e MYSQL_USER=snipe_it_rw -e MYSQL_PASSWORD=Snip3-IT! -e MYSQL_DATABASE=snipe_it -v ~/docker/mariadb:/var/lib/mysql --restart=unless-stopped mariadb:latest<br />
 	# run the snipeit container<br />
-	docker run -d --name snipeit -p 8000:80 --network snipeit --env-file=/home/$USER/docker/snipeit/.env -v /home/$USER/docker/snipeit/data:/var/lib/snipeit -v /home/$USER/docker/snipeit/config:/config snipe/snipe-it:v5.1.7</div>
+	docker run -d --name snipeit -p 8000:80 --network snipeit --env-file=~/docker/snipeit/.env -v ~/docker/snipeit/data:/var/lib/snipeit -v ~/docker/snipeit/config:/config restart=unless-stopped snipe/snipe-it:v5.1.7</div>
 	</li>
 </ol>
 
