@@ -1,0 +1,147 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Roll Your Own Asset Management System with Snipe-IT</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Asset Management,Linux,IT Asset Management,Free Software,Self-hosted,Snipe-IT,Ubuntu,Debian,PHP,MySQL,MariaDB,Apache HTTPD,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Roll Your Own Asset Management System with Snipe-IT">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="12/23/2023 09:57:24 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Roll Your Own Asset Management System with Snipe-IT</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Snipe-IT?</h2>
+
+<p><em>Snipe-IT is a Free Open Source (FOSS) project built on Laravel. Snipe-IT was made for IT asset management, to enable IT departments to track who has which laptop, when it was purchased, which software licenses and accessories are available, and so on.</em> - <a href="https://snipe-it.readme.io/docs" target="_blank">https://snipe-it.readme.io/docs</a></p>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal window:
+	<div class="codeBlock"># update software respositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install prerequisites<br />
+	sudo apt install git openssl curl wget zip composer -y<br />
+	# install Apache HTTPD and MySQL<br />
+	sudo apt install apache2 mariadb-server mariadb-client -y<br />
+	# install PHP components<br />
+	sudo apt install php7.3 libapache2-mod-php7.3 php7.3-curl php7.3-tokenizer php7.3-ldap php7.3-cli php7.3-json php7.3-gd php7.3-mbstring php7.3-mysql php7.3-xml php7.3-zip php7.3-bcmath -y<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the Snipe-IT database and database user
+	<div class="codeBlock">CREATE DATABASE snipe_it;<br />
+	GRANT ALL ON snipe_it.* to &#39;snipe_it_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;$nip3-IT!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># clone snipe-it from github<br />
+	sudo git clone https://github.com/snipe/snipe-it /var/www/snipe-it<br />
+	# create a copy of the sample .env file<br />
+	sudo cp /var/www/snipe-it/.env.example /var/www/snipe-it/.env<br />
+	# edit the .env file<br />
+	sudo nano /var/www/snipe-it/.env</div>
+	</li>
+	<li>Edit the following environment variables as needed
+	<p>APP_ENV=production<br />
+	APP_DEBUG=false<br />
+	APP_KEY=SomethingSecure<br />
+	APP_URL=http://debian/snipe_it<br />
+	APP_TIMEZONE=&#39;America/New_York&#39;<br />
+	APP_LOCALE=en<br />
+	<br />
+	DB_CONNECTION=mysql<br />
+	DB_HOST=127.0.0.1<br />
+	DB_DATABASE=snipe_it<br />
+	DB_USERNAME=snipe_it_rw<br />
+	DB_PASSWORD=$nip3-IT!<br />
+	<br />
+	MAIL_DRIVER=smtp<br />
+	MAIL_HOST=smtp.i12bretro.local<br />
+	MAIL_PORT=25<br />
+	MAIL_USERNAME=null<br />
+	MAIL_PASSWORD=null<br />
+	MAIL_ENCRYPTION=null<br />
+	MAIL_FROM_ADDR=snipe-it@i12bretro.local<br />
+	MAIL_FROM_NAME=&#39;Snipe-IT&#39;<br />
+	MAIL_REPLYTO_ADDR=snipe-it@i12bretro.local<br />
+	MAIL_REPLYTO_NAME=&#39;Snipe-IT&#39;<br />
+	MAIL_AUTO_EMBED_METHOD=&#39;attachment&#39;</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to .env</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># set the owner of the snipe-it directory<br />
+	sudo chown -R www-data:www-data /var/www/snipe-it<br />
+	# setup composer working directory<br />
+	sudo mkdir /var/www/.composer<br />
+	sudo chown -R www-data:www-data /var/www/.composer<br />
+	cd /var/www/snipe-it<br />
+	# install dependencies with composer<br />
+	sudo -u www-data composer install --no-dev --prefer-source<br />
+	# generate app key, type yes to confirm generating a new key<br />
+	sudo php artisan key:generate<br />
+	# create snipe-ip apache configuration<br />
+	sudo nano /etc/apache2/sites-available/snipe-it.conf</div>
+	</li>
+	<li>Paste the following configuration into snipe-it.conf
+	<p>Alias /snipe-it &quot;/var/www/snipe-it/public&quot;<br />
+	&lt;Directory /var/www/snipe-it/public&gt;<br />
+	Allow From All<br />
+	AllowOverride All<br />
+	Options -Indexes<br />
+	&lt;/Directory&gt;</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to snipe-it.conf</li>
+	<li>Run the following command to enable the snipe-it site
+	<div class="codeBlock"># enable rewrite module<br />
+	sudo a2enmod rewrite<br />
+	# enable the snipe-it site<br />
+	sudo a2ensite snipe-it<br />
+	# restart the apache2 service<br />
+	sudo systemctl restart apache2</div>
+	</li>
+</ol>
+
+<h2>Snipe-IT Web Installer</h2>
+
+<ol>
+	<li>Open a web browser and navigate to http://DNSorIP/snipe-it</li>
+	<li>Review the Pre-Flight Checks summary &gt; Click the Next: Create Database Tables button</li>
+	<li>Once the database tables are created, Click the Next: Create User button</li>
+	<li>Create a user by inputting a site name, first name, last name, email address, username and password &gt; Click the Next: Save User button</li>
+	<li>Welcome to Snipe-IT</li>
+</ol>
+
+<p> </p>          </div>
+        </div>
+      </body>
+    </html>
+  
