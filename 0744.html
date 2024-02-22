@@ -1,0 +1,62 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Level Up Your Linux Shell with ZSH</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Debian,Linux,Terminal,Home Lab,Home Lab Ideas,Install Guide,ZSH,OhMyZSH,Themeable Linux Shell,Z Shell,Linux Shell,Customizable Linux Shell,Improved Linux Shell,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Level Up Your Linux Shell with ZSH">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="02/11/2024 06:22:21 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Level Up Your Linux Shell with ZSH</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is ZSH?</h2>
+
+<blockquote><em>The Z shell (Zsh) is a Unix shell that can be used as an interactive login shell and as a command interpreter for shell scripting. Zsh is an extended Bourne shell with many improvements, including some features of Bash, ksh, and tcsh. -<a href="https://en.wikipedia.org/wiki/Z_shell" target="_blank">https://en.wikipedia.org/wiki/Z_shell</a></em></blockquote>
+
+<h2>Install ZSH</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal window
+	<div class="codeBlock"># update apt repositories<br />
+	sudo apt update<br />
+	# install zsh<br />
+	sudo apt install zsh -y<br />
+	# test zsh is working<br />
+	zsh --version<br />
+	# set zsh as the default shell<br />
+	chsh -s $(which zsh)<br />
+	# close the current terminal window<br />
+	exit</div>
+	</li>
+	<li>Logout and back in or reboot the Linux device</li>
+	<li>Launch a new terminal window to verify ZSH is now the default shell</li>
+	<li>Step through the configuration questions</li>
+	<li>That&#39;s it! Enjoy the power and beauty of zsh</li>
+</ol>
+
+<h2>Install Oh My ZSH (Optional, but highly recommended)</h2>
+
+<ol>
+	<li>Continue with the following commands in a terminal window
+	<div class="codeBlock"># install oh my zsh<br />
+	sh -c &quot;$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&quot;</div>
+	</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
