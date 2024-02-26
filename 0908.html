@@ -1,0 +1,52 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install EmuDeck on Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Install Guide,Emulation,Frontend,Gaming,Linux,Portable,Retro Gaming,RetroAchievements,RetroAchievements.org,Retro Achievements,RetroArch,EmulationStation,EmulationStation Destop Edition,ESDE,Emulate On Linux,Retro Gaming On Linux,Debian,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install EmuDeck on Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="02/09/2024 08:07:37 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install EmuDeck on Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is EmuDeck?</h2>
+
+<blockquote><em>EmuDeck is a collection of scripts that allows you to autoconfigure your Steam Deck, it creates your roms directory structure and downloads all of the needed Emulators for you along with the best configurations for each of them. EmuDeck works great with Steam Rom Manager or with EmulationStation DE. -<a href="https://emudeck.github.io/about/" target="_blank">https://emudeck.github.io/about/</a></em></blockquote>
+
+<h2>Installing EmuDeck</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal window:
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install prerequisites<br />
+	sudo apt install bash flatpak git jq libfuse2 rsync unzip zenity -y<br />
+	# run emudeck installer<br />
+	curl -L https://raw.githubusercontent.com/dragoonDorise/EmuDeck/main/install.sh | bash</div>
+	</li>
+	<li>That&#39;s it! An EmuDeck shortcut should be sitting on the desktop</li>
+	<li>Launch EmuDeck</li>
+	<li>Select some emulators to install, copy some ROMs and GAME!</li>
+</ol>
+
+<p>Source: <a href="https://emudeck.github.io/how-to-install-emudeck/linux/" target="_blank">https://emudeck.github.io/how-to-install-emudeck/linux/</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
