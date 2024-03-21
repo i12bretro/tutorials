@@ -1,0 +1,110 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install SolidInvoice - Open Source Invoicing Software - on Windows</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Accounting,Accounting Software,Homelab,How To Install SolidInvoice On Windows,Income Tracking,Invoice,SolidInvoice,Invoicing Software,MariaDB,Microsoft Windows,MySQL,PHP,PHP Based Application,Payment Manager,WAMP,Windows,XAMPP,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install SolidInvoice - Open Source Invoicing Software - on Windows">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="02/07/2024 08:31:34 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install SolidInvoice - Open Source Invoicing Software - on Windows</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is SolidInvoice?</h2>
+
+<blockquote><em>SolidInvoice is a sophisticated open-source invoicing application designed to assist small businesses and freelancers in efficiently managing their daily billing operations. With its comprehensive range of features, this elegant online platform ensures that you receive timely payments. -<a href="https://github.com/SolidInvoice/SolidInvoice" target="_blank">https://github.com/SolidInvoice/SolidInvoice</a></em></blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Download XAMPP <a href="https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/" target="_blank">Download</a></li>
+	<li>Download SolidInvoice <a href="https://github.com/SolidInvoice/SolidInvoice/releases" target="_blank">Download</a></li>
+	<li><label for="cb_li_917989_0">Download Microsoft Visual C++ </label><label for="cb_li_917989_0"><a href="https://aka.ms/vs/16/release/vc_redist.x64.exe" target="_blank">Download</a></label></li>
+	<li>Install Microsoft Visual C++</li>
+	<li>Right click the downloaded XAMPP .zip file &gt; Extract All...</li>
+	<li>Right click the downloaded SolidInvoice .zip file &gt; Extract All...</li>
+	<li>Rename the extracted folder solidinvoice</li>
+	<li>Cut the solid folder inside the XAMPP/ directory</li>
+	<li>Copy the extracted XAMPP directory to a safe location to run from, C:\Program Files for example</li>
+	<li>Run XAMPP/setup_xampp.bat to update the configuration files with the new server location</li>
+	<li>Navigate into XAMPP/Apache/conf and edit httpd.conf in a text editor</li>
+	<li>Paste the following at the bottom of the httpd.conf file
+	<p>Listen 8080<br />
+	&lt;VirtualHost *:8080&gt;<br />
+	&emsp;DocumentRoot &quot;&lt;%SOLIDINVOICEPATH%&gt;&quot;<br />
+	&emsp;&lt;Directory &quot;&lt;%SOLIDINVOICEPATH%&gt;&quot;&gt;<br />
+	&emsp;&emsp;# enable the .htaccess rewrites<br />
+	&emsp;&emsp;AllowOverride All<br />
+	&emsp;&emsp;Order allow,deny<br />
+	&emsp;&emsp;Allow from All<br />
+	&emsp;&lt;/Directory&gt;<br />
+	&lt;/VirtualHost&gt;</p>
+	</li>
+	<li>Save the changes and close out of the editor</li>
+	<li>Navigate to XAMPP/php and edit php.ini in a text editor</li>
+	<li>Find the following lines and remove the ; to uncomment them
+	<p>extension=gd<br />
+	extension=intl<br />
+	extension=openssl<br />
+	extension=soap<br />
+	extension=xsl<br />
+	extension=zip<br />
+	<br />
+	zend_extension=opcache</p>
+	</li>
+	<li>Search for the phrase error_reporting and updated the value as shown
+	<p>error_reporting = E_ALL &amp; ~E_DEPRECATED &amp; ~E_STRICT</p>
+	</li>
+	<li>Save the changes to php.ini and close the text editor</li>
+	<li>Run XAMPP/xampp-control.exe</li>
+	<li>Click the Start button next to Apache and MySQL</li>
+	<li>Navigate to XAMPP/mysql/bin</li>
+	<li>Hold the SHIFT key and right click in the white space &gt; Open PowerShell window here...</li>
+	<li>Type the following in the PowerShell window to setup the SolidInvoice database
+	<div class="codeBlock PS">.\mysql -u root<br />
+	CREATE DATABASE solidinvoice;<br />
+	GRANT ALL ON solidinvoice.* TO &#39;solidinvoice_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;SolidInv0ic3!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+</ol>
+
+<h2>SolidInvoice Web Installer</h2>
+
+<ol>
+	<li>Open a web browser and navigate to http://DNSorIP:8080</li>
+	<li>Click the Next button at the lower right corner of the System Requirements page</li>
+	<li>Complete the Database settings as follows:
+	<p>Driver: Mysql<br />
+	Host: localhost<br />
+	Port: 3306<br />
+	User: solidinvoice_rw<br />
+	Password: SolidInv0ic3!<br />
+	Database Name: solidinvoice</p>
+	</li>
+	<li>Click Next</li>
+	<li>After the database schema is created successfully &gt; Click Next</li>
+	<li>Click the Log In Now button</li>
+	<li>Login with the admin credentials created earlier</li>
+	<li>Enter a Company Name and select the default currency &gt; Click Create</li>
+	<li>Welcome to SolidInvoice</li>
+</ol>
+
+<p>Source: <a href="https://docs.solidinvoice.co/en/latest/guide/getting_started.html" target="_blank">https://docs.solidinvoice.co/en/latest/guide/getting_started.html</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
