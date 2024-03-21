@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Running Snipe-IT in Docker on Ubuntu Server">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="01/23/2024 05:18:38 PM" />
+        <meta name="revised" content="03/21/2024 05:31:40 PM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -115,7 +115,7 @@
 	# run the mariadb docker container<br />
 	docker run -d --name mariadb --network snipeit --network-alias db -e MYSQL_ROOT_PASSWORD=r00tp@ss -e MYSQL_USER=snipe_it_rw -e MYSQL_PASSWORD=Snip3-IT! -e MYSQL_DATABASE=snipe_it -v ~/docker/mariadb:/var/lib/mysql --restart=unless-stopped mariadb:latest<br />
 	# run the snipeit container<br />
-	docker run -d --name snipeit -p 8000:80 --network snipeit --env-file=~/docker/snipeit/.env -v ~/docker/snipeit/data:/var/lib/snipeit -v ~/docker/snipeit/config:/config restart=unless-stopped snipe/snipe-it:v5.1.7</div>
+	docker run -d --name snipeit -p 8000:80 --network snipeit --env-file=~/docker/snipeit/.env -v ~/docker/snipeit/data:/var/lib/snipeit -v ~/docker/snipeit/config:/config --restart=unless-stopped snipe/snipe-it:v5.1.7</div>
 	</li>
 </ol>
 
