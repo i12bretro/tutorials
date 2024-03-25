@@ -1,0 +1,84 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Run Homarr Application Dashboard on Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Web Based,Web Based Tools,Application Dashboard,Homarr,Homarr Application Dashboard,Home Lab Dashboard,Homelab,Homepage,Linux,Debian,Ubuntu,NodeJS,NPM,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Run Homarr Application Dashboard on Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="02/11/2024 06:10:22 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Run Homarr Application Dashboard on Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Homarr?</h2>
+
+<p><em>Simplify the management of your server with Homarr - a sleek, modern dashboard that puts all of your apps and services at your fingertips. With Homarr, you can access and control everything in one convenient location. Homarr seamlessly integrates with the apps you&#39;ve added, providing you with valuable information and giving you complete control. Installation is a breeze, and Homarr supports a wide range of deployment methods.</em> -<a href="https://github.com/ajnart/homarr" target="_blank">https://github.com/ajnart/homarr</a></p>
+
+<h2>Installing NodeJS</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal window
+	<div class="codeBlock"># add nodejs software repository<br />
+	curl -sL https://deb.nodesource.com/setup_20.x | sudo bash -<br />
+	# install nodejs<br />
+	sudo apt install nodejs -y<br />
+	# test node is working<br />
+	node -v<br />
+	# test npm is working<br />
+	npm -v</div>
+	</li>
+</ol>
+
+<h2>Running Homarr</h2>
+
+<ol>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># install git<br />
+	sudo apt install git -y<br />
+	# cd back to home<br />
+	cd ~<br />
+	# clone homarr github repo<br />
+	git clone https://github.com/ajnart/homarr.git ./homarr<br />
+	# cd into git clone<br />
+	cd homarr<br />
+	# checkout the latest tagged release<br />
+	git checkout &quot;$(git tag --sort=v:refname | tail -n1)&quot;<br />
+	# install yarn<br />
+	sudo npm install -g yarn<br />
+	# install dependencies<br />
+	yarn install<br />
+	# create .env file from example<br />
+	cp ./.env.example ./.env<br />
+	# build homarr<br />
+	yarn build<br />
+	# migrate database schema<br />
+	yarn db:migrate<br />
+	# run homarr<br />
+	yarn start</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP:3000</li>
+	<li>Click the Start update process button</li>
+	<li>Select Standalone Linux / Windows &gt; Click Continue</li>
+	<li>Enter an admin username and enter and confirm a password &gt; Click Continue</li>
+	<li>Click the Go to your board button</li>
+	<li>Welcome to Homarr</li>
+</ol>
+
+<p>Source: <a href="https://homarr.dev/docs/getting-started/installation/" target="_blank">https://homarr.dev/docs/getting-started/installation/</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
