@@ -1,0 +1,74 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Run HomeDash - Server Monitor/Dashboard - on Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Web Based,Web Based Tools,Application Dashboard,Home Lab Dashboard,HomeDash,HomeDash Application Dashboard,HomeDash Homelab Dashboard,HomeDash2,Homelab,Homepage,Linux,Java,Maven,Java Based Application Dashboard,Maven Based Application Dashboard,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Run HomeDash - Server Monitor/Dashboard - on Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="03/08/2024 06:45:58 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Run HomeDash - Server Monitor/Dashboard - on Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Homedash?</h2>
+
+<blockquote><em>HomeDash is a simple dashboard that allows to monitor and interact with many different services in order to have a single entry point for one&#39;s dedicated server via a set of Plugins. It&#39;s easy to install, setup and use. -<a href="https://lamarios.github.io/Homedash2/" target="_blank">https://lamarios.github.io/Homedash2/</a></em></blockquote>
+
+<h2>Installing Java and Maven</h2>
+
+<ol>
+	<li>Log into the Linux based device</li>
+	<li>Run the following commands in the terminal
+	<div class="codeBlock"># update software respositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install java and maven<br />
+	sudo apt install default-jdk maven -y<br />
+	# check java version<br />
+	java --version<br />
+	# check maven version<br />
+	mvn -version</div>
+	</li>
+</ol>
+
+<h2>Running HomeDash</h2>
+
+<ol>
+	<li>Now that Java and Maven are installed, run the following commands to run HomeDash
+	<div class="codeBlock"># create working directories<br />
+	sudo mkdir /opt/homedash2 -p<br />
+	# set owner of working directories<br />
+	sudo chown $USER:$USER /opt/homedash2 -R<br />
+	# change directory to the new folder<br />
+	cd /opt/homedash2<br />
+	# lookup latest homedash jar URL<br />
+	regex='"browser_download_url": "(https:\/\/github.com\/lamarios\/Homedash2\/releases\/download\/[^/]*\/Homedash-[^/]*\.jar)"' &amp;&amp; response=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/lamarios/Homedash2/releases/latest) &amp;&amp; [[ $response =~ $regex ]] &amp;&amp; downloadURL="${BASH_REMATCH[1]}"<br />
+	# download the latest release<br />
+	wget -O ./homedash.jar $downloadURL<br />
+	# generate a config file<br />
+	java -jar ./homedash.jar -create-config<br />
+	# run homedash<br />
+	java -Dconfig.file=/opt/homedash2/homedash.properties -jar homedash.jar</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP:4567</li>
+	<li>Welcome to HomeDash</li>
+</ol>
+
+<p>Documentation: <a href="https://github.com/lamarios/HomeDash2" target="_blank">https://github.com/lamarios/HomeDash2</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
