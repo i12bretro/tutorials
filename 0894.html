@@ -1,0 +1,88 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Run miniPaint - Browser Based Image Editor - on Windows</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Web Based,Web Based Tools,Install MiniPaint On Windows,NodeJS,MiniPaint,NodeJS Based Photo Editor,Open Source,Photoshop Alternative,Self-Hosted,Web Based Image Editor,Web Based Photo Editor,Web Based Photoshop Alternative,Windows,Microsoft Windows,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Run miniPaint - Browser Based Image Editor - on Windows">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="12/30/2023 02:39:56 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Run miniPaint - Browser Based Image Editor - on Windows</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is miniPaint?</h2>
+
+<p><em>[miniPaint is an] online image editor lets you create, edit images using HTML5 technologies. No need to buy, download, install or have obsolete flash. No ads. Key features: layers, filters, HTML5, open source, Photoshop alternative.<br />
+<br />
+miniPaint operates directly in the browser. You can create images, paste from the clipboard (ctrl+v) or upload from the computer (using menu or drag &amp; drop). Nothing will be sent to any server. Everything stays in your browser.</em> -<a href="https://github.com/viliusle/miniPaint" target="_blank">https://github.com/viliusle/miniPaint</a></p>
+
+<h2>Installing miniPaint</h2>
+
+<ol>
+	<li>Log into the Windows device</li>
+	<li>Download the latest miniPaint release <a href="https://github.com/viliusle/miniPaint/releases/latest" target="_blank">Download</a></li>
+	<li>Download NodeJS <a href="https://nodejs.org/en/download/current/" target="_blank">Download</a></li>
+	<li>Install NodeJS, accepting all defaults</li>
+	<li>Extract the downloaded miniPaint files</li>
+	<li>Rename the extracted folder miniPaint</li>
+	<li>Cut the miniPaint folder to a location it can safely run from, C:\Program Files\miniPaint in this example</li>
+	<li>Hold the SHIFT key and right click in the white space &gt; Open PowerShell windows here...</li>
+	<li>Run the following commands in the PowerShell window
+	<div class="codeBlock PS"># install dependencies<br />
+	npm install<br />
+	# build minipaint<br />
+	npm run build<br />
+	# run minipaint<br />
+	npm run server</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP:8080</li>
+	<li>Welcome to miniPaint</li>
+</ol>
+
+<h2>Run miniPaint on System Startup (Optional, but recommended)</h2>
+
+<ol>
+	<li>Press CTRL + C to kill the running miniPaint process</li>
+	<li>Open a text editor and paste the following
+	<p>:: Start miniPaint server<br />
+	cd /D &quot;%~dp0&quot;<br />
+	start &quot;miniPaint&quot; /b npm run server</p>
+	</li>
+	<li>Save the file as minipaint.bat in the miniPaint directory, C:\Program Files\miniPaint in this example</li>
+	<li>Click on the Start Button &gt; Type task &gt; Launch Task Scheduler</li>
+	<li>Right click the Task Scheduler Library folder in the left pane &gt; Create Basic Task...</li>
+	<li>Set the name to miniPaint and optionally set a Description &gt; Click Next</li>
+	<li>For the Trigger, select When the computer starts &gt; Click Next</li>
+	<li>For the Action, select Start a program &gt; Click Next</li>
+	<li>Complete the form fields as follows:
+	<p>Program/script: &quot;%ProgramFiles%\miniPaint\minipaint.bat&quot;<br />
+	Add arguments:<br />
+	Start in:</p>
+	</li>
+	<li>Click Next</li>
+	<li>Check the Open the Properties dialog checkbox &gt; Click Finish</li>
+	<li>In the Properties dialog, click the Change User or Group... button</li>
+	<li>Type System in the Object name field &gt; Click OK</li>
+	<li>Check the Run with highest privileges box</li>
+	<li>Click OK to create the scheduled task</li>
+	<li>Right click the miniPaint task &gt; Run</li>
+	<li>Refresh the open web browser to verify miniPaint is now running from the scheduled task</li>
+</ol>
+
+<p>Source: <a href="https://github.com/viliusle/miniPaint/wiki/Build-instructions" target="_blank">https://github.com/viliusle/miniPaint/wiki/Build-instructions</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
