@@ -1,0 +1,117 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install MyBB - Open Source Forum Software - on Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Bulletin Board,Debian,Forum,Homelab,Linux,PHP,MariaDB,MySQL,PHP Based Application,PHP Based Forum,Self-Hosted Forum,Ubuntu,MyBB,Install MyBB On Debian Linux,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install MyBB - Open Source Forum Software - on Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="04/16/2024 07:50:09 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install MyBB - Open Source Forum Software - on Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is MyBB?</h2>
+
+<blockquote>MyBB is the free and open source forum software powering thousands of engaging, vibrant, and unique communities across the internet.<i> - <a href="https://mybb.com/" target="_blank">https://mybb.com/</a></i></blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal:
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install any available software updates<br />
+	sudo apt upgrade -y<br />
+	# install Apache HTTPD and MySQL<br />
+	sudo apt install apache2 mariadb-server mariadb-client wget zip -y<br />
+	# install PHP components<br />
+	sudo apt install php php-mysql php-common php-gd php-mbstring php-xml -y<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type N and press Enter to not switch to socket authentication</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the mybb database and database user
+	<div class="codeBlock">CREATE DATABASE mybb DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;<br />
+	GRANT ALL ON mybb.* TO &#39;mybb_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;My44_rw$&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands to download and extract MyBB to the webroot
+	<div class="codeBlock"># fetch the latest download URL<br />
+	regex=&#39;&quot;browser_download_url&quot;: &quot;(https:\/\/github.com\/mybb\/mybb\/releases\/download\/[^/]*\/mybb_[^/]*\.zip)&quot;&#39; &amp;&amp; response=$(curl -H &quot;Accept: application/vnd.github.v3+json&quot; https://api.github.com/repos/mybb/mybb/releases/latest) &amp;&amp; [[ $response =~ $regex ]] &amp;&amp; downloadURL=&quot;${BASH_REMATCH[1]}&quot;<br />
+	# download latest mybb version<br />
+	sudo wget -O /tmp/mybb.zip $downloadURL<br />
+	# extract the downloaded zip archive<br />
+	sudo unzip /tmp/mybb.zip -d /var/www/html<br />
+	# delete the Documentation directory<br />
+	sudo rm /var/www/html/Documentation -R<br />
+	# rename mybb folder<br />
+	sudo mv /var/www/html/Upload /var/www/html/mybb<br />
+	# rename htaccess file<br />
+	sudo mv /var/www/html/mybb/htaccess.txt /var/www/html/mybb/.htaccess<br />
+	# set permissions<br />
+	sudo chown -R www-data:www-data /var/www/html/mybb<br />
+	# create a config file<br />
+	sudo touch /var/www/html/mybb/inc/config.php<br />
+	# make some files writable<br />
+	sudo chmod 666 /var/www/html/mybb/inc/config.php /var/www/html/mybb/inc/settings.php<br />
+	sudo chmod 777 /var/www/html/mybb/cache/ /var/www/html/mybb/cache/themes/ /var/www/html/mybb/uploads/ /var/www/html/mybb/uploads/avatars/</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP/mybb</li>
+	<li>Click Next at the Welcome screen</li>
+	<li>Click Next at the License Agreement</li>
+	<li>Click Next at the Requirements Check</li>
+	<li>Complete the Database Configuration as shown below
+	<p>Database Engine: MySQL Improved<br />
+	<br />
+	Database Server Hostname: localhost<br />
+	Database Username: mybb_rw<br />
+	Database Password: My44_rw$<br />
+	Database Name: mybb<br />
+	<br />
+	Table Prefix: mybb_</p>
+	</li>
+	<li>Click Next after the table creation completes</li>
+	<li>Click Next to complete the Table Population</li>
+	<li>Click Next at the Theme Insertion screen</li>
+	<li>Modify the Board Configuration form as needed &gt; Click Next</li>
+	<li>Create an administrator account by entering a Username, Password and Email Address &gt; Click Next</li>
+	<li>Back in the terminal, remove the /install directory with the following command
+	<div class="codeBlock"># remove the install directory<br />
+	sudo rm /var/www/html/mybb/install -R</div>
+	</li>
+	<li>Back in the browser, navigate to http://DNSorIP/mybb/admin/index.php</li>
+	<li>Login with the administrator username and password created earlier</li>
+	<li>Welcome to MyBB</li>
+</ol>
+
+<p>Source: <a href="https://docs.mybb.com/1.8/install/" target="_blank">https://docs.mybb.com/1.8/install/</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
