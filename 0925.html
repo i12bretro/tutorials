@@ -1,0 +1,125 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Odoo - Open Source Business Application Suite - on Windows</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Business Application Suite,Odoo,PostgreSQL,Python,Windows,Microsoft Windows,Install Odoo On Windows,Python Based Business Suite,Odoo Business Suite,Odoo On Windows,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Odoo - Open Source Business Application Suite - on Windows">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="04/21/2024 01:08:15 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Odoo - Open Source Business Application Suite - on Windows</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Odoo?</h2>
+
+<blockquote>Odoo is a suite of web based open source business apps. The main Odoo Apps include an Open Source CRM, Website Builder, eCommerce, Warehouse Management, Project Management, Billing &amp; Accounting, Point of Sale, Human Resources, Marketing, Manufacturing. Odoo Apps can be used as stand-alone applications, but they also integrate seamlessly so you get a full-featured Open Source ERP when you install several Apps.<i> - <a href="https://github.com/odoo/odoo" target="_blank">https://github.com/odoo/odoo</a></i></blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Log into the Windows device</li>
+	<li>Download Odoo <a href="https://github.com/odoo/odoo/" target="_blank">Download</a></li>
+	<li>Download Python <a href="https://www.python.org/downloads/" target="_blank">Download</a></li>
+	<li>Download PostgreSQL <a href="https://www.postgresql.org/download/windows/" target="_blank">Download</a></li>
+	<li>Download Visual Studio Build Tools <a href="https://download.visualstudio.microsoft.com/download/pr/1afa33fc-e800-4714-9e19-31b928ea2572/1fc592e65b7c697cb80f96ae2c2f7ac9e6b366fecd42d7ecb451cc9f0de89624/vs_BuildTools.exe" target="_blank">Download</a></li>
+	<li>Run the downloaded PostgreSQL installer, accepting all the defaults</li>
+	<li>When prompted, enter and confirm a superuser password</li>
+	<li>Run the downloaded Python installer, making sure to check the option to add Python to the path</li>
+	<li>Run the downloaded VS Build Tools installer</li>
+	<li>Select Individual components from the top left &gt; Filter the list to C++ x64/x86 build tools &gt; Check the box next to the option for x64/x86 build tools (Latest)</li>
+	<li>Filter the list to Windows SDK &gt; Check the box next to the option for the latest Windows SDK &gt; Click Install at the bottom right</li>
+	<li>Once the installation completes close VS Build Tools installer</li>
+	<li>Extract the downloaded Odoo .zip archive</li>
+	<li>Rename the extracted folder to Odoo</li>
+	<li>Cut the Odoo folder to a location it can safely run from, C:\Program Files\Odoo in this example</li>
+	<li>Navigate into the Odoo folder &gt; Right click in the white space &gt; New &gt; Text Document</li>
+	<li>Name the new file odoo.conf then edit it in a text editor</li>
+	<li>Paste the following configuration into odoo.conf
+	<p>[options]<br />
+	db_user = odoo_rw<br />
+	db_password = 0dooDB_rw$<br />
+	db_name = odoo<br />
+	db_host = localhost</p>
+	</li>
+	<li>Save the changes to odoo.conf</li>
+	<li>Back in the Odoo folder, hold the SHIFT key and right click in the white space &gt; Open PowerShell window here...</li>
+	<li>Run the following commands in PowerShell
+	<div class="codeBlock PS"># connect to postgres<br />
+	&amp;&#39;C:\Program Files\PostgreSQL\16\bin\psql.exe&#39; -U postgres<br />
+	# enter the postgres seperuser password set during installation<br />
+	# create odoo database user<br />
+	create user odoo_rw with password &#39;0dooDB_rw$&#39;;<br />
+	# create odoo database<br />
+	create database odoo with encoding=&#39;UTF8&#39; template=&#39;template0&#39; owner=&#39;odoo_rw&#39;;<br />
+	# close postgresql connection<br />
+	exit<br />
+	# prepare and activate the virtual environment<br />
+	python -m venv .\odoo-venv<br />
+	.\odoo-venv\Scripts\activate<br />
+	# install wheel<br />
+	pip3 install wheel<br />
+	# install setuptools<br />
+	pip install --upgrade setuptools<br />
+	# install odoo<br />
+	pip install -r requirements.txt<br />
+	# run odoo<br />
+	python .\odoo-bin --config .\odoo.conf -i base</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP:8069</li>
+	<li>Login with the username admin and password admin</li>
+	<li>Click the user icon at the top right corner of the screen &gt; Preferences</li>
+	<li>Update the Email and Email Signature &gt; Click Save</li>
+	<li>Click the Account Security tab &gt; Click the Change Password button</li>
+	<li>Enter admin as the current password &gt; Click Confirm Password</li>
+	<li>Enter and confirm a new password &gt; Click Change Password</li>
+	<li>Login using the updated email address and password</li>
+	<li>Welcome to Odoo</li>
+</ol>
+
+<h2>Run Odoo on System Startup (Optional, but recommended)</h2>
+
+<ol>
+	<li>Press CTRL + C to kill the running Odoo process</li>
+	<li>Open a text editor and paste the following
+	<p>:: Start Odoo server<br />
+	cd /D &quot;%~dp0&quot;<br />
+	start &quot;odoo&quot; /b python .\odoo-bin --config .\odoo.conf</p>
+	</li>
+	<li>Save the file as odoo.bat in the Odoo directory, C:\Program Files\Odoo in this example</li>
+	<li>Click on the Start Button &gt; Type task &gt; Launch Task Scheduler</li>
+	<li>Right click the Task Scheduler Library folder in the left pane &gt; Create Basic Task...</li>
+	<li>Set the name to Odoo and optionally set a Description &gt; Click Next</li>
+	<li>For the Trigger, select When the computer starts &gt; Click Next</li>
+	<li>For the Action, select Start a program &gt; Click Next</li>
+	<li>Complete the form fields as follows:
+	<p>Program/script: &quot;%ProgramFiles%\Odoo\odoo.bat&quot;<br />
+	Add arguments:<br />
+	Start in: &quot;%ProgramFiles%\Odoo&quot;</p>
+	</li>
+	<li>Click Next</li>
+	<li>Check the Open the Properties dialog checkbox &gt; Click Finish</li>
+	<li>In the Properties dialog, click the Change User or Group... button</li>
+	<li>Type System in the Object name field &gt; Click OK</li>
+	<li>Check the Run with highest privileges box</li>
+	<li>Click OK to create the scheduled task</li>
+	<li>Right click the Odoo task &gt; Run</li>
+	<li>Refresh the open web browser to verify Odoo is now running from the scheduled task</li>
+</ol>
+
+<p>Source: <a href="https://www.odoo.com/documentation/17.0/administration/on_premise/source.html" target="_blank">https://www.odoo.com/documentation/17.0/administration/on_premise/source.html</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
