@@ -91,7 +91,7 @@
 	# Set the default gateway adress of your network<br />
 	uci set network.lan.gateway=&#39;10.10.27.1&#39;<br />
 	# Set a dns to resolve url's<br />
-	uci add_list dhcp.@dnsmasq[].server='10.10.27.1'<br />
+	uci add_list network.lan.dns='10.10.27.1'<br />
 	# restart network services<br />
 	service network restart<br />
 	# update openwrt packages<br />
