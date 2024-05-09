@@ -1,0 +1,166 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Running Cachet Open Source Status Page System on Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Cachet,Cachet Status Page,Free Software,Linux,Self-hosted,Status Page,Ubuntu,Debian,PHP,MariaDB,MySQL,PHP Based Application,PHP Based,Homelab,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Running Cachet Open Source Status Page System on Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="05/04/2024 06:09:09 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Running Cachet Open Source Status Page System on Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Cachet?</h2>
+
+<blockquote>Cachet is a beautiful and powerful open source status page system.<em> -<a href="https://github.com/CachetHQ/Cachet" target="_blank">https://github.com/CachetHQ/Cachet</a></em></blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal window:
+	<div class="codeBlock"># update software respositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install prerequisites<br />
+	sudo apt install git openssl curl wget zip composer -y<br />
+	# install Apache HTTPD and MySQL<br />
+	sudo apt install apache2 mariadb-server mariadb-client -y<br />
+	# install PHP components<br />
+	sudo apt install php7.3 libapache2-mod-php7.3 php7.3-curl php7.3-tokenizer php7.3-ldap php7.3-cli php7.3-json php7.3-gd php7.3-mbstring php7.3-mysql php7.3-xml php7.3-zip php7.3-bcmath php7.3-fpm -y<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the Cachet database and database user
+	<div class="codeBlock">CREATE DATABASE cachet;<br />
+	GRANT ALL ON cachet.* to &#39;cachet_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;C@ch3t!!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># clone cachet from github<br />
+	sudo git clone https://github.com/cachethq/Cachet.git /var/www/cachet<br />
+	# change directories to cachet<br />
+	cd /var/www/cachet<br />
+	# create a copy of the sample .env file<br />
+	sudo cp /var/www/cachet/.env.example /var/www/cachet/.env<br />
+	# edit the .env file<br />
+	sudo nano /var/www/cachet/.env</div>
+	</li>
+	<li>Edit the following environment variables as needed
+	<p>APP_ENV=production<br />
+	APP_DEBUG=false<br />
+	APP_URL=http://localhost/cachet<br />
+	APP_TIMEZONE=America/New_York<br />
+	APP_KEY=<br />
+	DEBUGBAR_ENABLED=false</p>
+
+	<p>DB_DRIVER=mysql<br />
+	DB_HOST=localhost<br />
+	DB_UNIX_SOCKET=false<br />
+	DB_DATABASE=cachet<br />
+	DB_USERNAME=cache_rw<br />
+	DB_PASSWORD=C@ch3t!!<br />
+	DB_PORT=null<br />
+	DB_PREFIX=null</p>
+
+	<p>CACHE_DRIVER=database<br />
+	SESSION_DRIVER=database<br />
+	QUEUE_DRIVER=database<br />
+	CACHET_EMOJI=false</p>
+
+	<p>MAIL_DRIVER=smtp<br />
+	MAIL_HOST=smtp.i12bretro.local<br />
+	MAIL_PORT=25<br />
+	MAIL_USERNAME=null<br />
+	MAIL_PASSWORD=null<br />
+	MAIL_ADDRESS=null<br />
+	MAIL_NAME=&quot;Cachet&quot;<br />
+	MAIL_ENCRYPTION=null</p>
+
+	<p>REDIS_HOST=null<br />
+	REDIS_DATABASE=null<br />
+	REDIS_PORT=null</p>
+
+	<p>GITHUB_TOKEN=null</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to .env</li>
+	<li>Continue with the following commands:
+	<div class="codeBlock"># set the owner of the cachet directory<br />
+	sudo chown -R www-data:www-data /var/www/cachet<br />
+	# setup composer working directory<br />
+	sudo mkdir /var/www/.composer<br />
+	sudo chown -R www-data:www-data /var/www/.composer<br />
+	# install dependencies with composer<br />
+	sudo -u www-data composer install --no-dev -o<br />
+	# generate app key, type yes to confirm generating a new key<br />
+	sudo php artisan key:generate<br />
+	# run cachet install, answer No and then Yes<br />
+	sudo php artisan cachet:install<br />
+	# create cachet apache configuration<br />
+	sudo nano /etc/apache2/sites-available/cachet.conf</div>
+	</li>
+	<li>Paste the following configuration into cachet.conf
+	<p>Alias /cachet &quot;/var/www/cachet/public&quot;<br />
+	&lt;Directory /var/www/cachet/public&gt;<br />
+	Require all granted<br />
+	Options Indexes FollowSymLinks<br />
+	AllowOverride All<br />
+	Order allow,deny<br />
+	Allow from all<br />
+	&lt;/Directory&gt;</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to cachet.conf</li>
+	<li>Run the following command to enable the cachet site
+	<div class="codeBlock"># enable rewrite module<br />
+	sudo a2enmod rewrite<br />
+	# enable the cachet site<br />
+	sudo a2ensite cachet<br />
+	# restart the apache2 service<br />
+	sudo systemctl restart apache2</div>
+	</li>
+</ol>
+
+<h2>Cachet Web Installer</h2>
+
+<ol>
+	<li>Open a web browser and navigate to http://DNSorIP/cachet/setup</li>
+	<li>The Cachet setup screen should be displayed</li>
+	<li>Set the Cache, Queue and Session drivers to Database</li>
+	<li>Optionally setup the SMTP host and email address &gt; Click Next</li>
+	<li>Enter a site name, set the timezone and language &gt; Click Next</li>
+	<li>Create an administrator account by entering a username, email address and password &gt; Click Complete Setup</li>
+	<li>Click the Go to dashboard button</li>
+	<li>Login with the administator account created earlier</li>
+	<li>Welcome to Cachet</li>
+	<li>To view the status page navigate to http://DNSorIP:8000</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
