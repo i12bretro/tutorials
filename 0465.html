@@ -1,0 +1,79 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Roll Your Own Self-Hosted PHP Sandbox Page</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Debian,Homelab,Linux,PHP,PHP Based Application,PHPSandbox,Self-Hosted PHP Sandbox,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Roll Your Own Self-Hosted PHP Sandbox Page">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="05/04/2024 06:44:30 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Roll Your Own Self-Hosted PHP Sandbox Page</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is PHPSandbox?</h2>
+
+<p><em>A PHP-based sandboxing library with a full suite of configuration and validation options.</em> -<a href="https://github.com/Corveda/PHPSandbox" target="_blank">https://github.com/Corveda/PHPSandbox</a></p>
+
+<ol>
+	<li>Log into the Debian device</li>
+	<li>Run the following commands in a terminal:
+	<div class="codeBlock"># update repositories<br />
+	sudo apt update<br />
+	# install any available software updates<br />
+	sudo apt upgrade -y<br />
+	# install some dependencies<br />
+	sudo apt install git composer apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y<br />
+	# install Apache HTTPD and PHP components<br />
+	sudo apt install apache2 php7.3 libapache2-mod-php7.3 php-imagick php-gnupg php7.3-common php7.3-mysql php7.3-fpm php7.3-ldap php7.3-gd php7.3-imap php7.3-json php7.3-curl php7.3-zip php7.3-xml php7.3-mbstring php7.3-bz2 php7.3-intl php7.3-gmp php7.3-xsl -y<br />
+	# change directory<br />
+	cd /var/www<br />
+	# clone php sandbox from github<br />
+	sudo git clone https://github.com/Corveda/PHPSandbox.git<br />
+	# rename PHPSandbox to phpsandbox<br />
+	sudo mv ./PHPSandbox ./phpsandbox<br />
+	# set the owner of the phpsandbox directory to www-data<br />
+	sudo chown -R www-data:www-data /var/www/phpsandbox<br />
+	# setup composer working directory<br />
+	sudo mkdir /var/www/.composer<br />
+	sudo chown -R www-data:www-data /var/www/.composer<br />
+	# change directory<br />
+	cd phpsandbox<br />
+	# install dependencies with composer<br />
+	sudo -u www-data composer install<br />
+	# create and edit phpsandbox.conf<br />
+	sudo nano /etc/apache2/sites-available/phpsandbox.conf</div>
+	</li>
+	<li>Paste the following into phpsandbox.conf
+	<p>Alias /phpsandbox &quot;/var/www/phpsandbox/toolkit/&quot;<br />
+	&lt;directory /var/www/phpsandbox/toolkit/&gt;<br />
+	Options +FollowSymlinks<br />
+	AllowOverride All<br />
+	Require all granted<br />
+	&lt;/directory&gt;</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes to phpsandbox.conf</li>
+	<li>Continue with the following commands
+	<div class="codeBlock"># enable the phpsandbox site<br />
+	sudo a2ensite phpsandbox<br />
+	# restart apache2<br />
+	sudo systemctl restart apache2</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP/phpsandbox</li>
+	<li>Welcome to your very own self-hosted PHP Sandbox</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
