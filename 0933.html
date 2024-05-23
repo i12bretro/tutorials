@@ -1,0 +1,88 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install MyBB - Open Source Forum Software - on Windows</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Bulletin Board,Forum,Homelab,Install MyBB On Debian Linux,MariaDB,MyBB,MySQL,PHP,PHP Based Application,PHP Based Forum,Self-Hosted Forum,Windows,Microsoft Windows,XAMPP,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install MyBB - Open Source Forum Software - on Windows">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="04/16/2024 08:00:55 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install MyBB - Open Source Forum Software - on Windows</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is MyBB?</h2>
+
+<blockquote>MyBB is the free and open source forum software powering thousands of engaging, vibrant, and unique communities across the internet.<i> - <a href="https://mybb.com/" target="_blank">https://mybb.com/</a></i></blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Download XAMPP <a href="https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/" target="_blank">Download</a></li>
+	<li>Download MyBB <a href="https://github.com/mybb/mybb/releases" target="_blank">Download</a></li>
+	<li><label for="cb_li_917989_0">Download Microsoft Visual C++ </label><label for="cb_li_917989_0"><a href="https://aka.ms/vs/16/release/vc_redist.x64.exe" target="_blank">Download</a></label></li>
+	<li>Install Microsoft Visual C++</li>
+	<li>Right click the downloaded XAMPP .zip file &gt; Extract All...</li>
+	<li>Right click the downloaded MyBB .zip file &gt; Extract All...</li>
+	<li>Navigate into the extracted mybb folder structure</li>
+	<li>Rename the Upload directory to mybb</li>
+	<li>Cut the mybb folder inside the extracted XAMPP/htdocs directory</li>
+	<li>Copy the extracted XAMPP directory to a safe location to run from, C:\Program Files for example</li>
+	<li>Run XAMPP/setup_xampp.bat to update the configuration files with the new server location</li>
+	<li>Run XAMPP/xampp-control.exe</li>
+	<li>Click the Start button next to Apache and MySQL</li>
+	<li>Navigate to XAMPP/mysql/bin</li>
+	<li>Hold the SHIFT key and right click in the white space &gt; Open PowerShell window here...</li>
+	<li>Type the following in the PowerShell window to setup the MyBB database
+	<div class="codeBlock PS">.\mysql -u root<br />
+	CREATE DATABASE mybb;<br />
+	GRANT ALL ON mybb.* TO &#39;mybb_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;My44_rw$&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+</ol>
+
+<h2>MyBB Web Installer</h2>
+
+<ol>
+	<li>Open a web browser and navigate to http://DNSorIP/mybb</li>
+	<li>Click Next at the Welcome screen</li>
+	<li>Click Next at the License Agreement</li>
+	<li>Click Next at the Requirements Check</li>
+	<li>Complete the Database Configuration as shown below
+	<p>Database Engine: MySQL Improved<br />
+	<br />
+	Database Server Hostname: localhost<br />
+	Database Username: mybb_rw<br />
+	Database Password: My44_rw$<br />
+	Database Name: mybb<br />
+	<br />
+	Table Prefix: mybb_</p>
+	</li>
+	<li>Click Next after the table creation completes</li>
+	<li>Click Next to complete the Table Population</li>
+	<li>Click Next at the Theme Insertion screen</li>
+	<li>Modify the Board Configuration form as needed &gt; Click Next</li>
+	<li>Create an administrator account by entering a Username, Password and Email Address &gt; Click Next</li>
+	<li>Click the Admin Control Panel link</li>
+	<li>Login with the administrator username and password created earlier</li>
+	<li>Welcome to MyBB</li>
+</ol>
+
+<p>Source: <a href="https://docs.mybb.com/1.8/install/" target="_blank">https://docs.mybb.com/1.8/install/</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
