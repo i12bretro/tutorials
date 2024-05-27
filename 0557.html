@@ -1,0 +1,102 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Monitor Websites, Servers and Other Network Service Uptime with PHP Server Monitor</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Homelab,Linux,PHP,PHP Server Monitor,PHPServerMonitor,Ubuntu,Debian,MariaDB,MySQL,PHP Based Application,PHP Based Server Monitor,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Monitor Websites, Servers and Other Network Service Uptime with PHP Server Monitor">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="05/04/2024 06:48:37 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Monitor Websites, Servers and Other Network Service Uptime with PHP Server Monitor</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is PHP Server Monitor?</h2>
+
+<p><em>PHP Server Monitor is a script that checks whether your websites and servers are up and running. It comes with a web based user interface where you can manage your services and websites, and you can manage users for each server with a mobile number and email address. - <a href="https://www.phpservermonitor.org/" target="_blank">https://www.phpservermonitor.org/</a></em></p>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal:
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install software updates<br />
+	sudo apt upgrade -y<br />
+	# install Apache HTTPD and MySQL<br />
+	sudo apt install apache2 mariadb-server mariadb-client -y<br />
+	# install PHP components<br />
+	sudo apt install php7.3 libapache2-mod-php7.3 php7.3-curl php7.3-common php7.3-json php7.3-mysql php7.3-xml<br />
+	# configure the MySQL database<br />
+	sudo su<br />
+	mysql_secure_installation</div>
+	</li>
+	<li>Press Enter to login as root</li>
+	<li>Type Y and press Enter to set a root password, type the password twice to confirm</li>
+	<li>Type Y and press Enter to remove anonymous users</li>
+	<li>Type Y and press Enter to disallow root login remotely</li>
+	<li>Type Y and press Enter to remove the test database</li>
+	<li>Type Y and press Enter to reload privilege tables</li>
+	<li>Run the following command to login into MySQL:
+	<div class="codeBlock">mysql -u root -p</div>
+	</li>
+	<li>Authenticate with the root password set earlier</li>
+	<li>Run the following commands to create the database and database user
+	<div class="codeBlock">CREATE DATABASE server_monitor;<br />
+	GRANT ALL ON server_monitor.* to &#39;servermon_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;$erv3rM0n!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Continue with the following commands to download and extract PHP Server Monitor in the Apache webroot
+	<div class="codeBlock"># download latest PHP Server Monitor<br />
+	wget -O phpservermon.tar.gz https://github.com/phpservermon/phpservermon/releases/download/v3.5.2/phpservermon-3.5.2.tar.gz<br />
+	# extract the tar.gz<br />
+	sudo tar xzvf phpservermon.tar.gz --directory /var/www/html<br />
+	# rename the extracted folder<br />
+	sudo mv /var/www/html/phpservermon-3.5.2 /var/www/html/monitor<br />
+	# create config.php placeholder<br />
+	sudo touch /var/www/html/monitor/config.php<br />
+	# set the owner of the new monitor directory to www-data<br />
+	sudo chown -R www-data:www-data /var/www/html/monitor<br />
+	# set the PHP timezone, change the timezone as needed before running<br />
+	sudo sed -i &quot;s/^;date.timezone =/\date.timezone = America\/New_York/&quot; /etc/php/7.3/apache2/php.ini<br />
+	# restart apache2 service for the changes to take effect<br />
+	sudo systemctl restart apache2</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP/monitor/install.php</li>
+	<li>The PHP Server Monitor setup screen should be displayed</li>
+	<li>Click the Let&#39;s Go button</li>
+	<li>Fill out the database connetion information as follows
+	<p>Database host: localhost<br />
+	Database port: 3306<br />
+	Database name: server_monitor<br />
+	Database user: servermon_rw<br />
+	Database password: $erv3rM0n!<br />
+	Table prefix:</p>
+	</li>
+	<li>Click Save configuration</li>
+	<li>Refresh the page</li>
+	<li>Create an administrator account by entering a username, password and email address &gt; Click Install</li>
+	<li>After the installation completes click Go to your monitor</li>
+	<li>Login with the administator account created earlier</li>
+	<li>Welcome to PHP Server Monitor</li>
+</ol>
+
+<p>Source: <a href="https://github.com/phpservermon/phpservermon" target="_blank">https://github.com/phpservermon/phpservermon</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
