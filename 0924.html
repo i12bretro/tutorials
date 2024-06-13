@@ -1,0 +1,128 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Odoo - Open Source Business Application Suite - on Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Business Application Suite,Debian,Homelab,Linux,Odoo,PostgreSQL,Ubuntu,Odoo Business Suite,Python,Python Based Business Suite,Install Odoo On Linux,Odoo On Linux,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Odoo - Open Source Business Application Suite - on Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="04/21/2024 01:13:44 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Odoo - Open Source Business Application Suite - on Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Odoo?</h2>
+
+<blockquote>Odoo is a suite of web based open source business apps. The main Odoo Apps include an Open Source CRM, Website Builder, eCommerce, Warehouse Management, Project Management, Billing &amp; Accounting, Point of Sale, Human Resources, Marketing, Manufacturing. Odoo Apps can be used as stand-alone applications, but they also integrate seamlessly so you get a full-featured Open Source ERP when you install several Apps.<i> - <a href="https://github.com/odoo/odoo" target="_blank">https://github.com/odoo/odoo</a></i></blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in terminal
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade<br />
+	# install prerequisites<br />
+	sudo apt install wget git apt-transport-https -y<br />
+	# install postgresql<br />
+	sudo apt install postgresql postgresql-client -y<br />
+	# enable the postgresql service and start it<br />
+	sudo systemctl enable postgresql --now<br />
+	# connect to postgresql<br />
+	sudo -u postgres psql postgres<br />
+	# create odoo database user<br />
+	create user odoo_rw with password &#39;0dooDB_rw$&#39;;<br />
+	# create odoo database<br />
+	create database odoo with encoding=&#39;UTF8&#39; template=&#39;template0&#39; owner=&#39;odoo_rw&#39;;<br />
+	# close postgresql connection<br />
+	exit<br />
+	# install python<br />
+	sudo apt install python3-full python3-pip libldap2-dev libpq-dev libsasl2-dev -y<br />
+	# create odoo user<br />
+	sudo useradd -M odoo<br />
+	# create /opt/odoo directory<br />
+	sudo mkdir /opt/odoo -p<br />
+	# set owner of /opt/odoo<br />
+	sudo chown odoo /opt/odoo -R &amp;&amp; sudo chgrp odoo /opt/odoo -R &amp;&amp; sudo usermod -d /opt/odoo odoo<br />
+	# switch to odoo user<br />
+	sudo su - odoo<br />
+	# clone odoo from github<br />
+	git clone https://github.com/odoo/odoo.git .<br />
+	# prepare the working directory<br />
+	python3 -m venv odoo-venv<br />
+	. odoo-venv/bin/activate<br />
+	# install wheel<br />
+	pip3 install wheel<br />
+	# install odoo<br />
+	pip install -r requirements.txt<br />
+	# create a config file<br />
+	touch ./odoo.conf<br />
+	# write database config to config file<br />
+	echo &quot;[options]\ndb_user = odoo_rw\ndb_password = 0dooDB_rw$\ndb_name = odoo\ndb_host = localhost&quot; &gt; ./odoo.conf<br />
+	# run odoo<br />
+	./odoo-bin --config ./odoo.conf -i base</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP:8069</li>
+	<li>Login with the username admin and password admin</li>
+	<li>Click the user icon at the top right corner of the screen &gt; Preferences</li>
+	<li>Update the Email and Email Signature &gt; Click Save</li>
+	<li>Click the Account Security tab &gt; Click the Change Password button</li>
+	<li>Enter admin as the current password &gt; Click Confirm Password</li>
+	<li>Enter and confirm a new password &gt; Click Change Password</li>
+	<li>Login using the updated email address and password</li>
+	<li>Welcome to Odoo</li>
+</ol>
+
+<h2>Running Odoo as a Service</h2>
+
+<ol>
+	<li>Back in the Terminal, press CTRL+C to kill the running Odoo process</li>
+	<li>Continue with the following commands in terminal
+	<div class="codeBlock"># exit the odoo user shell<br />
+	exit<br />
+	# create odoo service file<br />
+	sudo nano /etc/systemd/system/odoo.service</div>
+	</li>
+	<li>Paste the following into odoo.service
+	<p>[Unit]<br />
+	Description=Odoo<br />
+	Requires=postgresql.service<br />
+	After=network.target postgresql.service</p>
+
+	<p>[Service]<br />
+	User=odoo<br />
+	Group=odoo<br />
+	ExecStart=/opt/odoo/odoo-venv/bin/python3 /opt/odoo/odoo-bin -c /opt/odoo/odoo.conf</p>
+
+	<p>[Install]<br />
+	WantedBy=multi-user.target</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following commands
+	<div class="codeBlock"># reload systemd services<br />
+	sudo systemctl daemon-reload<br />
+	# start odoo service on boot and now<br />
+	sudo systemctl enable odoo --now</div>
+	</li>
+	<li>Back in the web browser, refresh the Odoo tab</li>
+	<li>If prompted, log back in using the updated email address and password</li>
+</ol>
+
+<p>Source: <a href="https://www.odoo.com/documentation/17.0/administration/on_premise/source.html" target="_blank">https://www.odoo.com/documentation/17.0/administration/on_premise/source.html</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
