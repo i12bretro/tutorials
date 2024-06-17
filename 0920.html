@@ -1,0 +1,161 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install BookStack - Documentation/Wiki Platform - on Windows</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,BookStack,Homelab,KB,Knowledge Base,MariaDB,MySQL,PHP,PHP Based Application,XAMPP,WAMP,Windows,Microsoft Windows,How To Install BookStack On Windows,PHP Based Knowledge Base,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install BookStack - Documentation/Wiki Platform - on Windows">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="04/20/2024 05:06:39 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install BookStack - Documentation/Wiki Platform - on Windows</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is BookStack?</h2>
+
+<blockquote><em>BookStack is an opinionated wiki system that provides a pleasant and simple out-of-the-box experience. New users to an instance should find the experience intuitive and only basic word-processing skills should be required to get involved in creating content on BookStack. The platform should provide advanced power features to those that desire it but they should not interfere with the core simple user experience. -<a href="https://github.com/BookStackApp/BookStack" target="_blank">https://github.com/BookStackApp/BookStack</a></em></blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Download XAMPP <a href="https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/" target="_blank">Download</a></li>
+	<li>Download BookStack <a href="https://github.com/BookStackApp/BookStack/releases/latest" target="_blank">Download</a></li>
+	<li><label for="cb_li_917989_0">Download Microsoft Visual C++ </label><label for="cb_li_917989_0"><a href="https://aka.ms/vs/16/release/vc_redist.x64.exe" target="_blank">Download</a></label></li>
+	<li><label for="cb_li_917989_0">Download Composer <a href="https://getcomposer.org/Composer-Setup.exe" target="_blank">Download</a></label></li>
+	<li>Install Microsoft Visual C++</li>
+	<li>Right click the downloaded XAMPP .zip file &gt; Extract All...</li>
+	<li>Right click the downloaded BookStack .zip file &gt; Extract All...</li>
+	<li>Rename the extracted folder bookstack</li>
+	<li>Cut the bookstack folder inside the XAMPP directory</li>
+	<li>Copy the extracted XAMPP directory to a safe location to run from, C:\Program Files for example</li>
+	<li>Run XAMPP/setup_xampp.bat to update the configuration files with the new server location</li>
+</ol>
+
+<h2>Configuring the Web Server</h2>
+
+<ol>
+	<li>Navigate to XAMPP/php and edit php.ini</li>
+	<li>Find the following line and remove the ; to uncomment them
+	<p>extension=ldap<br />
+	extension=gd</p>
+	</li>
+	<li>Save the changes to php.ini</li>
+	<li>Navigate to XAMPP/apache/conf and edit httpd.conf</li>
+	<li>Paste the following configuration at the bottom of the file, update the folder paths as needed
+	<p>Alias /bookstack &quot;C:/Program Files/xampp/bookstack/public/&quot;<br />
+	<label for="cb_li_136389_15">&lt;Directory </label>&quot;C:/Program Files/xampp/bookstack/public/&quot;<label for="cb_li_136389_15">&gt;</label></p>
+
+	<p><label for="cb_li_136389_15">Options Indexes FollowSymLinks<br />
+	AllowOverride None<br />
+	Require all granted<br />
+	&lt;IfModule mod_rewrite.c&gt;<br />
+	&lt;IfModule mod_negotiation.c&gt;<br />
+	Options -MultiViews -Indexes<br />
+	&lt;/IfModule&gt;</label></p>
+
+	<p><label for="cb_li_136389_15">RewriteEngine On</label></p>
+
+	<p><label for="cb_li_136389_15"># Handle Authorization Header<br />
+	RewriteCond %{HTTP:Authorization} .<br />
+	RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]</label></p>
+
+	<p><label for="cb_li_136389_15"># Redirect Trailing Slashes If Not A Folder...<br />
+	RewriteCond %{REQUEST_FILENAME} !-d<br />
+	RewriteCond %{REQUEST_URI} (.+)/$<br />
+	RewriteRule ^ %1 [L,R=301]</label></p>
+
+	<p><label for="cb_li_136389_15"># Handle Front Controller...<br />
+	RewriteCond %{REQUEST_FILENAME} !-d<br />
+	RewriteCond %{REQUEST_FILENAME} !-f<br />
+	RewriteRule ^ index.php [L]<br />
+	&lt;/IfModule&gt;<br />
+	&lt;/Directory&gt;</label></p>
+	</li>
+	<li>Save the changes to httpd.conf</li>
+	<li>Install Composer</li>
+	<li>Run XAMPP/xampp-control.exe</li>
+	<li>Click the Start button next to Apache and MySQL</li>
+	<li>Navigate to XAMPP/mysql/bin</li>
+	<li>Hold the SHIFT key and right click in the white space &gt; Open PowerShell window here...</li>
+	<li>Type the following in the PowerShell window to setup the BookStack database
+	<div class="codeBlock PS">.\mysql -u root<br />
+	CREATE DATABASE bookstack;<br />
+	GRANT ALL ON bookstack.* to &#39;bookstack_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;B00k$t@ck!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+	<li>Navigate to the XAMPP/bookstack folder &gt; Right click in the white space &gt; Open PowerShell window here...</li>
+	<li>Run the following command to download dependencies
+	<div class="codeBlock PS"># create a copy of the sample .env file<br />
+	cp .\.env.example .\.env<br />
+	# edit .env in notepad<br />
+	notepad .\.env</div>
+	</li>
+	<li>Modifying the following key/value pairs in .env as needed
+	<p>APP_ENV=production<br />
+	APP_DEBUG=false<br />
+	APP_KEY=SomethingSecure<br />
+	APP_URL=http://windows11.local/bookstack<br />
+	APP_TIMEZONE=&#39;America/New_York&#39;<br />
+	APP_LOCALE=en<br />
+	<br />
+	DB_CONNECTION=mysql<br />
+	DB_HOST=127.0.0.1<br />
+	DB_DATABASE=bookstack<br />
+	DB_USERNAME=bookstack_rw<br />
+	DB_PASSWORD=B00k$t@ck!<br />
+	<br />
+	MAIL_DRIVER=smtp<br />
+	MAIL_HOST=smtp.i12bretro.local<br />
+	MAIL_PORT=25<br />
+	MAIL_USERNAME=null<br />
+	MAIL_PASSWORD=null<br />
+	MAIL_ENCRYPTION=null<br />
+	MAIL_FROM_ADDR=bookstack@i12bretro.local<br />
+	MAIL_FROM_NAME=&#39;BookStack&#39;<br />
+	MAIL_REPLYTO_ADDR=bookstack@i12bretro.local<br />
+	MAIL_REPLYTO_NAME=&#39;BookStack&#39;<br />
+	MAIL_AUTO_EMBED_METHOD=&#39;attachment&#39;</p>
+	</li>
+	<li>Save the changes to .env</li>
+	<li>Continue with the following commands in PowerShell
+	<div class="codeBlock PS"># install dependencies with composer<br />
+	composer install --no-dev --no-plugins<br />
+	# generate app key<br />
+	php artisan key:generate --no-interaction --force<br />
+	# migrate the database<br />
+	php artisan migrate --no-interaction --force</div>
+	</li>
+</ol>
+
+<h2>BookStack Web Installer</h2>
+
+<ol>
+	<li>Open a web browser and navigate to http://DNSorIP/bookstack</li>
+	<li>Login with the username admin@admin.com and the password password</li>
+	<li>Click the user dropdown at the top right &gt; My Account</li>
+	<li>Update the user name and email address as needed &gt; Click Save</li>
+	<li>Select Access &amp; Security from the left navigation menu</li>
+	<li>Enter and confirm a new password &gt; Click Update</li>
+	<li>Click the user dropdown at the top right &gt; Logout</li>
+	<li>Log back in using the updated email address and password</li>
+	<li>Welcome to BookStack</li>
+</ol>
+
+<p>Source: <a href="https://www.bookstackapp.com/docs/admin/installation/#manual" target="_blank">https://www.bookstackapp.com/docs/admin/installation/#manual</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
