@@ -1,0 +1,67 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Shinobi on Raspberry Pi -- Open Source CCTV Solution</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,CCTV,Debian,FOSS,Homelab,Linux,Open Source,Shinobi,Shinobi CCTV,Pi,RPi,Raspberry Pi,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Shinobi on Raspberry Pi -- Open Source CCTV Solution">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="04/20/2024 07:34:06 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Shinobi on Raspberry Pi -- Open Source CCTV Solution</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Shinobi?</h2>
+
+<p><em>Shinobi is Open Source, written in Node.js, and real easy to use. It is the future of CCTV and NVR for developers and end-users alike. It is catered to by professionals and most importantly by the one who created it.</em> - <a href="https://shinobi.video/" target="_blank">https://shinobi.video/</a></p>
+
+<h2>Install Shinobi</h2>
+
+<ol>
+	<li>Log into the Raspberry Pi</li>
+	<li>Run the following commands in a terminal:
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install software updates<br />
+	sudo apt upgrade -y<br />
+	# install pre-requisites<br />
+	sudo apt install git -y<br />
+	# clone shinobi code<br />
+	git clone https://gitlab.com/Shinobi-Systems/Shinobi.git Shinobi<br />
+	# change directory to Shinobi<br />
+	cd Shinobi<br />
+	# set permissions<br />
+	sudo chmod +x INSTALL/ubuntu.sh<br />
+	# execute the installation script<br />
+	sudo INSTALL/ubuntu.sh</div>
+	</li>
+	<li>Answer Yes (y) when asked to install MariaDB</li>
+	<li>Input a password for the root MariaDB user account</li>
+	<li>Answer Yes (y) when asked to install the Shinobi database</li>
+	<li>Enter root when asked for the database user</li>
+	<li>Enter the root password created earnlier when asked for the database password</li>
+	<li>Answer Yes (y) when asked to start Shinobi and start it on boot</li>
+	<li>Open a web browser and navigate to http://DNSorIP:8080/super</li>
+	<li>Login with the username admin@shinobi.video and password admin</li>
+	<li>Select Preferences from the top navigation menu</li>
+	<li>Change the admin user email address and enter and confirm a new password</li>
+	<li>Click Save at the top of the page</li>
+	<li>Welcome to Shinobi</li>
+</ol>
+
+<p>Source: <a href="https://shinobi.video/docs/" target="_blank">https://shinobi.video/docs/</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
