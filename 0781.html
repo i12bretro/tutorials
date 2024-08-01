@@ -1,0 +1,110 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Let's Install Healthchecks - Cron Job Monitoring Service - On Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Home Lab,Home Lab Ideas,Install Guide,Linux,Homelab,Debian,Ubuntu,Cron,Cron Job,Cron Monitor,Cron Job Monitor,Healthchecks,Healthcheck Install Guide,Healthchecks Cron Monitor,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Let's Install Healthchecks - Cron Job Monitoring Service - On Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="07/27/2024 06:51:18 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Let's Install Healthchecks - Cron Job Monitoring Service - On Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Healthchecks?</h2>
+
+<blockquote>
+<p><em>Healthchecks is a cron job monitoring service. It listens for HTTP requests and email messages (&quot;pings&quot;) from your cron jobs and scheduled tasks (&quot;checks&quot;). When a ping does not arrive on time, Healthchecks sends out alerts.</em></p>
+
+<p><em>Healthchecks comes with a web dashboard, API, 25+ integrations for delivering notifications, monthly email reports, WebAuthn 2FA support, team management features: projects, team members, read-only access.</em><em> -<a href="https://github.com/healthchecks/healthchecks" target="_blank">https://github.com/healthchecks/healthchecks</a></em></p>
+</blockquote>
+
+<h2>Installing HeathChecks</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in the terminal
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install prerequisites<br />
+	sudo apt install git gcc python3-dev python3-venv libpq-dev -y<br />
+	# create a working directory<br />
+	mkdir healthchecks<br />
+	# change directory to the working directory<br />
+	cd healthchecks<br />
+	# prepare the working directory<br />
+	python3 -m venv hc-venv<br />
+	source hc-venv/bin/activate<br />
+	# install wheel<br />
+	pip3 install wheel<br />
+	# clone healthchecks from github<br />
+	git clone https://github.com/healthchecks/healthchecks.git<br />
+	# install healthchecks<br />
+	pip install -r healthchecks/requirements.txt<br />
+	# cd into ./healthchecks<br />
+	cd healthchecks<br />
+	# initialize database<br />
+	./manage.py migrate<br />
+	# create an admin user<br />
+	./manage.py createsuperuser<br />
+	# enter an email address<br />
+	# enter and confirm a password<br />
+	# run healthchecks server<br />
+	./manage.py runserver</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP:8000</li>
+	<li>Login with the admin account created earlier</li>
+	<li>Welcome to HealthChecks</li>
+</ol>
+
+<h2>Running Healthchecks as a Service</h2>
+
+<ol>
+	<li>Go back to the open terminal and press CTRL+C to kill the running Healthchecks process</li>
+	<li>Continue with the following commands
+	<div class="codeBlock"># change directories back to home<br />
+	cd ~<br />
+	# move the healthchecks folder to opt<br />
+	sudo mv ./healthchecks /opt/<br />
+	# create healthchecks service file<br />
+	sudo nano /etc/systemd/system/healthchecks.service</div>
+	</li>
+	<li>Paste the following configuration into healthchecks.service
+	<p>[Unit]<br />
+	Description=Healthchecks<br />
+	After=multi-user.target</p>
+
+	<p>[Service]<br />
+	ExecStart=/opt/healthchecks/hc-venv/bin/python /opt/healthchecks/healthchecks/manage.py runserver<br />
+	Restart=always<br />
+	WorkingDirectory=/opt/healthchecks/healthchecks</p>
+
+	<p>[Install]<br />
+	WantedBy=multi-user.target</p>
+	</li>
+	<li>Press CTRL+O, Enter, CTRL+X to write the changes</li>
+	<li>Continue with the following commands
+	<div class="codeBlock"># reload systemd services<br />
+	sudo systemctl daemon-reload<br />
+	# start and enable the healthchecks service<br />
+	sudo systemctl enable healthchecks --now</div>
+	</li>
+	<li>Back in the web browser refresh the Healthchecks page</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
