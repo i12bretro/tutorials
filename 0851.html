@@ -1,0 +1,76 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Android 7.1.2 Nougat on the Microsoft Surface RT Tablet</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Install Guide,ARM Architecture,ARM CPU,ARM Processor,Linux On Surface RT,Microsoft,Microsoft Surface RT,Nvidia,Surface,Surface RT,Tegra 3,Android,Android 7,Android Nougat,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Android 7.1.2 Nougat on the Microsoft Surface RT Tablet">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="07/25/2024 05:21:24 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Android 7.1.2 Nougat on the Microsoft Surface RT Tablet</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Disclaimer</h2>
+
+<blockquote><em>This process will run Android 7.1.2 Nougat on the Surface RT tablet from a microSD card. I have tested these steps on my own device (as shown in this video), but I am not responsible if you damage or brick your device.</em></blockquote>
+
+<h2>Things You Will Need</h2>
+
+<ul>
+	<li class="noCheckbox">A USB flash drive <a href="https://amzn.to/3wkR5ju" target="_blank">https://amzn.to/3wkR5ju</a> | <a href="https://amzn.to/3qkrJ1p" target="_blank">https://amzn.to/3qkrJ1p</a> | <a href="https://amzn.to/3Nhu9b9" target="_blank">https://amzn.to/3Nhu9b9</a></li>
+	<li class="noCheckbox">A microSD card, at least 8 GB <a href="https://amzn.to/3wkR5ju" target="_blank">https://amzn.to/3JqyxSP</a></li>
+</ul>
+
+<h2>Preparing to Run Android</h2>
+
+<ol>
+	<li>Insert the microSD card and USB flash drive into a PC</li>
+	<li>Download Android 7.1.2 Surface RT image <a href="https://archive.org/download/Android-surface-7.1.2/surface-7.1.2-8gb-sdcard.img.gz" target="_blank">Download</a></li>
+	<li>Download UEFI Plug and Play Booting Tool for USB <a href="https://archive.org/download/surface-rt-uefi-downstream-boot-v-1/surface%20RT%20UEFI%20Downstream%20Boot%20v1.zip" target="_blank">Download</a></li>
+	<li>Download Balena Etcher <a href="https://www.balena.io/etcher/" target="_blank">Download</a></li>
+	<li>Run Balena Etcher</li>
+	<li>Write the Android 7.1.2 image to the microSD card</li>
+	<li>Once the write completes, safely remove the microSD card and insert it into the Surface RT&#39;s microSD slot</li>
+	<li>Format the USB flash drive to FAT32
+	<p>⚠ <em>NOTE: This will delete all files on the drive. Make sure to backup any important files before continuing</em></p>
+
+	<ol start="1">
+		<li>Right Click Start &gt; File Explorer</li>
+		<li>Right Click the USB flash drive &gt; Format...</li>
+		<li>Select FAT32 from the File System dropdown</li>
+		<li>Name the drive EFI</li>
+		<li>Make sure Quick Format is checked</li>
+		<li>Click Start</li>
+	</ol>
+	</li>
+	<li>Extract the downloaded UEFI Plug and Play Booting Tool for USB .zip file to the root of the USB flash drive</li>
+	<li>Safely remove the USB flash drive</li>
+</ol>
+
+<h2>Booting into Android</h2>
+
+<ol>
+	<li>Power off the Surface RT tablet if it is not already</li>
+	<li>Connect the prepared USB flash drive to the Surface RT tablet</li>
+	<li>Hold Vol- and press the power button, releasing the Vol- when Surface logo appears</li>
+	<li>Once the menu appears, select Env USB option</li>
+	<li>The Surface RT should begin booting into Android</li>
+</ol>
+
+<p>Source: <a href="https://www.retrogameshistory.com/2023/03/how-to-install-android-on-microsoft.html" target="_blank">https://www.retrogameshistory.com/2023/03/how-to-install-android-on-microsoft.html</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
