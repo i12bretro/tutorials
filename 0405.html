@@ -88,6 +88,10 @@
 	<li><strong>Continue the configuration by running the following commands </strong>
 	<div class="codeBlock CMD"><strong># set the lan ip address, use something in the same subnet as your LAN<br />
 	uci set network.lan.ipaddr=&#39;10.10.27.151&#39;<br />
+	# Set the default gateway adress of your network<br />
+	uci set network.lan.gateway=&#39;10.10.27.1&#39;<br />
+	# Set a dns to resolve url's<br />
+	uci add_list network.lan.dns='10.10.27.1'<br />
 	# restart network services<br />
 	service network restart<br />
 	# update openwrt packages<br />
