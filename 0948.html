@@ -1,0 +1,79 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Easy!Appointments - Appointment Scheduler System - on Windows</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Apache HTTPD,Easy!Appointments,MariaDB,MySQL,PHP,Scheduling Application,XAMPP,Windows,Microsoft Windows,PHP Based Application,Web Based Scheduling,PHP Based Scheduling Application,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Easy!Appointments - Appointment Scheduler System - on Windows">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="08/11/2024 09:52:46 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Easy!Appointments - Appointment Scheduler System - on Windows</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Easy!Appointments?</h2>
+
+<blockquote><em>Easy!Appointments is a highly customizable web application that allows customers to book appointments with you via a sophisticated web interface. Moreover, it provides the ability to sync your data with Google Calendar so you can use them with other services. It is an open source project that you can download and install even for commercial use. Easy!Appointments will run smoothly with your existing website as it can be installed in a single folder of the server and of course share an existing database. -<a href="https://github.com/alextselegidis/easyappointments#about" target="_blank">https://github.com/alextselegidis/easyappointments#about</a></em></blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Download XAMPP <a href="https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/" target="_blank">Download</a></li>
+	<li>Download Easy!Appointments <a href="https://github.com/alextselegidis/easyappointments/releases/latest" target="_blank">Download</a></li>
+	<li><label for="cb_li_917989_0">Download Microsoft Visual C++ </label><label for="cb_li_917989_0"><a href="https://aka.ms/vs/16/release/vc_redist.x64.exe" target="_blank">Download</a></label></li>
+	<li>Install Microsoft Visual C++</li>
+	<li>Right click the downloaded XAMPP file &gt; Extract All...</li>
+	<li>Right click the downloaded Easy!Appointments.zip file &gt; Extract All...</li>
+	<li>Rename the Extracted folder easyappointments (all lowercase)</li>
+	<li>Cut the easyappointments folder inside the XAMPP/htdocs directory</li>
+	<li>Create a copy of config-sample.php and name it config.php</li>
+	<li>Edit config.php in a text editor making the following changes</li>
+	<li>Scroll down to the const BASE_URL variable and set the value to the IP address or DNS name of the host
+	<p>const BASE_URL = &#39;http://&lt;%DNSorIP%&gt;/easyappointments&#39;;<br />
+	const DB_HOST = &#39;localhost&#39;;<br />
+	const DB_NAME = &#39;easy_appointments&#39;;<br />
+	const DB_USERNAME = &#39;easy_appointments_rw&#39;;<br />
+	const DB_PASSWORD = &#39;EasyAppo1ntm3nts&#39;;</p>
+	</li>
+	<li>Save the changes to config.php and close the editor</li>
+	<li>Navigate back to the Downloads directory and copy the extracted XAMPP directory to a safe location to run from, C:\Program Files for example</li>
+	<li>Run XAMPP/setup_xampp.bat to update the configuration files with the new server location</li>
+	<li>Back in File Explorer, run XAMPP/xampp-control.exe</li>
+	<li>Click the Start buttons next to Apache and MySQL</li>
+	<li>Navigate to XAMPP/mysql/bin</li>
+	<li>Hold the SHIFT key and right click in the white space &gt; Open PowerShell window here...</li>
+	<li>Run the following commands in the PowerShell window to setup the database
+	<div class="codeBlock PS">.\mysql -u root<br />
+	CREATE DATABASE easy_appointments;<br />
+	GRANT ALL ON easy_appointments.* to &#39;easy_appointments_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;EasyAppo1ntm3nts&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+</ol>
+
+<h2>Easy!Appointments Web Installer</h2>
+
+<ol>
+	<li>Open a web browser and navigate to http://DNSorIP/easyappointments</li>
+	<li>The Easy!Appointments Installation web installer should be load</li>
+	<li>Complete the Administrator and Company form fields &gt; Click Install Easy!Appointments</li>
+	<li>Welcome to Easy!Appointments</li>
+</ol>
+
+<p>Documentation: <a href="https://lycheeorg.github.io/docs/#installation" target="_blank">https://lycheeorg.github.io/docs/#installation</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
