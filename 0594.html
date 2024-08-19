@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Running MediaWiki in Docker on Ubuntu Server">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="08/18/2024 12:25:55 PM" />
+        <meta name="revised" content="08/19/2024 06:09:40 AM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -60,7 +60,7 @@
 	# create containers network<br />
 	docker network create containers<br />
 	# run the mariadb docker container<br />
-	docker run --name mariadb -e MYSQL_ROOT_PASSWORD=r00tp@$$ -e MYSQL_USER=mediawiki_rw -e MYSQL_PASSWORD=WikiW1k1What! -e MYSQL_DATABASE=mediawiki -v /home/$USER/docker/mariadb:/var/lib/mysql --network containers -d mariadb:latest<br />
+	docker run --name mariadb -e MYSQL_ROOT_PASSWORD=r00tp@$$ -e MYSQL_USER=mediawiki_rw -e MYSQL_PASSWORD=WikiW1k1What! -e MYSQL_DATABASE=mediawiki -v /home/$USER/docker/mariadb:/var/lib/mysql --network containers --restart=unless-stopped -d mariadb:latest<br />
 	# run the mediawiki docker container<br />
 	docker run -d --name mediawiki -p 8080:80 -e MYSQL_USER=mediawiki_rw -e MYSQL_PASSWORD=WikiW1k1What! -e MYSQL_DATABASE=mediawiki -v /home/$USER/docker/mediawiki/images:/var/www/html/images --network containers mediawiki:latest</div>
 	</li>
@@ -95,7 +95,7 @@
 	<div class="codeBlock"># remove mediawiki container<br />
 	docker rm mediawiki --force<br />
 	# re-initialize mediawiki container with local settings<br />
-	docker run -d --name mediawiki -p 8080:80 -e MYSQL_USER=mediawiki_rw -e MYSQL_PASSWORD=WikiW1k1What! -e MYSQL_DATABASE=mediawiki -v /home/$USER/docker/mediawiki/images:/var/www/html/images -v /home/$USER/docker/mediawiki/LocalSettings.php:/var/www/html/LocalSettings.php --network containers mediawiki:latest<br />
+	docker run -d --name mediawiki -p 8080:80 -e MYSQL_USER=mediawiki_rw -e MYSQL_PASSWORD=WikiW1k1What! -e MYSQL_DATABASE=mediawiki -v /home/$USER/docker/mediawiki/images:/var/www/html/images -v /home/$USER/docker/mediawiki/LocalSettings.php:/var/www/html/LocalSettings.php --network containers --restart=unless-stopped mediawiki:latest<br />
 	# allow the container to write to working directories<br />
 	sudo chmod a+rwx -R ~/docker</div>
 	</li>
