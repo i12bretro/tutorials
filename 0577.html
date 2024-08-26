@@ -1,0 +1,65 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Host Your Own Hoppscotch - Browser Based Open Source Alternative to Postman</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,API Development,Postman Alternative,Postman,Hoppscotch,Hoppscotch.io,Web Developer Tools,API,Linux,Debian,Ubuntu,NodeJS,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Host Your Own Hoppscotch - Browser Based Open Source Alternative to Postman">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="07/28/2024 06:55:05 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Host Your Own Hoppscotch - Browser Based Open Source Alternative to Postman</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Hoppscotch?</h2>
+
+<blockquote><em>Hoppscotch is a lightweight, web-based API development suite. It was built from the ground up with ease of use and accessibility in mind providing all the functionality needed for developers with minimalist, unobtrusive UI. -<a href="https://docs.hoppscotch.io/documentation/getting-started/introduction" target="_blank">https://docs.hoppscotch.io/documentation/getting-started/introduction</a></em></blockquote>
+
+<h2>Installing Hoppscotch</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in a terminal window
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade -y<br />
+	# install prerequisites<br />
+	sudo apt install git curl openssl -y<br />
+	# add nodejs software repository<br />
+	curl -sL https://deb.nodesource.com/setup_16.x | sudo bash -<br />
+	# install nodejs<br />
+	sudo apt install nodejs -y<br />
+	# clone hoppscotch from git<br />
+	git clone https://github.com/hoppscotch/hoppscotch ./hoppscotch<br />
+	# cd into the new directory<br />
+	cd hoppscotch/<br />
+	# clean npm cache<br />
+	npm cache clean --force<br />
+	# install npm dependencies<br />
+	npm install<br />
+	# fix npm vulnerabilities<br />
+	npm audit fix<br />
+	# build hoppscotch<br />
+	npm run generate<br />
+	# run it<br />
+	npm start</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP:3000</li>
+	<li>Welcome to Hoppscotch</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
