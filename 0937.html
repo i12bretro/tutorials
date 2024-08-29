@@ -1,0 +1,108 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Lychee - Photo Management System - On Windows</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Install Guide,Self-Hosted,Web Based,Web Based Tools,Google Photos Alternative,Windows,Photo Management,Photo Manager,Photo Organizer,Lychee,Lychee Photo Management,Microsoft Windows,XAMPP,MariaDB,MySQL,PHP,PHP Based Application,Home Lab Ideas,Home Lab,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Lychee - Photo Management System - On Windows">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="08/11/2024 09:41:53 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Lychee - Photo Management System - On Windows</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Lychee?</h2>
+
+<blockquote><em>Lychee is a free photo-management tool, which runs on your server or web-space. Installing is a matter of seconds. Upload, manage and share photos like from a native application. Lychee comes with everything you need and all your photos are stored securely. -<a href="https://lycheeorg.github.io/" target="_blank">https://lycheeorg.github.io/</a></em></blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Download XAMPP <a href="https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/" target="_blank">Download</a></li>
+	<li>Download Lychee <a href="https://github.com/LycheeOrg/Lychee/releases/latest" target="_blank">Download</a></li>
+	<li><label for="cb_li_917989_0">Download Microsoft Visual C++ </label><label for="cb_li_917989_0"><a href="https://aka.ms/vs/16/release/vc_redist.x64.exe" target="_blank">Download</a></label></li>
+	<li>Install Microsoft Visual C++</li>
+	<li>Right click the downloaded XAMPP file &gt; Extract All...</li>
+	<li>Right click the downloaded Lychee.zip file &gt; Extract All...</li>
+	<li>Rename the Extracted folder lychee (all lowercase)</li>
+	<li>Cut the lychee folder inside the XAMPP directory</li>
+	<li>Navigate back to the Downloads directory and copy the extracted XAMPP directory to a safe location to run from, C:\Program Files for example</li>
+	<li>Run XAMPP/setup_xampp.bat to update the configuration files with the new server location</li>
+	<li>Navigate into XAMPP/PHP and edit php.ini in a text editor</li>
+	<li>Find the list of extensions and make sure the following are enabled by removing the ; at the start of the line
+	<p>extension=curl<br />
+	extension=fileinfo<br />
+	extension=gd<br />
+	extension=xsl<br />
+	extension=mbstring<br />
+	extension=mysqli<br />
+	extension=pdo_mysql</p>
+	</li>
+	<li>Save the changes to php.ini</li>
+	<li>Navigate into XAMPP/Apache/conf and edit httpd.conf in a text editor</li>
+	<li>Paste the following at the bottom of the httpd.conf file
+	<p>Alias /lychee &quot;C:/Program Files/xampp/lychee/public&quot;<br />
+	&lt;Directory &quot;C:/Program Files/xampp/lychee/public&quot;&gt;<br />
+	# enable the .htaccess rewrites<br />
+	AllowOverride All<br />
+	Options +FollowSymLinks<br />
+	Require all granted<br />
+	Order allow,deny<br />
+	Allow from All<br />
+	&lt;/Directory&gt;</p>
+	</li>
+	<li>Save the changes and close out of the editor</li>
+	<li>Back in File Explorer, run XAMPP/xampp-control.exe</li>
+	<li>Click the Start buttons next to Apache and MySQL</li>
+	<li>Navigate to XAMPP/mysql/bin</li>
+	<li>Hold the SHIFT key and right click in the white space &gt; Open PowerShell window here...</li>
+	<li>Run the following commands in the PowerShell window to setup the database
+	<div class="codeBlock PS">.\mysql -u root<br />
+	CREATE DATABASE lychee;<br />
+	GRANT ALL ON lychee.* to &#39;lychee_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;Lych33!&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+</ol>
+
+<h2>Lychee Web Installer</h2>
+
+<ol>
+	<li>Open a web browser and navigate to http://DNSorIP/lychee</li>
+	<li>Click Next at the Lychee welcome screen</li>
+	<li>Click Next at the Requirements Check</li>
+	<li>Click Next at the Permissions Check</li>
+	<li>Update at least the following values in the
+	<p>APP_URL=http://DNSorIP<br />
+	APP_DIR=/lychee<br />
+	<br />
+	DB_CONNECTION=mysql<br />
+	DB_HOST=localhost<br />
+	DB_PORT=3306<br />
+	DB_DATABASE=lychee<br />
+	DB_USERNAME=lychee_rw<br />
+	DB_PASSWORD=Lych33!</p>
+	</li>
+	<li>Click Save &gt; Click Install</li>
+	<li>Once the installation completes click Set up admin account</li>
+	<li>Enter a Username &gt; Enter and confirm a Password &gt; Click Create admin account</li>
+	<li>Click Open Lychee</li>
+</ol>
+
+<p>Documentation: <a href="https://lycheeorg.github.io/docs/#installation" target="_blank">https://lycheeorg.github.io/docs/#installation</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
