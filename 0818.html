@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Install InvoiceNinja - Invoice and Payment Manager - On Linux">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="02/15/2023 01:24:01 PM" />
+        <meta name="revised" content="09/02/2024 07:59:22 PM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -46,7 +46,7 @@
 	# install Apache HTTPD and MySQL<br />
 	sudo apt install apache2 mariadb-server mariadb-client -y<br />
 	# install PHP components<br />
-	sudo apt install php8.1 libapache2-mod-php php8.1-common php8.1-bcmath php8.1-gmp php8.1-fileinfo php8.1-gd php8.1-mbstring php8.1-pdo php8.1-xml php8.1-curl php8.1-zip php8.1-gmp php8.1-mysql php8.1-fpm -y<br />
+	sudo apt install php8.2 libapache2-mod-php8.2 php8.2-common php8.2-bcmath php8.2-gmp php8.2-gd php8.2-mbstring php8.2-xml php8.2-curl php8.2-zip php8.2-gmp php8.2-mysql php8.2-fpm php8.2-imagick php8.2-soap php8.2-common php8.2-intl -y<br />
 	# configure the MySQL database<br />
 	sudo su<br />
 	mysql_secure_installation</div>
@@ -71,11 +71,13 @@
 	</li>
 	<li>Continue with the following commands:
 	<div class="codeBlock"># lookup latest invoiceninja release URL<br />
-	regex=&#39;&quot;browser_download_url&quot;: &quot;(https:\/\/github.com\/invoiceninja\/invoiceninja\/releases\/download\/[^/]*\/invoiceninja\.zip)&quot;&#39; &amp;&amp; response=$(curl -H &quot;Accept: application/vnd.github.v3+json&quot; https://api.github.com/repos/invoiceninja/invoiceninja/releases/latest) &amp;&amp; &#91;&#91; $response =~ $regex &#93;&#93; &amp;&amp; downloadURL=&quot;${BASH_REMATCH[1]}&quot;<br />
+	regex=&#39;&quot;browser_download_url&quot;: &quot;(https:\/\/github.com\/invoiceninja\/invoiceninja\/releases\/download\/[^/]*\/invoiceninja\.tar)&quot;&#39; &amp;&amp; response=$(curl -H &quot;Accept: application/vnd.github.v3+json&quot; https://api.github.com/repos/invoiceninja/invoiceninja/releases/latest) &amp;&amp; &#91;&#91; $response =~ $regex &#93;&#93; &amp;&amp; downloadURL=&quot;${BASH_REMATCH[1]}&quot;<br />
 	# download the latest release<br />
-	wget -O ./invoiceninja.zip $downloadURL<br />
-	# extract the download .zip archive<br />
-	sudo unzip ./invoiceninja.zip -d /var/www/invoiceninja<br />
+	wget -O /tmp/invoiceninja.tar $downloadURL<br />
+	# create target directory<br />
+	mkdir /var/www/invoiceninja -p<br />
+	# extract the download .tar archive<br />
+	tar -xvzf /tmp/invoiceninja.tar -C /var/www/invoiceninja<br />
 	# change permissions on the storage directory<br />
 	sudo chmod 755 /var/www/invoiceninja/storage/ -R<br />
 	# copy sample .env file<br />
@@ -84,8 +86,7 @@
 	sudo nano /etc/apache2/sites-available/invoiceninja.conf</div>
 	</li>
 	<li>Paste the following configuration into the .conf file
-	<p>alias /invoiceninja /var/www/invoiceninja/public<br />
-	&lt;Directory /var/www/invoiceninja/public&gt;<br />
+	<p>&lt;Directory /var/www/invoiceninja/public&gt;<br />
 	DirectoryIndex index.php<br />
 	Require all granted<br />
 	Options +FollowSymLinks<br />
