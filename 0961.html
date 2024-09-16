@@ -1,0 +1,59 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install MeshCentral - Remote Management Site - on Windows</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Computer Management,How To Install MeshCentral,MeshCentral,MeshCentral Installation Guide,NPM,NodeJS,Remote Computer Management,Remote Management,Web Based Utilities,Windows,Microsoft Windows,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install MeshCentral - Remote Management Site - on Windows">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="09/04/2024 08:31:50 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install MeshCentral - Remote Management Site - on Windows</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is MeshCentral?</h2>
+
+<blockquote><em>MeshCentral is a full computer management web site. With MeshCentral, you can run your own web server to remotely manage and control computers on a local network or anywhere on the internet. -<a href="https://github.com/Ylianst/MeshCentral" target="_blank">https://github.com/Ylianst/MeshCentral</a></em></blockquote>
+
+<h2>Installing MeshCentral</h2>
+
+<ol>
+	<li>Log into the Windows device</li>
+	<li>Download NodeJS <a href="https://nodejs.org/en/download/current/" target="_blank">Download</a></li>
+	<li>Install NodeJS, accepting all defaults</li>
+	<li>Launch PowerShell as administrator from the Start menu</li>
+	<li>Run the following commands in the PowerShell window
+	<div class="codeBlock PS"># create a meshcentral folder<br />
+	mkdir $ENV:ProgramFiles/meshcentral<br />
+	# change to the new directory<br />
+	cd $ENV:ProgramFiles/meshcentral<br />
+	# install meshcentral<br />
+	npm install meshcentral<br />
+	# install dependencies for running as a service<br />
+	node node_modules/meshcentral --install<br />
+	# create meshcentral service<br />
+	node node_modules/meshcentral --install</div>
+	</li>
+	<li>Open a web browser and navigate to https://DNSorIP</li>
+	<li>Accept the certificate warning</li>
+	<li>Click the link to create an account</li>
+	<li>Complete the form by entering an username, email and password &gt; Click Create Account</li>
+	<li>Welcome to MeshCentral</li>
+</ol>
+
+<p>Source: <a href="https://meshcentral.com/docs/MeshCentral2InstallGuide.pdf" target="_blank">https://meshcentral.com/docs/MeshCentral2InstallGuide.pdf</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
