@@ -1,0 +1,59 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Installing EmuElec on S905x3 Android TV Box (Tanix TX3)</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Install Guide,Raspberry Pi Alternative,SBC,Single Board Computer,AARCH64,ARM,ARM Architecture,ARM CPU,ARM Processor,ARM64,ARMv8,Amlogic,Amlogic S905x3,Android TV Box,Cheap TV Box,Linux,Run EmuElec On Amlogic S905x3,System On A Chip,TX3,Tanix,Tanix TX3,SOC,S905x3,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Installing EmuElec on S905x3 Android TV Box (Tanix TX3)">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="09/22/2024 07:41:16 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Installing EmuElec on S905x3 Android TV Box (Tanix TX3)</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>Things You Will Need</h2>
+
+<ul>
+	<li>A microSD card at least 4 GB <a href="https://amzn.to/36CpShC" target="_blank">https://amzn.to/36CpShC</a> | <a href="https://amzn.to/3CXJngt" target="_blank">https://amzn.to/3CXJngt</a> | <a href="https://amzn.to/3JqyxSP" target="_blank">https://amzn.to/3JqyxSP</a></li>
+</ul>
+
+<h2>Downloads and Flashing to MicroSD</h2>
+
+<ol>
+	<li>Download EmuElec <a href="https://github.com/EmuELEC/EmuELEC/releases" target="_blank">Download</a></li>
+	<li>Download Balena Etcher <a href="https://www.balena.io/etcher/" target="_blank">Download</a></li>
+	<li>Run Balena Etcher</li>
+	<li>Burn EmuElec image to microSD card</li>
+	<li><label for="cb_li_925857_7">Open the microSD card in Explorer and navigate to the /device_trees directory</label></li>
+	<li>Locate the .dtb file name <label for="cb_li_925857_7">that corresponds to target Amlogic processor and copy it to the root of the microSD card</label></li>
+	<li><label for="cb_li_925857_7">Rename the copied .dtb file dtb.img</label></li>
+	<li>Safely remove microSD and re-insert</li>
+	<li>Ignore/close the Windows dialogs to format the inserted microSD card</li>
+</ol>
+
+<h2>Booting to EmuElec for the First Time</h2>
+
+<ol>
+	<li>With an unfolded paperclip, press the reset button</li>
+	<li>While holding the reset button, plug the power adapter into the Android TV box</li>
+	<li>You should see the EmuElec splash screen</li>
+	<li>Setup Your Controller</li>
+	<li>Game</li>
+</ol>
+
+<p>Special thanks to the developers of <a href="https://github.com/EmuELEC/EmuELEC" target="_blank">EmuElec</a> for making this amazing software</p>          </div>
+        </div>
+      </body>
+    </html>
+  
