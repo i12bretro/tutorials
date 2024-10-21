@@ -1,0 +1,63 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Group Office Collaboration Suite on Linux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Collaboration Suite,Debian,Linux,Ubuntu,Group Office,Google Docs Alternative,MariaDB,MySQL,PHP,PHP Based Application,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Group Office Collaboration Suite on Linux">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="10/20/2024 08:40:51 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Group Office Collaboration Suite on Linux</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Group Office?</h2>
+
+<blockquote><em>Group-Office is an enterprise CRM and groupware tool. Collaborate, Share projects, calendars, files and e-mail online with co-workers and clients. Easy to use and fully customizable. -<a href="https://www.group-office.com/" target="_blank">https://www.group-office.com/</a></em></blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in terminal
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade<br />
+	# add group-office gpg key<br />
+	wget -qO - https://repo.group-office.com/downloads/groupoffice.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/groupoffice.gpg<br />
+	# add group-office apt repository<br />
+	echo &quot;deb http://repo.group-office.com/ sixeight main&quot; | sudo tee /etc/apt/sources.list.d/groupoffice.list<br />
+	# update software repositories<br />
+	sudo apt update<br />
+	# install group-office<br />
+	sudo apt install groupoffice -y &amp;&amp; sudo apt install php-apcu -y</div>
+	</li>
+	<li>When prompted, press enter to configure the database</li>
+	<li>Enter and confirm a database password, Grou40ff1c3 in this example</li>
+	<li>Open a web browser and navigate to http://DNSorIP/groupoffice</li>
+	<li>Click Continue at the welcome screen</li>
+	<li>Click Continue at the system requirements check</li>
+	<li>Create an administrator account by entering an Email, Username and password &gt; Select a Language &gt; Click Install</li>
+	<li>Once the installation completes, click Continue</li>
+	<li>Login using the username and password setup earlier</li>
+	<li>If prompted, enter and confirm a new password</li>
+	<li>Welcome to Group Office</li>
+</ol>
+
+<p>Source: <a href="https://groupoffice.readthedocs.io/en/latest/install/debian.html#core-system" target="_blank">https://groupoffice.readthedocs.io/en/latest/install/debian.html#core-system</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
