@@ -1,0 +1,85 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Running an Amazon Linux (AL2) VM in VirtualBox</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Hypervisor,Home Lab Ideas,Home Lab,Install Guide,Self-Hosted,AL2,Amaonz Linux 2,How To Install Amazon Linux On Proxmox,How To Run Amazon Linux On Proxmox VE,Linux,Amazon Linux,Virtualization,Virtual Machine,VM,Virtual Box,VirtualBox,Oracle VirtualBox,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Running an Amazon Linux (AL2) VM in VirtualBox">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="11/17/2024 09:51:03 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Running an Amazon Linux (AL2) VM in VirtualBox</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Amazon Linux?</h2>
+
+<blockquote><em>Amazon Linux 2 is a Linux operating system from Amazon Web Services (AWS). It provides a security-focused, stable, and high-performance execution environment to develop and run cloud applications. -<a href="https://aws.amazon.com/amazon-linux-2" target="_blank">https://aws.amazon.com/amazon-linux-2</a></em></blockquote>
+
+<h2>Preparation</h2>
+
+<ol>
+	<li><label for="cb_li_104833_12">Install 7-Zip if it is not already installed </label><label for="cb_li_104833_12"><a href="https://www.7-zip.org/download.html" target="_blank">Download</a></label></li>
+	<li>Download ImgBurn <a href="https://download.imgburn.com/SetupImgBurn_2.5.8.0.exe" target="_blank">Download</a></li>
+	<li>Download the Amazon Linux virtual disk image (.vdi) <a href="https://cdn.amazonlinux.com/os-images/latest/virtualbox/" target="_blank">Download</a></li>
+	<li>Download the sample Amazon Linux cloud init (seed.iso) <a href="https://cdn.amazonlinux.com/os-images/latest/seed.iso" target="_blank">Download</a></li>
+	<li>Extract the downloaded seed.iso file with 7-Zip</li>
+	<li>Edit meta-data in a text editor</li>
+	<li>Update local-hostname as needed &gt; Save the changes &gt; Close </li>
+	<li>Edit user-data in a text editor</li>
+	<li>Update as needed to create users in the VM &gt; Save the changes &gt; Close</li>
+	<li>Extract the downloaded ImgBurn .exe file with 7-Zip</li>
+	<li>Launch ImgBurn.exe inside the extracted folder</li>
+	<li>Select Build mode from the main menu</li>
+	<li>Click Browse for a file &gt; Browse to and select the updated meta-data and user-data files edited earlier &gt; Click Open</li>
+	<li>At the top right of the window, select the Options tab</li>
+	<li>Set the File System to ISO9660 + Joliet</li>
+	<li>Select the Labels tab</li>
+	<li>Set the two labels to cidata</li>
+	<li>Click the browse icon next to the destination folder</li>
+	<li>Browse to the downloads location and name the file updated-seed.iso &gt; Click Save</li>
+	<li>Click the large icon at the bottom left of the window to build the iso</li>
+</ol>
+
+<h2>Creating the VM</h2>
+
+<ol>
+	<li>Launch VirtualBox Manager</li>
+	<li>Create a New VM by selecting Machine &gt; New
+	<p>Name: Amazon Linux<br />
+	Folder: C:\VMs<br />
+	ISO Image: &lt;not selected&gt;<not selected="selected"><br />
+	Type: Linux<br />
+	Version: Other Linux (64-bit)<br />
+	Base Memory: 2048 MB (or more)<br />
+	Processors: 1 (or more)<br />
+	Hard disk: Do Not Add a Virtual Hard Disk</not></p>
+	</li>
+	<li>Click Finish</li>
+	<li>Right click the VM &gt; Show in Explorer</li>
+	<li>Copy the downloaded .vdi file and the updated-seed.iso files inside the VM folder</li>
+	<li>Back in VirtualBox Manager, select the VM and Click Settings</li>
+	<li>Select Storage</li>
+	<li>Click the Add hard disk icon &gt; Browse to and select the Amazon Linux .vdi downloaded earlier</li>
+	<li>Click the Add optical disc icon &gt; Browse to and select the updated-seed.iso file created earlier</li>
+	<li>Select Network</li>
+	<li>Set the attached to dropdown to Bridged Adapter</li>
+	<li>Click OK</li>
+	<li>Make sure the Amazon Linux VM is selected and click Start &gt; Normal</li>
+	<li>Once the boot process completes, login using the credentials created in user-data</li>
+	<li>Welcome to Amazon Linux</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
