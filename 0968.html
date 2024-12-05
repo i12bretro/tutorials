@@ -1,0 +1,73 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Actual Budget - Open Source Finance Management - on Windows</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Accounting,Accounting Software,Expense Tracker,Expense Tracking,Homelab,Income Tracking,NodeJS,Windows,Microsoft Windows,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Actual Budget - Open Source Finance Management - on Windows">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="11/26/2024 06:51:57 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Actual Budget - Open Source Finance Management - on Windows</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Actual Budget?</h2>
+
+<blockquote><em>Actual is a local-first personal finance tool. It is 100% free and open-source, written in NodeJS, it has a synchronization element so that all your changes can move between devices without any heavy lifting. -<a href="https://github.com/actualbudget/actual" target="_blank">https://github.com/actualbudget/actual</a></em></blockquote>
+
+<h2>Installing Actual Budget</h2>
+
+<ol>
+	<li>Log into the Windows device</li>
+	<li>Download the latest Actual Budget release <a href="https://github.com/actualbudget/actual/releases/latest" target="_blank">Download</a></li>
+	<li>Download NodeJS 16 <a href="https://nodejs.org/en/download/prebuilt-installer/" target="_blank">Download</a></li>
+	<li>Download Git for Windows <a href="https://github.com/git-for-windows/git/releases/tag/v2.46.2.windows.1" target="_blank">Download</a></li>
+	<li><label for="cb_li_917989_0">Download Microsoft Visual C++ </label><label for="cb_li_917989_0"><a href="https://aka.ms/vs/16/release/vc_redist.x64.exe" target="_blank">Download</a></label></li>
+	<li>Install Microsoft Visual C++</li>
+	<li>Install Git for Windows, accepting all the defaults</li>
+	<li>Install NodeJS, accepting all the defaults</li>
+	<li>Extract the downloaded Actual Budget files</li>
+	<li>Rename the extracted folder actualbudget</li>
+	<li>Cut the actualbudget folder to a location it can safely run from, C:\Apps\actualbudget in this example</li>
+	<li>Right click the Start button &gt; Settings &gt; System &gt; About</li>
+	<li>Click the Advanced system settings option</li>
+	<li>Click the Environment Variables...</li>
+	<li>Edit the System Path variable</li>
+	<li>Click the New button</li>
+	<li>Add the Git for Windows \bin directory (ie C:\Program Files\Git\bin)</li>
+	<li>Click OK to all open dialog windows</li>
+	<li>Click on the Start menu &gt; type cmd &gt; Right click on Command Prompt &gt; Run as administrator</li>
+	<li>Run the following commands in the Command Prompt window
+	<div class="codeBlock CMD"># change directory to actualbudget, C:\Apps\actualbudget in this example<br />
+	cd C:\Apps\actualbudget<br />
+	# update npm<br />
+	npm install -g npm<br />
+	# install yarn<br />
+	npm install -g yarn<br />
+	# fix dependencies<br />
+	yarn install<br />
+	# run actual<br />
+	yarn start</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP:3001</li>
+	<li>Click the Don&#39;t use a server link</li>
+	<li>Click Start Fresh</li>
+	<li>Welcome to Actual Budget</li>
+</ol>
+
+<p>Source: <a href="https://actualbudget.org/docs/install/local/" target="_blank">https://actualbudget.org/docs/install/local/</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
