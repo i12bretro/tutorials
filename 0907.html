@@ -1,0 +1,92 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install Zammad on Linux [Opensource Helpdesk Ticketing System]</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Browser Based,Home Lab,Home Lab Ideas,Install Guide,Self-Hosted,Web Based,Web Based Tools,Debian,Enterprise Helpdesk,Free Helpdesk,Help Desk,Helpdesk,IT Ticketing System,Linux,Open Source Helpdesk,Support,Ticket,Ticketing System,Zammad,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install Zammad on Linux [Opensource Helpdesk Ticketing System]">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="11/12/2024 07:25:30 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install Zammad on Linux [Opensource Helpdesk Ticketing System]</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is Zammad?</h2>
+
+<blockquote><em>Zammad is a web based open source helpdesk/customer support system with many features to manage customer communication via several channels like telephone, facebook, twitter, chat and emails. -<a href="https://github.com/zammad/zammad" target="_blank">https://github.com/zammad/zammad</a></em></blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Log into the Linux device</li>
+	<li>Run the following commands in terminal
+	<div class="codeBlock"># update software repositories<br />
+	sudo apt update<br />
+	# install available software updates<br />
+	sudo apt upgrade<br />
+	# install prerequisite packages<br />
+	sudo apt install curl wget apt-transport-https gnupg -y<br />
+	# add elasticsearch gpg key<br />
+	wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg<br />
+	# add zammad gpg key<br />
+	curl -fsSL https://dl.packager.io/srv/zammad/zammad/key | gpg --dearmor | sudo tee /etc/apt/keyrings/zammad.gpg&gt; /dev/null<br />
+	# add elasticsearch apt repository<br />
+	echo &quot;deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://artifacts.elastic.co/packages/8.x/apt stable main&quot; | sudo tee /etc/apt/sources.list.d/elastic-8.x.list<br />
+	# add zammad apt repository<br />
+	echo &quot;deb [signed-by=/etc/apt/keyrings/zammad.gpg] https://dl.packager.io/srv/deb/zammad/zammad/stable/debian 12 main&quot;| sudo tee /etc/apt/sources.list.d/zammad.list<br />
+	# update software repositories<br />
+	sudo apt update<br />
+	# list installed languages<br />
+	locale | grep &quot;LANG=&quot;<br />
+	# if not listed in the above output<br />
+	# install en_US.UTF-8 and set as default locale<br />
+	sudo apt install locales -y &amp;&amp; sudo locale-gen en_US.UTF-8 &amp;&amp; echo &quot;LANG=en_US.UTF-8&quot; &gt; sudo /etc/default/locale<br />
+	# install supporting packages<br />
+	sudo apt install libimlib2 elasticsearch postgresql postgresql-common redis-server nginx nodejs -y<br />
+	# start and enable services<br />
+	sudo systemctl enable postgresql --now &amp;&amp; sudo systemctl enable redis-server --now &amp;&amp; sudo systemctl enable nginx --now &amp;&amp; sudo systemctl enable elasticsearch --now<br />
+	# update postgres max connections to 2000<br />
+	sudo sed -i &#39;s/max_connections = 100/max_connections = 2000/&#39; /etc/postgresql/*/main/postgresql.conf<br />
+	# restart postgres service<br />
+	sudo systemctl restart postgresql<br />
+	# install ingest-attachment for elasticsearch<br />
+	sudo /usr/share/elasticsearch/bin/elasticsearch-plugin install ingest-attachment<br />
+	# restart elasticsearch service<br />
+	sudo systemctl restart elasticsearch<br />
+	# install zammad<br />
+	sudo apt install zammad -y<br />
+	# configure elasticsearch url<br />
+	sudo zammad run rails r &quot;Setting.set(&#39;es_url&#39;, &#39;http://localhost:9200&#39;)&quot;<br />
+	# rebuild elasticsearch search index<br />
+	sudo zammad run rake zammad:searchindex:rebuild<br />
+	# update server name in nginx config<br />
+	# replace &lt;% SERVER DNS NAME %&gt; before executing<br />
+	sudo sed -i &#39;s/server_name localhost;/server_name &lt;% SERVER DNS NAME %&gt;;/&#39; /etc/nginx/sites-available/zammad.conf<br />
+	# restart nginx service<br />
+	sudo systemctl restart nginx</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP</li>
+	<li>Click the Set up a new system button</li>
+	<li>Enter a login, first name, last name, email address, password and check full permissions &gt; Click Create</li>
+	<li>Complete the Organization details form &gt; Click Next</li>
+	<li>Click Skip on the Email Notification screen</li>
+	<li>Click Skip on the Connect Channels screen</li>
+	<li>Welcome to Zammad</li>
+</ol>
+
+<p>Source: <a href="https://docs.zammad.org/en/latest/install/package.html" target="_blank">https://docs.zammad.org/en/latest/install/package.html</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
