@@ -1,0 +1,67 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Setup FTP File Transfers ToFrom SteamDeck</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Install Guide,FTP,File Transfer Protocol,FileZilla,How To FTP Files To The SteamDeck,FTP Connection To SteamDeck,Arch,Arch Linux,Steam,SteamDeck,SteamOS,Linux,Using FTP On The SteamDeck,Backup EmuDeck Save Data,Emulation,EmuDeck,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Setup FTP File Transfers ToFrom SteamDeck">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="01/09/2025 04:43:36 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Setup FTP File Transfers ToFrom SteamDeck</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is FTP?</h2>
+
+<blockquote><em>As its name suggests, the File Transfer Protocol (FTP) is a standardized network protocol used to transfer files between a client and a server over the internet or any other TCP/IP network. -<a href="https://filezilla-project.org/faq.php" target="_blank">https://filezilla-project.org/faq.php</a></em></blockquote>
+
+<h2>What is FileZilla?</h2>
+
+<blockquote><em>FileZilla 3 is the next generation (S)FTP-client from the FileZilla project. It is platform independent and supports operating systems like Microsoft Windows, GNU/Linux, *BSD and Mac OS X. -<a href="https://wiki.filezilla-project.org/FileZilla_FTP_Client" target="_blank">https://wiki.filezilla-project.org/FileZilla_FTP_Client</a></em></blockquote>
+
+<h2>Enabling the SSH Server</h2>
+
+<ol>
+	<li>Log into the SteamDeck</li>
+	<li>If not in Desktop Mode, hold the power button &gt; select Switch to Desktop</li>
+	<li>Click the Application menu &gt; Search Konsole &gt; Select Konsole to launch a terminal</li>
+	<li>Continue with the following commands in Konsole
+	<div class="codeBlock"># if you haven&#39;t already, set a password<br />
+	passwd<br />
+	# enter and confirm a password<br />
+	# start and enable ssh daemon<br />
+	sudo systemctl enable sshd --now<br />
+	# output IP address, note this for use in the client<br />
+	ip a</div>
+	</li>
+</ol>
+
+<h2>Connecting from an FTP Client</h2>
+
+<ol>
+	<li>On a PC, download FileZilla FTP Client <a href="https://filezilla-project.org/download.php" target="_blank">Download</a></li>
+	<li>Install FileZilla FTP Client, accepting all the defaults</li>
+	<li>At the top of the application in the Quickconnect area, complete the fields as follows:
+	<p>Host: &lt;% SteamDeck IP address noted earlier %&gt;<br />
+	Username: deck<br />
+	Password: &lt;% SteamDeck password %&gt;<br />
+	Port: 22</p>
+	</li>
+	<li>Click Quickconnect</li>
+	<li>You now have easy file transfer access to and from the SteamDeck via FTP</li>
+</ol>          </div>
+        </div>
+      </body>
+    </html>
+  
