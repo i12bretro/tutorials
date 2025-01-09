@@ -8,7 +8,7 @@
         <meta name="author" content="i12bretro">
         <meta name="description" content="Disable ProxMox Nagging Subscription Popup and Enterprise Apt Repository">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="revised" content="01/03/2025 10:17:55 AM" />
+        <meta name="revised" content="01/08/2025 06:36:05 PM" />
 				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
 				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 				        <script type="text/javascript" src="includes/js/steps.js"></script>
@@ -36,8 +36,10 @@
 	# remove no subscription nag popup<br />
 	# if running promox 6<br />
 	sed -i.bak &#39;s/NotFound/Active/g&#39; /usr/share/perl5/PVE/API2/Subscription.pm<br />
-	# if running proxmox 7+<br />
+	# if running proxmox 7<br />
 	sed -Ezi.bak &quot;s/(Ext.Msg.show\(\{\s+title: gettext\(&#39;No valid sub)/void\(\{ \/\/\1/g&quot; /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js<br />
+	# if running proxmox 8<br />
+	sed -i.bak &#39;/.*data\.status.*{/{s/\!//;s/active/NoMoreNagging/}&#39; /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js;<br />
 	# restart pveproxy service<br />
 	systemctl restart pveproxy.service</div>
 	</li>
