@@ -1,0 +1,77 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install MkDocs - Read the Docs Alternative - on Windows</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="MkDocs,Install Guide,Microsoft Windows,Python,Self-Hosted,Home Lab,Home Lab Ideas,Web Based,Web Based Tools,Browser Based,Install MkDocs On Windows,Windows,Read The Docs Alternative,Documentation,Static Site Generator,MkDocs On Windows,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install MkDocs - Read the Docs Alternative - on Windows">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="01/22/2025 07:08:28 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install MkDocs - Read the Docs Alternative - on Windows</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is MkDocs?</h2>
+
+<blockquote>MkDocs is a fast, simple and downright gorgeous static site generator that&#39;s geared towards building project documentation. Documentation source files are written in Markdown, and configured with a single YAML configuration file. It is designed to be easy to use and can be extended with third-party themes, plugins, and Markdown extensions.<i> - <a href="https://github.com/mkdocs/mkdocs" target="_blank">https://github.com/mkdocs/mkdocs</a></i></blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Log into the Windows device</li>
+	<li>Download Python <a href="https://www.python.org/downloads/" target="_blank">Download</a></li>
+	<li>Run the downloaded Python installer, making sure to check the option to add Python to the path</li>
+	<li>Launch PowerShell as Administrator</li>
+	<li>Run the following commands in PowerShell
+	<div class="codeBlock PS"># upgrade pip<br />
+	pip install --upgrade pip<br />
+	# create a mkdocs directory in user directory<br />
+	mkdir $ENV:UserProfile\mkdocs<br />
+	# change directory to mkdocs<br />
+	cd $ENV:UserProfile\mkdocs<br />
+	# install mkdocs<br />
+	pip install mkdocs<br />
+	# create a mkdocs site<br />
+	mkdocs new mkdocs-demo<br />
+	# change directory to mkdocs-demo<br />
+	cd mkdocs-demo<br />
+	# start the demo site<br />
+	mkdocs serve</div>
+	</li>
+	<li>Open a web browser and navigate to http://DNSorIP:8000</li>
+</ol>
+
+<h2>Read the Docs Theme</h2>
+
+<ol>
+	<li>Back in PowerShell, press CTRL+C to kill the running process</li>
+	<li>Run the following command
+	<div class="codeBlock PS"># open the mkdocs config file in notepad<br />
+	notepad &quot;$ENV:UserProfile\mkdocs\mkdocs-demo\mkdocs.yml&quot;</div>
+	</li>
+	<li>Add the following line to mkdocs.yml
+	<p>theme: readthedocs</p>
+	</li>
+	<li>Save the change and close Notepad</li>
+	<li>Run the following command to see the change
+	<div class="codeBlock PS"># restart the demo site<br />
+	mkdocs serve</div>
+	</li>
+</ol>
+
+<p>Source: <a href="https://www.mkdocs.org/getting-started/" target="_blank">https://www.mkdocs.org/getting-started/</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
