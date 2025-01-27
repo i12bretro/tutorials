@@ -1,0 +1,94 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install LimeSurvey CE - Custom Survey Tool - on Windows</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="LimeSurvey,Install Guide,Microsoft Windows,Browser Based,Home Lab,Home Lab Ideas,Self-Hosted,Web Based,Web Based Tools,PHP,MySQL,MariaDB,PHP Based Application,WAMP,Windows,XAMPP,How To Install LimeSurvey On Windows,Survey Maker,Survey Builder,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install LimeSurvey CE - Custom Survey Tool - on Windows">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="01/26/2025 09:50:21 AM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install LimeSurvey CE - Custom Survey Tool - on Windows</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is LimeSurvey?</h2>
+
+<blockquote>[LimeSurvey is] a powerful, open-source survey platform. A free alternative to SurveyMonkey, Typeform, Qualtrics, and Google Forms, making it simple to create online surveys and forms with unmatched flexibility.<i> - <a href="https://github.com/LimeSurvey/LimeSurvey" target="_blank">https://github.com/LimeSurvey/LimeSurvey</a></i></blockquote>
+
+<h2>Installation</h2>
+
+<ol>
+	<li>Download XAMPP <a href="https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/" target="_blank">Download</a></li>
+	<li>Download LimeSurvey CE <a href="https://community.limesurvey.org/downloads/" target="_blank">Download</a></li>
+	<li><label for="cb_li_917989_0">Download Microsoft Visual C++ </label><label for="cb_li_917989_0"><a href="https://aka.ms/vs/16/release/vc_redist.x64.exe" target="_blank">Download</a></label></li>
+	<li>Install Microsoft Visual C++</li>
+	<li>Right click the downloaded XAMPP .zip file &gt; Extract All...</li>
+	<li>Right click the downloaded LimeSurvey .zip file &gt; Extract All...</li>
+	<li>If necessary, rename the extracted directory to limesurvey</li>
+	<li>Cut the limesurvey folder inside the extracted XAMPP/htdocs directory</li>
+	<li>Copy the extracted XAMPP directory to a safe location to run from, C:\apps for example</li>
+	<li>Run XAMPP/setup_xampp.bat to update the configuration files with the new server location</li>
+	<li>Navigate to XAMPP/php and edit php.ini in a text editor</li>
+	<li>Find the following lines and remove the ; to uncomment them
+	<p>extension=ldap<br />
+	extension=gd<br />
+	extension=imap<br />
+	extension=intl<br />
+	extension=zip</p>
+	</li>
+	<li>Save the changes to php.ini and close the text editor</li>
+	<li>Navigate back to /XAMPP &gt; Run xampp-control.exe</li>
+	<li>Click the Start button next to Apache and MySQL</li>
+	<li>Navigate to XAMPP/mysql/bin</li>
+	<li>Hold the SHIFT key and right click in the white space &gt; Open PowerShell window here...</li>
+	<li>Type the following in the PowerShell window to setup the LimeSurvey database
+	<div class="codeBlock PS">.\mysql -u root<br />
+	CREATE DATABASE limesurvey;<br />
+	GRANT ALL ON limesurvey.* TO &#39;limesurvey_rw&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;L!m3Surv3Y&#39;;<br />
+	FLUSH PRIVILEGES;<br />
+	EXIT;<br />
+	exit</div>
+	</li>
+</ol>
+
+<h2>LimeSurvey Web Installer</h2>
+
+<ol>
+	<li>Open a web browser and navigate to http://DNSorIP/limesurvey</li>
+	<li>Select a Language &gt; Click <strong>Start installation</strong> at the Welcome screen</li>
+	<li>Click <strong>I accept</strong> at the License Agreement</li>
+	<li>Click <strong>Next</strong> at the Pre-Installation Check</li>
+	<li>Complete the Database Configuration as shown below
+	<p>Database type: MySQL<br />
+	MySQL database engine type: MyISAM<br />
+	<br />
+	Database location: localhost<br />
+	Database user: limesurvey_rw<br />
+	Database Password: L!m3Surv3Y<br />
+	Database name: limesurvey<br />
+	<br />
+	Table Prefix:</p>
+	</li>
+	<li>Click <strong>Next &gt; </strong>Click <strong>Populate database</strong></li>
+	<li>Complete the Administration settings form &gt; Click <strong>Next</strong></li>
+	<li>Click <strong>Administration</strong></li>
+	<li>Login using the admin credentials created earlier</li>
+	<li>Welcome to LimeSurvey</li>
+</ol>
+
+<p>Source: <a href="https://manual.limesurvey.org/Installation_-_LimeSurvey_CE" target="_blank">https://manual.limesurvey.org/Installation_-_LimeSurvey_CE</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
