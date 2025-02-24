@@ -1,0 +1,78 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Using WatchTower To Keep Docker Images Updated</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="WatchTower,Updating Docker Containers,Linux,Docker Made Easy,Home Lab,Home Lab Ideas,Docker How To,Docker Made Simple,Docker Simplified,Docker Tutorial,Homelab,Docker,Docker Container,Debian,Ubuntu,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Using WatchTower To Keep Docker Images Updated">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="02/23/2025 06:18:46 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Using WatchTower To Keep Docker Images Updated</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <h2>What is WatchTower?</h2>
+
+<blockquote><em>Watchtower is an application that will monitor your running Docker containers and watch for changes to the images that those containers were originally started from. If watchtower detects that an image has changed, it will automatically restart the container using the new image. -<a href="https://containrrr.dev/watchtower/introduction/" target="_blank">https://containrrr.dev/watchtower/introduction/</a></em></blockquote>
+
+<h2>Pull the WatchTower Image</h2>
+
+<ol>
+	<li>Log into the Docker host</li>
+	<li>Run the following command in a terminal window
+	<div class="codeBlock">docker pull containrrr/watchtower</div>
+	</li>
+</ol>
+
+<h2>Check for Available Updates, Without Applying Them</h2>
+
+<ol>
+	<li>Log into the Docker host</li>
+	<li>Run the following command in a terminal window
+	<div class="codeBlock">docker run --rm -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --run-once --monitor-only --include-restarting --include-stopped</div>
+	</li>
+</ol>
+
+<h2>Update Running Containers</h2>
+
+<ol>
+	<li>Log into the Docker host</li>
+	<li>Run the following command in a terminal window
+	<div class="codeBlock">docker run --rm -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --run-once</div>
+	</li>
+</ol>
+
+<h2>Update Running Containers, Deleting Outdated Images</h2>
+
+<ol>
+	<li>Log into the Docker host</li>
+	<li>Run the following command in a terminal window
+	<div class="codeBlock">docker run --rm -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --run-once --cleanup</div>
+	</li>
+</ol>
+
+<h2>Update All Containers, Deleting Outdated Images</h2>
+
+<ol>
+	<li>Log into the Docker host</li>
+	<li>Run the following command in a terminal window
+	<div class="codeBlock">docker run --rm -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --run-once --cleanup --include-restarting --include-stopped</div>
+	</li>
+</ol>
+
+<p>In addition, notifications can be configured using environment variables. More info can be found at <a href="https://containrrr.dev/watchtower/notifications/" target="_blank">https://containrrr.dev/watchtower/notifications/</a>.</p>          </div>
+        </div>
+      </body>
+    </html>
+  
