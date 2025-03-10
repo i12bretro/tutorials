@@ -1,0 +1,83 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>Install MacOS Updates Via the Terminal</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="UTF-8">
+        <meta name="keywords" content="Apple,MacOS Updates,Terminal,Mac OS 12,MacOS,Monterey,Updates,Scripting,MacOS Updates Via Terminal,SoftwareUpdate,Ventura,Mac OS 13,Mac OS 14,Mac OS 15,Sequoia,Sonoma,How To,Tutorial,i12bretro">
+        <meta name="author" content="i12bretro">
+        <meta name="description" content="Install MacOS Updates Via the Terminal">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="revised" content="03/09/2025 06:58:57 PM" />
+				          <link rel="icon" type="image/x-icon" href="includes/favicon.ico">
+				  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+				        <script type="text/javascript" src="includes/js/steps.js"></script>
+        <link href="css/steps.css" rel="stylesheet" type="text/css" />
+      </head>
+      <body>
+        <div id="gridContainer">
+          <div class="topMargin"></div>
+          <div id="listName" class="topMargin">
+            <h1>Install MacOS Updates Via the Terminal</h1>
+          </div>
+          <div></div>
+          <div id="content">
+          <ol>
+	<li>Start LaunchPad from the dock</li>
+	<li>Search terminal &gt; Click Terminal to launch it</li>
+	<li>Run the following commands in the terminal window
+	<div class="codeBlock CMD"># list available updates<br />
+	softwareupdate --list<br />
+	# install a specific update from the listing<br />
+	# softwareupdate --install &#39;Title of Update&#39;<br />
+	softwareupdate --install &#39;macOS Monterey 12.7.6-21H1320&#39;<br />
+	# automatically install available updates<br />
+	softwareupdate --install --all</div>
+	</li>
+</ol>
+
+<h2>softwareupdate Usage</h2>
+
+<div class="codeBlock CMD noCheckbox" style="font-size: 11pt;">
+<p>usage: softwareupdate <cmd> [<args> ...]<br />
+<br />
+** Manage Updates:<br />
+&emsp; -l | --list List all appropriate update labels (options: --no-scan, --product-types)<br />
+&emsp; -d | --download Download Only<br />
+&emsp; -i | --install Install<br />
+&emsp; &emsp; <label>... specific updates</label><br />
+&emsp; &emsp; -a | --all All appropriate updates<br />
+&emsp; &emsp; -R | --restart Automatically restart (or shut down) if required to complete installation.<br />
+&emsp; &emsp; -r | --recommended Only recommended updates<br />
+&emsp; &emsp; &emsp; &emsp;--os-only Only OS updates<br />
+&emsp; &emsp; &emsp; &emsp;--safari-only Only Safari updates<br />
+&emsp; &emsp; &emsp; &emsp;--stdinpass Password to authenticate as an owner. Apple Silicon only.<br />
+&emsp; &emsp; &emsp; &emsp;--user Local username to authenticate as an owner. Apple Silicon only.<br />
+&emsp; &emsp; --list-full-installers List the available macOS Installers<br />
+&emsp; &emsp; --fetch-full-installer Install the latest recommended macOS Installer<br />
+&emsp; &emsp; --full-installer-version The version of macOS to install. Ex: --full-installer-version 10.15<br />
+&emsp; &emsp; --install-rosetta Install Rosetta 2<br />
+&emsp; &emsp; --background Trigger a background scan and update operation<br />
+<br />
+** Other Tools:<br />
+&emsp; --dump-state Log the internal state of the SU daemon to /var/log/install.log<br />
+&emsp; --evaluate-products Evaluate a list of product keys specified by the --products option<br />
+&emsp; --history Show the install history. By default, only displays updates installed by softwareupdate.<br />
+<br />
+** Options:<br />
+&emsp; --no-scan Do not scan when listing or installing updates (use available updates previously scanned)<br />
+&emsp; --product-types <type> Limit a scan to a particular product type only - ignoring all others<br />
+&emsp; &emsp; &emsp; Ex: --product-types macOS || --product-types macOS,Safari<br />
+&emsp; --products A comma-separated (no spaces) list of product keys to operate on.<br />
+&emsp; --force Force an operation to complete. Use with --background to trigger a background scan regardless of &quot;Automatically check&quot; pref<br />
+&emsp; --agree-to-license Agree to the software license agreement without user interaction.<br />
+<br />
+&emsp; --verbose Enable verbose output<br />
+&emsp; --help Print this help</type></args></cmd></p>
+</div>
+
+<p>Source: <a href="https://www.macrumors.com/how-to/update-macos-terminal-command/" target="_blank">https://www.macrumors.com/how-to/update-macos-terminal-command/</a></p>          </div>
+        </div>
+      </body>
+    </html>
+  
