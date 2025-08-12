@@ -54,7 +54,7 @@
 	<p class="masked">args: -device isa-applesmc,osk=&quot;ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc&quot; -smbios type=2 -device usb-kbd,bus=ehci.0,port=2 -cpu Penryn,kvm=on,vendor=GenuineIntel,+kvm_pv_unhalt,+kvm_pv_eoi,+hypervisor,+invtsc,+pcid,+ssse3,+sse4.2,+popcnt,+avx,+avx2,+aes,+fma,+fma4,+bmi1,+bmi2,+xsave,+xsaveopt,check</p>
 	</li>
 	<li>Press CTRL+W and search for ,media=cdrom</li>
-	<li>Delete the ,media=cdrom from the two attached .iso files (KVM OpenCore and Catalina) and add cache=unsafe</li>
+	<li>Replace the media=cdrom by media=disk from the two attached .iso files (KVM OpenCore and Catalina) and add cache=unsafe</li>
 	<li>Press CTRL+O, Enter, CTRL+X to write the changes to the conf file</li>
 	<li>Back in the Proxmox web UI, right click the MacOSCatalina VM in the left navigation pane &gt; Start</li>
 	<li>Click console in the left sub-navigation menu</li>
