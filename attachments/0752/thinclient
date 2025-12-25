@@ -35,7 +35,7 @@ TICKET="${TICKET%%\}*}"
 CSRF="${DATA//\"/}"
 CSRF="${CSRF##*CSRFPreventionToken:}"
 CSRF="${CSRF%%,*}"
-CSRF="${CSRF%%\}*}"
+#CSRF="${CSRF%%}*}"
 
 #Request a SPICE config file from the API
 #Note that I've removed the proxy argument
@@ -45,7 +45,6 @@ CSRF="${CSRF%%\}*}"
 #I left the other command commented out, so you can replace the first curl with the second if you need the argument
 curl -f -s -S -k -b "PVEAuthCookie=$TICKET" -H "CSRFPreventionToken: $CSRF" "https://$PROXY:8006/api2/spiceconfig/nodes/$NODE/qemu/$VMID/spiceproxy" -X POST > spiceproxy
 #curl -f -s -S -k -b "PVEAuthCookie=$TICKET" -H "CSRFPreventionToken: $CSRF" "https://$PROXY:8006/api2/spiceconfig/nodes/$NODE/qemu/$VMID/spiceproxy" -X POST -d "proxy=$PROXY" > spiceproxy
-
 
 #Launch remote-viewer with spiceproxy file, in full screen mode
 #You can add USB passthrough options here if you'd like
