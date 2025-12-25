@@ -2,8 +2,8 @@
 set -e
 
 # Set auth options
-PASSWORD='vdiuser'
-USERNAME='vdiuser@pve'
+PASSWORD='virt-viewer'
+USERNAME='virt-viewer@pve'
 
 # Set VM ID from the first and only argument
 VMID="$1"
