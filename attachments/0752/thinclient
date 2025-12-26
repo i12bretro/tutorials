@@ -1,55 +1,62 @@
 #!/bin/bash
 set -e
 
-# Set auth options
-PASSWORD='virt-viewer'
-USERNAME='virt-viewer@pve'
-
 # Set VM ID from the first and only argument
 VMID="$1"
 
-# Set Node
-# This must either be a DNS address or name of the node in the cluster
-NODE="pvehost"
+# if VMID is not numeric, launch remmina
+if ! [[ $VMID =~ ^[0-9]+?$ ]] ; then
+        echo "LAUNCHING REMMINA"
+        remmina -k --enable-fullscreen -c $VMID
+else
+				# Set auth options
+				PASSWORD='virt-viewer'
+				USERNAME='virt-viewer@pve'
 
-# Proxy equals node if node is a DNS address
-# Otherwise, you need to set the IP address of the node here
-PROXY="$NODE"
+        # Set Node
+        # This must either be a DNS address or name of the node in the cluster
+        NODE="vmhost.snet.internal"
 
-#The rest of the script originated from a Proxmox example
+        # Proxy equals node if node is a DNS address
+        # Otherwise, you need to set the IP address of the node here
+        PROXY="$NODE"
 
-#Strip the DNS name to get the node name
-NODE="${NODE%%\.*}"
+        #The rest of the script originated from a Proxmox example
 
-#Authenticate to the API and get a ticket and CSRF token
-DATA="$(curl -f -s -S -k --data-urlencode "username=$USERNAME" --data-urlencode "password=$PASSWORD" "https://$PROXY:8006/api2/json/access/ticket")"
+        #Strip the DNS name to get the node name
+        NODE="${NODE%%\.*}"
 
-echo "AUTH OK"
+        #Authenticate to the API and get a ticket and CSRF token
+        DATA="$(curl -f -s -S -k --data-urlencode "username=$USERNAME" --data-urlencode "password=$PASSWORD" "https://$PROXY:8006/api2/json/access/ticket")"
 
-#Extract the ticket an CSRF token from the returned data
-TICKET="${DATA//\"/}"
-TICKET="${TICKET##*ticket:}"
-TICKET="${TICKET%%,*}"
-TICKET="${TICKET%%\}*}"
+        echo "AUTH OK"
 
-CSRF="${DATA//\"/}"
-CSRF="${CSRF##*CSRFPreventionToken:}"
-CSRF="${CSRF%%,*}"
-#CSRF="${CSRF%%}*}"
+        #Extract the ticket an CSRF token from the returned data
+        TICKET="${DATA//\"/}"
+        TICKET="${TICKET##*ticket:}"
+        TICKET="${TICKET%%,*}"
+        TICKET="${TICKET%%\}*}"
 
-#Request a SPICE config file from the API
-#Note that I've removed the proxy argument
-#This results in Proxmox pointing remote-viewer to the node that is currently running the VM,
-#instead of the node that we specified with PROXY. Only useful in clustered scenarios,
-#but it doesn't hurt to leave it out.
-#I left the other command commented out, so you can replace the first curl with the second if you need the argument
-curl -f -s -S -k -b "PVEAuthCookie=$TICKET" -H "CSRFPreventionToken: $CSRF" "https://$PROXY:8006/api2/spiceconfig/nodes/$NODE/qemu/$VMID/spiceproxy" -X POST > spiceproxy
-#curl -f -s -S -k -b "PVEAuthCookie=$TICKET" -H "CSRFPreventionToken: $CSRF" "https://$PROXY:8006/api2/spiceconfig/nodes/$NODE/qemu/$VMID/spiceproxy" -X POST -d "proxy=$PROXY" > spiceproxy
+        CSRF="${DATA//\"/}"
+        CSRF="${CSRF##*CSRFPreventionToken:}"
+        CSRF="${CSRF%%,*}"
+        #CSRF="${CSRF%%}*}"
 
-#Launch remote-viewer with spiceproxy file, in full screen mode
-#You can add USB passthrough options here if you'd like
-#Not calling via exec, so the script continues after remote-viewer exits
-remote-viewer -f spiceproxy
+        #Request a SPICE config file from the API
+        #Note that I've removed the proxy argument
+        #This results in Proxmox pointing remote-viewer to the node that is currently running the VM,
+        #instead of the node that we specified with PROXY. Only useful in clustered scenarios,
+        #but it doesn't hurt to leave it out.
+        #I left the other command commented out, so you can replace the first curl with the second if you need the argument
+        curl -f -s -S -k -b "PVEAuthCookie=$TICKET" -H "CSRFPreventionToken: $CSRF" "https://$PROXY:8006/api2/spiceconfig/nodes/$NODE/qemu/$VMID/spiceproxy" -X POST > spiceproxy
+        #curl -f -s -S -k -b "PVEAuthCookie=$TICKET" -H "CSRFPreventionToken: $CSRF" "https://$PROXY:8006/api2/spiceconfig/nodes/$NODE/qemu/$VMID/spiceproxy" -X POST -d "proxy=$PROXY" > spiceproxy
+
+        #Launch remote-viewer with spiceproxy file, in full screen mode
+        #You can add USB passthrough options here if you'd like
+        #Not calling via exec, so the script continues after remote-viewer exits
+        remote-viewer -f spiceproxy
+
+fi
 
 #Kill lxsession
 #This is how LXDE is designed to logout, it's not a hack lol
